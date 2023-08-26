@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Document(value = "users")
-public class User implements UserDetails{
+public class User implements UserDetails {
 
     @Id
     private String id;
