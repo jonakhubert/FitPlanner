@@ -2,6 +2,8 @@ package com.fitplanner.authentication.auth;
 
 import com.fitplanner.authentication.exception.UserAlreadyExistException;
 import com.fitplanner.authentication.jwt.JwtService;
+import com.fitplanner.authentication.token.ITokenRepository;
+import com.fitplanner.authentication.token.Token;
 import com.fitplanner.authentication.user.Role;
 import com.fitplanner.authentication.user.User;
 import com.fitplanner.authentication.user.UserRepository;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
+    private final ITokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -23,11 +26,13 @@ public class AuthenticationService {
     @Autowired
     public AuthenticationService(
         UserRepository userRepository,
+        ITokenRepository tokenRepository,
         PasswordEncoder passwordEncoder,
         JwtService jwtService,
         AuthenticationManager authenticationManager
     ) {
         this.userRepository = userRepository;
+        this.tokenRepository = tokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
@@ -45,8 +50,10 @@ public class AuthenticationService {
             Role.USER
         );
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
         String jwt = jwtService.generateToken(user);
+
+        saveUserToken(jwt, savedUser);
 
         return new AuthenticationResponse(jwt);
     }
@@ -64,6 +71,13 @@ public class AuthenticationService {
 
         String jwt = jwtService.generateToken(user);
 
+        saveUserToken(jwt, user);
+
         return new AuthenticationResponse(jwt);
+    }
+
+    private void saveUserToken(String jwtToken, User user) {
+        Token token = new Token(jwtToken, false, false, user.getUsername());
+        tokenRepository.save(token);
     }
 }
