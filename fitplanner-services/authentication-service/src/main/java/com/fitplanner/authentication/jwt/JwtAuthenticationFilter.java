@@ -1,5 +1,6 @@
 package com.fitplanner.authentication.jwt;
 
+import com.fitplanner.authentication.exception.InvalidAuthenticationTokenException;
 import com.fitplanner.authentication.jwt.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -41,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // check if authentication token is missing
         if(authenticationHeader == null || !authenticationHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
-            return;
+            throw new InvalidAuthenticationTokenException("Invalid authentication token.");
         }
 
         jwt = authenticationHeader.substring(7); // index 7 because of 'Bearer '
