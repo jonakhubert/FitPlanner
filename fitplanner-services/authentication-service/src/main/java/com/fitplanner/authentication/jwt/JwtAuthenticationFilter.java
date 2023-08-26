@@ -1,6 +1,6 @@
 package com.fitplanner.authentication.jwt;
 
-import com.fitplanner.authentication.exception.InvalidAuthenticationTokenException;
+import com.fitplanner.authentication.token.ITokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,11 +22,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final ITokenRepository tokenRepository;
 
     @Autowired
-    public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService) {
+    public JwtAuthenticationFilter(
+        JwtService jwtService,
+        UserDetailsService userDetailsService,
+        ITokenRepository tokenRepository
+    ) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
+        this.tokenRepository = tokenRepository;
     }
 
     @Override
@@ -41,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // check if authentication token is missing
         if(authenticationHeader == null || !authenticationHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
-            throw new InvalidAuthenticationTokenException("Invalid authentication token.");
+            return;
         }
 
         jwt = authenticationHeader.substring(7); // index 7 because of 'Bearer '
@@ -51,7 +57,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            if(jwtService.isTokenValid(jwt, userDetails)) {
+            boolean isTokenValid = tokenRepository.findByToken(jwt)
+                .map(t -> !t.isExpired() && !t.isRevoked())
+                .orElse(false);
+
+            if(jwtService.isTokenValid(jwt, userDetails) && isTokenValid) {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,
