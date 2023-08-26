@@ -1,7 +1,6 @@
 package com.fitplanner.authentication.jwt;
 
 import com.fitplanner.authentication.exception.InvalidAuthenticationTokenException;
-import com.fitplanner.authentication.jwt.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
