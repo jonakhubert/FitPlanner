@@ -14,7 +14,7 @@ public class Token {
     private String token;
 
     @Enumerated(EnumType.STRING)
-    private final TokenType tokenType = TokenType.BEARER;
+    private TokenType tokenType = TokenType.BEARER;
 
     private boolean expired;
 
@@ -31,7 +31,7 @@ public class Token {
 
     public void setExpired(boolean expired) { this.expired = expired; }
     public void setRevoked(boolean revoked) { this.revoked = revoked; }
-    //public void setTokenType(TokenType tokenType) { this.tokenType = tokenType; }
+    public void setTokenType(TokenType tokenType) { this.tokenType = tokenType; }
     public boolean isExpired() { return expired; }
     public boolean isRevoked() { return revoked; }
 }
