@@ -16,22 +16,12 @@ public class Token {
     @Enumerated(EnumType.STRING)
     private TokenType tokenType = TokenType.BEARER;
 
-    private boolean expired;
-
-    private boolean revoked;
-
     private String userEmail;
 
-    public Token(String token, boolean expired, boolean revoked, String userEmail) {
+    public Token(String token, String userEmail) {
         this.token = token;
-        this.expired = expired;
-        this.revoked = revoked;
         this.userEmail = userEmail;
     }
 
-    public void setExpired(boolean expired) { this.expired = expired; }
-    public void setRevoked(boolean revoked) { this.revoked = revoked; }
     public void setTokenType(TokenType tokenType) { this.tokenType = tokenType; }
-    public boolean isExpired() { return expired; }
-    public boolean isRevoked() { return revoked; }
 }
