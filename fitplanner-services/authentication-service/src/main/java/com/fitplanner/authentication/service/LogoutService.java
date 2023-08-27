@@ -1,8 +1,7 @@
-package com.fitplanner.authentication.auth;
+package com.fitplanner.authentication.service;
 
-import com.fitplanner.authentication.exception.InvalidAuthenticationTokenException;
-import com.fitplanner.authentication.exception.TokenNotFoundException;
-import com.fitplanner.authentication.token.TokenRepository;
+import com.fitplanner.authentication.model.exception.TokenNotFoundException;
+import com.fitplanner.authentication.repository.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;

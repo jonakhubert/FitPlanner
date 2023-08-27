@@ -1,12 +1,14 @@
-package com.fitplanner.authentication.auth;
+package com.fitplanner.authentication.service;
 
-import com.fitplanner.authentication.exception.UserAlreadyExistException;
-import com.fitplanner.authentication.jwt.JwtService;
-import com.fitplanner.authentication.token.TokenRepository;
-import com.fitplanner.authentication.token.Token;
-import com.fitplanner.authentication.user.Role;
-import com.fitplanner.authentication.user.User;
-import com.fitplanner.authentication.user.UserRepository;
+import com.fitplanner.authentication.model.exception.UserAlreadyExistException;
+import com.fitplanner.authentication.model.api.AuthenticationRequest;
+import com.fitplanner.authentication.model.api.AuthenticationResponse;
+import com.fitplanner.authentication.model.api.RegisterRequest;
+import com.fitplanner.authentication.repository.TokenRepository;
+import com.fitplanner.authentication.model.token.Token;
+import com.fitplanner.authentication.model.user.Role;
+import com.fitplanner.authentication.model.user.User;
+import com.fitplanner.authentication.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

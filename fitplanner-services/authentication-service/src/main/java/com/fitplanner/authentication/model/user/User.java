@@ -1,4 +1,4 @@
-package com.fitplanner.authentication.user;
+package com.fitplanner.authentication.model.user;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

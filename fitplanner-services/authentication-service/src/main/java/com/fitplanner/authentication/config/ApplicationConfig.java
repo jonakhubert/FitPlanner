@@ -1,7 +1,7 @@
 package com.fitplanner.authentication.config;
 
-import com.fitplanner.authentication.exception.UserNotFoundException;
-import com.fitplanner.authentication.user.UserRepository;
+import com.fitplanner.authentication.model.exception.UserNotFoundException;
+import com.fitplanner.authentication.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

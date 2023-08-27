@@ -1,4 +1,4 @@
-package com.fitplanner.authentication.exception;
+package com.fitplanner.authentication.model.api;
 
 import java.time.LocalDateTime;
 

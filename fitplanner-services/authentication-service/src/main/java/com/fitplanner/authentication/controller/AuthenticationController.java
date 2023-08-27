@@ -1,5 +1,9 @@
-package com.fitplanner.authentication.auth;
+package com.fitplanner.authentication.controller;
 
+import com.fitplanner.authentication.model.api.AuthenticationRequest;
+import com.fitplanner.authentication.model.api.AuthenticationResponse;
+import com.fitplanner.authentication.service.AuthenticationService;
+import com.fitplanner.authentication.model.api.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

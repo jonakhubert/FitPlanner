@@ -1,5 +1,6 @@
-package com.fitplanner.authentication.token;
+package com.fitplanner.authentication.repository;
 
+import com.fitplanner.authentication.model.token.Token;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
