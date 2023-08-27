@@ -1,6 +1,6 @@
 package com.fitplanner.authentication.config;
 
-import com.fitplanner.authentication.model.exception.UserNotFoundException;
+import com.fitplanner.authentication.exception.model.UserNotFoundException;
 import com.fitplanner.authentication.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +26,7 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> userRepository.findByEmail(username)
-            .orElseThrow(() -> new UserNotFoundException(username + " not found."));
+            .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     @Bean
