@@ -2,7 +2,7 @@ package com.fitplanner.authentication.auth;
 
 import com.fitplanner.authentication.exception.UserAlreadyExistException;
 import com.fitplanner.authentication.jwt.JwtService;
-import com.fitplanner.authentication.token.ITokenRepository;
+import com.fitplanner.authentication.token.TokenRepository;
 import com.fitplanner.authentication.token.Token;
 import com.fitplanner.authentication.user.Role;
 import com.fitplanner.authentication.user.User;
@@ -14,13 +14,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class AuthenticationService {
 
     private final UserRepository userRepository;
-    private final ITokenRepository tokenRepository;
+    private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -28,7 +26,7 @@ public class AuthenticationService {
     @Autowired
     public AuthenticationService(
         UserRepository userRepository,
-        ITokenRepository tokenRepository,
+        TokenRepository tokenRepository,
         PasswordEncoder passwordEncoder,
         JwtService jwtService,
         AuthenticationManager authenticationManager
@@ -73,28 +71,18 @@ public class AuthenticationService {
 
         String jwt = jwtService.generateToken(user);
 
-        revokeAllUserTokens(user);
+        deleteUserToken(user);
         saveUserToken(jwt, user);
 
         return new AuthenticationResponse(jwt);
     }
 
     private void saveUserToken(String jwt, User user) {
-        Token token = new Token(jwt, false, false, user.getUsername());
+        Token token = new Token(jwt, user.getUsername());
         tokenRepository.save(token);
     }
 
-    private void revokeAllUserTokens(User user) {
-        List<Token> validUserTokens = tokenRepository.findAllValidTokensByUser(user.getUsername());
-
-        if(validUserTokens.isEmpty())
-            return;
-
-        validUserTokens.forEach(t -> {
-            t.setExpired(true);
-            t.setRevoked(true);
-        });
-
-        tokenRepository.saveAll(validUserTokens);
+    private void deleteUserToken(User user) {
+        tokenRepository.findByUserEmail(user.getUsername()).ifPresent(tokenRepository::delete);
     }
 }
