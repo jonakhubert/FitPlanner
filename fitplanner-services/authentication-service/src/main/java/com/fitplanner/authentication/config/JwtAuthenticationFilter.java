@@ -1,4 +1,4 @@
-package com.fitplanner.authentication.jwt;
+package com.fitplanner.authentication.config;
 
 import com.fitplanner.authentication.service.JwtService;
 import com.fitplanner.authentication.model.token.Token;
