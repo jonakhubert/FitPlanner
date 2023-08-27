@@ -1,6 +1,5 @@
 package com.fitplanner.authentication.service;
 
-import com.fitplanner.authentication.model.exception.TokenNotFoundException;
 import com.fitplanner.authentication.repository.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,9 +27,6 @@ public class LogoutService implements LogoutHandler {
            return;
 
         token = authHeader.substring(7);
-        var storedToken = tokenRepository.findByToken(token)
-            .orElseThrow(() -> new TokenNotFoundException("Token not found."));
-
-        tokenRepository.delete(storedToken);
+        tokenRepository.findByToken(token).ifPresent(tokenRepository::delete);
     }
 }
