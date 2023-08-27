@@ -1,8 +1,8 @@
-package com.fitplanner.authentication.config;
+package com.fitplanner.authentication.auth;
 
 import com.fitplanner.authentication.exception.InvalidAuthenticationTokenException;
 import com.fitplanner.authentication.exception.TokenNotFoundException;
-import com.fitplanner.authentication.token.ITokenRepository;
+import com.fitplanner.authentication.token.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class LogoutService implements LogoutHandler {
 
-    private final ITokenRepository tokenRepository;
+    private final TokenRepository tokenRepository;
 
     @Autowired
-    public LogoutService(ITokenRepository tokenRepository) {
+    public LogoutService(TokenRepository tokenRepository) {
         this.tokenRepository = tokenRepository;
     }
 
@@ -30,10 +30,8 @@ public class LogoutService implements LogoutHandler {
 
         token = authHeader.substring(7);
         var storedToken = tokenRepository.findByToken(token)
-            .orElseThrow(() -> new TokenNotFoundException("Token not found.")); // TODO: return null???
+            .orElseThrow(() -> new TokenNotFoundException("Token not found."));
 
-        storedToken.setExpired(true);
-        storedToken.setRevoked(true);
-        tokenRepository.save(storedToken);
+        tokenRepository.delete(storedToken);
     }
 }
