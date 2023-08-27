@@ -26,7 +26,7 @@ public class LogoutService implements LogoutHandler {
         final String token;
 
         if(authHeader == null || !authHeader.startsWith("Bearer "))
-            throw new InvalidAuthenticationTokenException("Invalid authentication token.");
+           return;
 
         token = authHeader.substring(7);
         var storedToken = tokenRepository.findByToken(token)
