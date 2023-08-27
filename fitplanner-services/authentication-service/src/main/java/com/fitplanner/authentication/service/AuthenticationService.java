@@ -1,6 +1,6 @@
 package com.fitplanner.authentication.service;
 
-import com.fitplanner.authentication.model.exception.UserAlreadyExistException;
+import com.fitplanner.authentication.exception.model.UserAlreadyExistException;
 import com.fitplanner.authentication.model.api.AuthenticationRequest;
 import com.fitplanner.authentication.model.api.AuthenticationResponse;
 import com.fitplanner.authentication.model.api.RegisterRequest;
@@ -12,7 +12,6 @@ import com.fitplanner.authentication.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -69,7 +68,7 @@ public class AuthenticationService {
         );
 
         User user = userRepository.findByEmail(authenticationRequest.email())
-            .orElseThrow(() -> new UsernameNotFoundException(authenticationRequest.email() + " not found."));
+            .orElseThrow();
 
         String jwt = jwtService.generateToken(user);
 
