@@ -1,4 +1,4 @@
-package com.fitplanner.authentication.model.exception;
+package com.fitplanner.authentication.exception.model;
 
 public class UserAlreadyExistException extends RuntimeException {
     public UserAlreadyExistException(String message) {

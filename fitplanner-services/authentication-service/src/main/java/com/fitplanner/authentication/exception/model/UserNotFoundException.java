@@ -1,4 +1,4 @@
-package com.fitplanner.authentication.model.exception;
+package com.fitplanner.authentication.exception.model;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException(String message) {
