@@ -12,6 +12,7 @@
   <name>fitplanner-services</name>
   <modules>
       <module>authentication-service</module>
+      <module>api-gateway</module>
   </modules>
 
   <properties>
