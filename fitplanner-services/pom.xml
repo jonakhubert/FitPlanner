@@ -20,6 +20,7 @@
     <maven.compiler.target>17</maven.compiler.target>
     <spring.boot.maven.plugin.version>3.1.2</spring.boot.maven.plugin.version>
     <spring.boot.dependencies.version>3.1.2</spring.boot.dependencies.version>
+    <spring.cloud.dependencies.version>2022.0.3</spring.cloud.dependencies.version>
   </properties>
 
   <dependencyManagement>
@@ -38,6 +39,13 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-dependencies</artifactId>
+      <version>${spring.cloud.dependencies.version}</version>
+      <scope>import</scope>
+      <type>pom</type>
     </dependency>
   </dependencies>
 
