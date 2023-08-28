@@ -4,6 +4,7 @@ import com.fitplanner.authentication.model.api.AuthenticationRequest;
 import com.fitplanner.authentication.model.api.AuthenticationResponse;
 import com.fitplanner.authentication.service.AuthenticationService;
 import com.fitplanner.authentication.model.api.RegisterRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,9 @@ public class AuthenticationController {
         path = "/register",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<AuthenticationResponse> register(
+        @Valid @RequestBody RegisterRequest registerRequest
+    ) {
         return ResponseEntity.ok(authenticationService.register(registerRequest));
     }
 
@@ -35,7 +38,9 @@ public class AuthenticationController {
         path = "/authenticate",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
+    public ResponseEntity<AuthenticationResponse> authenticate(
+        @Valid @RequestBody AuthenticationRequest authenticationRequest
+    ) {
         return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
     }
 }
