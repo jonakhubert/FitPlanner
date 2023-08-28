@@ -5,7 +5,18 @@ eureka:
   client:
     register-with-eureka: false
 
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: gateway
+
 spring:
+  main:
+    allow-bean-definition-overriding: true
   cloud:
     gateway:
       discovery:
@@ -13,6 +24,6 @@ spring:
           enabled: true
       routes:
         - id: authentication-service
-          uri: lb://authentication-service
+          uri: http://localhost:8090
           predicates:
             - Path=/api/auth/**
