@@ -1,4 +1,4 @@
-package com.fitplanner.authentication.jwt;
+package com.fitplanner.authentication.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

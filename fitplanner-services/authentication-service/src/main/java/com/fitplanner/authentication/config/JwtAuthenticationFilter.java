@@ -1,6 +1,8 @@
-package com.fitplanner.authentication.jwt;
+package com.fitplanner.authentication.config;
 
-import com.fitplanner.authentication.jwt.JwtService;
+import com.fitplanner.authentication.service.JwtService;
+import com.fitplanner.authentication.model.token.Token;
+import com.fitplanner.authentication.repository.TokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,11 +24,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final TokenRepository tokenRepository;
 
     @Autowired
-    public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService) {
+    public JwtAuthenticationFilter(
+        JwtService jwtService,
+        UserDetailsService userDetailsService,
+        TokenRepository tokenRepository
+    ) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
+        this.tokenRepository = tokenRepository;
     }
 
     @Override
@@ -51,7 +59,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            if(jwtService.isTokenValid(jwt, userDetails)) {
+            Token token = tokenRepository.findByToken(jwt)
+                .orElse(null);
+
+            if(jwtService.isTokenValid(jwt, userDetails) && token != null) {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,

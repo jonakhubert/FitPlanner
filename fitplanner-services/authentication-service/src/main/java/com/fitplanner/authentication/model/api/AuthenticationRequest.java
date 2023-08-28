@@ -1,4 +1,4 @@
-package com.fitplanner.authentication.auth;
+package com.fitplanner.authentication.model.api;
 
 import jakarta.validation.constraints.NotNull;
 

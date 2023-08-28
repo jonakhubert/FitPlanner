@@ -1,4 +1,4 @@
-package com.fitplanner.authentication.user;
+package com.fitplanner.authentication.model.user;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Document(value = "users")
-public class User implements UserDetails{
+public class User implements UserDetails {
 
     @Id
     private String id;
