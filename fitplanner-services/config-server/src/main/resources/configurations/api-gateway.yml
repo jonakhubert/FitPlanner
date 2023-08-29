@@ -5,18 +5,7 @@ eureka:
   client:
     register-with-eureka: false
 
-management:
-  endpoint:
-    gateway:
-      enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: gateway
-
 spring:
-  main:
-    allow-bean-definition-overriding: true
   cloud:
     gateway:
       discovery:
