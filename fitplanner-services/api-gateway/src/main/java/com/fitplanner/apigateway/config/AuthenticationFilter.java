@@ -15,7 +15,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
     @Autowired
     public AuthenticationFilter(WebClient.Builder webClientBuilder) {
-        super(Config.classcd );
+        super(Config.class);
         this.webClientBuilder = webClientBuilder;
     }
 
