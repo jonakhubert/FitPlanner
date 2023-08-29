@@ -43,7 +43,9 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
     }
 
-    @PostMapping("/validate-token")
+    @PostMapping(
+        path = "/validate-token"
+    )
     public ResponseEntity<Void> validateToken(
         @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
     ) {
