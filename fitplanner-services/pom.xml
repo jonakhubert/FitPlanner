@@ -13,8 +13,9 @@
   <modules>
       <module>authentication-service</module>
       <module>api-gateway</module>
-    <module>discovery-server</module>
-    <module>config-server</module>
+      <module>discovery-server</module>
+      <module>config-server</module>
+      <module>nutrition-service</module>
   </modules>
 
   <properties>
