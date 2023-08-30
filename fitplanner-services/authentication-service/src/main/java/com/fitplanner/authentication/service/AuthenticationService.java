@@ -78,6 +78,10 @@ public class AuthenticationService {
         return new AuthenticationResponse(jwt);
     }
 
+    public boolean isTokenValid(String token) {
+        return tokenRepository.findByToken(token).isPresent();
+    }
+
     private void saveUserToken(String jwt, User user) {
         Token token = new Token(jwt, user.getUsername());
         tokenRepository.save(token);
