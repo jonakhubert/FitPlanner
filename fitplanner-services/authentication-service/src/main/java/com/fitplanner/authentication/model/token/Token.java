@@ -26,6 +26,8 @@ public class Token {
         this.userEmail = userEmail;
     }
 
+    public Token() {}
+
     public void setTokenType(TokenType tokenType) { this.tokenType = tokenType; }
 
     @Override
