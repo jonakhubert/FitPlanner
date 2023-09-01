@@ -3,7 +3,6 @@ package com.fitplanner.authentication.repository;
 import com.fitplanner.authentication.MongoDBContainerConfig;
 import com.fitplanner.authentication.model.user.Role;
 import com.fitplanner.authentication.model.user.User;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -21,22 +20,16 @@ public class UserRepositoryTest {
     @Autowired
     UserRepository underTest;
 
-    private User user;
-
-    @BeforeEach
-    public void beforeEach() {
-       user = new User(
+    @Test
+    public void shouldReturnUserWhenExistingEmailIsProvided() {
+        // given
+        String email = "johnsmith@gmail.com";
+        User user = new User(
             "John", "Smith",
-            "johnsmith@gmail.com",
+            email,
             "1234",
             Role.USER
         );
-    }
-
-    @Test
-    public void shouldReturnExistingUserWhenExistingEmailIsProvided() {
-        // given
-        String email = "johnsmith@gmail.com";
         underTest.save(user);
 
         // when
