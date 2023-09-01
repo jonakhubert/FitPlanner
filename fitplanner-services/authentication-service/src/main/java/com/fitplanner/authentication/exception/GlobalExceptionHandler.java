@@ -1,5 +1,6 @@
 package com.fitplanner.authentication.exception;
 
+import com.fitplanner.authentication.exception.model.InvalidEmailFormatException;
 import com.fitplanner.authentication.exception.model.UserAlreadyExistException;
 import com.fitplanner.authentication.exception.model.UserNotFoundException;
 import com.fitplanner.authentication.model.api.ApiError;
@@ -96,6 +97,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleMethodArgumentNotValidException(
         MethodArgumentNotValidException ex,
+        HttpServletRequest request
+    ) {
+        ApiError apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidEmailFormatException.class)
+    public ResponseEntity<ApiError> handleInvalidEmailFormatException(
+        InvalidEmailFormatException ex,
         HttpServletRequest request
     ) {
         ApiError apiError = new ApiError(
