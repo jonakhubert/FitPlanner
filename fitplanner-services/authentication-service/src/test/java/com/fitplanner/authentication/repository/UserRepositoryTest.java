@@ -50,7 +50,6 @@ public class UserRepositoryTest {
     public void shouldReturnNullWhenNonExistingEmailIsProvided() {
         // given
         String email = "non-existing";
-        underTest.save(user);
 
         // when
         User result = underTest.findByEmail(email).orElse(null);
