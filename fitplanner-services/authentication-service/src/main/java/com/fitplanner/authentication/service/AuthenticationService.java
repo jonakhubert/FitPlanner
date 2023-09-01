@@ -1,5 +1,6 @@
 package com.fitplanner.authentication.service;
 
+import com.fitplanner.authentication.exception.model.InvalidEmailFormatException;
 import com.fitplanner.authentication.exception.model.UserAlreadyExistException;
 import com.fitplanner.authentication.model.api.AuthenticationRequest;
 import com.fitplanner.authentication.model.api.AuthenticationResponse;
@@ -14,6 +15,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.regex.Pattern;
 
 @Service
 public class AuthenticationService {
@@ -40,6 +43,9 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse register(RegisterRequest registerRequest) {
+        if(!isEmailValid(registerRequest.email()))
+            throw new InvalidEmailFormatException(registerRequest.email() + " format is invalid.");
+
         if(userRepository.findByEmail(registerRequest.email()).isPresent())
             throw new UserAlreadyExistException(registerRequest.email() + " already exist.");
 
@@ -60,6 +66,9 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
+        if(!isEmailValid(authenticationRequest.email()))
+            throw new InvalidEmailFormatException(authenticationRequest.email() + " format is invalid.");
+
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 authenticationRequest.email(),
@@ -89,5 +98,14 @@ public class AuthenticationService {
 
     private void deleteUserToken(User user) {
         tokenRepository.findByUserEmail(user.getUsername()).ifPresent(tokenRepository::delete);
+    }
+
+    private boolean isEmailValid(String email) {
+        String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+            + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+
+        return Pattern.compile(regexPattern)
+            .matcher(email)
+            .matches();
     }
 }
