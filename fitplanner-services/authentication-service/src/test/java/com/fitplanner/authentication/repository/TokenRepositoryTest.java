@@ -19,7 +19,7 @@ public class TokenRepositoryTest {
     private TokenRepository underTest;
 
     @Test
-    public void shouldReturnTokenWhenExistingTokenIsProvided() {
+    public void findByToken_ExistingAccessToken_AccessToken() {
         // given
         String validToken = "john-token";
         Token token = new Token(
@@ -36,7 +36,7 @@ public class TokenRepositoryTest {
     }
 
     @Test
-    public void shouldReturnNullWhenNonExistingTokenIsProvided() {
+    public void findByToken_NonExistingAccessToken_Null() {
         // given
         String invalidToken = "invalid-token";
 
@@ -48,7 +48,7 @@ public class TokenRepositoryTest {
     }
 
     @Test
-    public void shouldReturnTokenWhenExistingUserEmailIsProvided() {
+    public void findByUserEmail_ExistingUserEmail_AccessToken() {
         // given
         String email = "emmabrown@gmail.com";
         Token token = new Token(
@@ -65,7 +65,7 @@ public class TokenRepositoryTest {
     }
 
     @Test
-    public void shouldReturnNullWhenNonExistingUserEmailIsProvided() {
+    public void findByUserEmail_NonExistingUserEmail_Null() {
         // given
         String email = "invalid";
 

@@ -34,7 +34,7 @@ public class LogoutServiceTest {
     private LogoutService underTest;
 
     @Test
-    public void shouldDeleteTokenWhenValidAuthorizationHeaderIsPresent() {
+    public void logout_ValidAuthorizationHeader_DeleteAccessToken() {
         // given
         String validToken = "validToken";
         String authHeader = "Bearer " + validToken;
@@ -50,7 +50,7 @@ public class LogoutServiceTest {
     }
 
     @Test
-    public void shouldNotDeleteTokenWhenAuthorizationHeaderIsNotPresent() {
+    public void logout_NoAuthorizationHeader_NoAccessTokenRemoval() {
         // given
         when(request.getHeader("Authorization")).thenReturn(null);
 
@@ -62,7 +62,7 @@ public class LogoutServiceTest {
     }
 
     @Test
-    public void shouldNotDeleteTokenWhenInvalidAuthorizationHeaderIsPresent() {
+    public void logout_InvalidAuthorizationHeader_NoAccessTokenRemoval() {
         // given
         String invalidToken = "invalidToken";
         String authHeader = "Invalid " + invalidToken;

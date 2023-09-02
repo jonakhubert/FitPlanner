@@ -21,7 +21,7 @@ public class UserRepositoryTest {
     UserRepository underTest;
 
     @Test
-    public void shouldReturnUserWhenExistingEmailIsProvided() {
+    public void findByEmail_ExistingEmail_User() {
         // given
         String email = "johnsmith@gmail.com";
         User user = new User(
@@ -40,7 +40,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void shouldReturnNullWhenNonExistingEmailIsProvided() {
+    public void findByEmail_NonExistingEmail_Null() {
         // given
         String email = "non-existing";
 
