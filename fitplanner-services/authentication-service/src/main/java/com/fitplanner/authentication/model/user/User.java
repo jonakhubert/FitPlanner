@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Document(value = "users")
 public class User implements UserDetails {
@@ -35,6 +36,8 @@ public class User implements UserDetails {
         this.password = password;
         this.role = role;
     }
+
+    public User() {}
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -76,4 +79,24 @@ public class User implements UserDetails {
     public void setUsername(String email) { this.email = email; }
     public void setPassword(String password) { this.password = password; }
     public void setRole(Role role) { this.role = role; }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == this)
+            return true;
+        if(!(o instanceof User other))
+            return false;
+
+        return  Objects.equals(id, other.id) &&
+                Objects.equals(firstName, other.firstName) &&
+                Objects.equals(lastName, other.lastName) &&
+                Objects.equals(email, other.email) &&
+                Objects.equals(password, other.password) &&
+                Objects.equals(role, other.role);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, email, password, role);
+    }
 }
