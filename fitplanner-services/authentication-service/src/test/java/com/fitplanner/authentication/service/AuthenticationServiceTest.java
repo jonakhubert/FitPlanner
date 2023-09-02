@@ -21,8 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
 import static org.junit.Assert.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -49,7 +48,7 @@ public class AuthenticationServiceTest {
     private AuthenticationService underTest;
 
     @Test
-    public void shouldReturnAuthenticationResponseWithAccessTokenWhenValidRegisterRequestIsProvided() {
+    public void register_ValidRegisterRequest_AuthenticationResponseWithAccessToken() {
         // given
         RegisterRequest registerRequest = new RegisterRequest("any", "any", "valid@gmail.com", "any");
 
@@ -67,11 +66,11 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    public void shouldThrowInvalidEmailFormatExceptionWhenRegisterRequestWithInvalidEmailIsProvided() {
+    public void register_RegisterRequestWithInvalidEmail_InvalidEmailFormatException() {
         // given
         RegisterRequest registerRequest = new RegisterRequest("any", "any", "invalid", "any");
 
-        // when & then
+        // then
         assertThrows(InvalidEmailFormatException.class, () -> underTest.register(registerRequest));
         verify(userRepository, never()).save(any());
         verify(tokenRepository, never()).save(any(Token.class));
@@ -79,13 +78,13 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    public void shouldThrowUserAlreadyExistExceptionWhenRegisterRequestWithExistingEmailIsProvided() {
+    public void register_RegisterRequestWithExistingEmail_UserAlreadyExistException() {
         // given
         RegisterRequest registerRequest = new RegisterRequest("any", "any", "existing@gmail.com", "any");
 
         when(userRepository.findByEmail(registerRequest.email())).thenReturn(Optional.of(new User()));
 
-        // when & then
+        // then
         assertThrows(UserAlreadyExistException.class, () -> underTest.register(registerRequest));
         verify(userRepository, never()).save(any());
         verify(tokenRepository, never()).save(any(Token.class));
@@ -93,7 +92,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    public void shouldReturnAuthenticationResponseWithAccessTokenWhenValidAuthenticationRequestIsProvided() {
+    public void authenticate_ValidAuthenticationRequest_AuthenticationResponseWithAccessToken() {
         // given
         AuthenticationRequest authenticationRequest = new AuthenticationRequest("any@email.com", "any");
 
@@ -113,11 +112,11 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    public void shouldThrowInvalidEmailFormatExceptionWhenAuthenticationRequestWithInvalidEmailIsProvided() {
+    public void authenticate_AuthenticateRequestWithInvalidEmail_InvalidEmailFormatException() {
         // given
         AuthenticationRequest authenticationRequest = new AuthenticationRequest("invalid", "any");
 
-        // when & then
+        // then
         assertThrows(InvalidEmailFormatException.class, () -> underTest.authenticate(authenticationRequest));
         verify(authenticationManager, never()).authenticate(any());
         verify(userRepository, never()).findByEmail(anyString());
@@ -128,16 +127,46 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    public void shouldThrowUserNotFoundExceptionWhenAuthenticationRequestWithNonExistingEmailIsProvided() {
+    public void authenticate_AuthenticationRequestWithNonExistingEmail_UserNotFoundException() {
         // given
         AuthenticationRequest authenticationRequest = new AuthenticationRequest("any@gmail.com", "any");
 
-        // when & then
+        // then
         assertThrows(UserNotFoundException.class, () -> underTest.authenticate(authenticationRequest));
         verify(authenticationManager, never()).authenticate(any());
         verify(jwtService, never()).generateToken(any(User.class));
         verify(tokenRepository, never()).save((any(Token.class)));
         verify(tokenRepository, never()).findByUserEmail(anyString());
         verify(tokenRepository, never()).delete(any(Token.class));
+    }
+
+    @Test
+    public void isTokenValid_ValidToken_True() {
+        // given
+        String token = "valid-token";
+
+        when(tokenRepository.findByToken(token)).thenReturn(Optional.of(new Token()));
+
+        // when
+        boolean response = underTest.isTokenValid(token);
+
+        // then
+        assertTrue(response);
+        verify(tokenRepository, times(1)).findByToken(anyString());
+    }
+
+    @Test
+    public void isTokenValid_InvalidToken_False() {
+        // given
+        String token = "invalid-token";
+
+        when(tokenRepository.findByToken(token)).thenReturn(Optional.empty());
+
+        // when
+        boolean response = underTest.isTokenValid(token);
+
+        // then
+        assertFalse(response);
+        verify(tokenRepository, times(1)).findByToken(anyString());
     }
 }
