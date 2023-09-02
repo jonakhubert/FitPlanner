@@ -71,7 +71,7 @@ public class AuthenticationService {
             throw new InvalidEmailFormatException(authenticationRequest.email() + " format is invalid.");
 
         User user = userRepository.findByEmail(authenticationRequest.email())
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found."));
 
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(

@@ -49,10 +49,10 @@ public class AuthenticationController {
     public ResponseEntity<Void> validateToken(
         @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
     ) {
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
 
-            if (authenticationService.isTokenValid(token))
+            if(authenticationService.isTokenValid(token))
                 return ResponseEntity.ok().build();
         }
 
