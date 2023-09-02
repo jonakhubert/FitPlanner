@@ -1,9 +1,12 @@
 package com.fitplanner.authentication.model.token;
 
+import com.fitplanner.authentication.model.user.User;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Objects;
 
 @Document(value = "tokens")
 public class Token {
@@ -23,5 +26,25 @@ public class Token {
         this.userEmail = userEmail;
     }
 
+    public Token() {}
+
     public void setTokenType(TokenType tokenType) { this.tokenType = tokenType; }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == this)
+            return true;
+        if(!(o instanceof Token other))
+            return false;
+
+        return  Objects.equals(id, other.id) &&
+                Objects.equals(token, other.token) &&
+                Objects.equals(tokenType, other.tokenType) &&
+                Objects.equals(userEmail, other.userEmail);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, token, tokenType, userEmail);
+    }
 }
