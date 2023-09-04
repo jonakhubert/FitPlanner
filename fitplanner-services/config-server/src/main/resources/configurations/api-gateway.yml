@@ -22,3 +22,9 @@ spring:
             - Path=/api/nutrition/**
           filters:
             - name: AuthenticationFilter
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
