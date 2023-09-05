@@ -1,12 +1,11 @@
 package com.fitplanner.authentication.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fitplanner.authentication.config.JwtAuthenticationFilter;
 import com.fitplanner.authentication.config.SecurityConfig;
 import com.fitplanner.authentication.exception.model.InvalidEmailFormatException;
 import com.fitplanner.authentication.exception.model.UserAlreadyExistException;
 import com.fitplanner.authentication.exception.model.UserNotFoundException;
-import com.fitplanner.authentication.model.api.AuthenticationRequest;
+import com.fitplanner.authentication.model.api.LoginRequest;
 import com.fitplanner.authentication.model.api.AuthenticationResponse;
 import com.fitplanner.authentication.model.api.RegisterRequest;
 import com.fitplanner.authentication.repository.TokenRepository;
@@ -188,15 +187,15 @@ public class AuthenticationControllerTest {
     @Test
     public void authenticate_ValidAuthenticateRequest_AuthenticationResponseWithAccessToken() throws Exception {
         // given
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest("any@gmail.com", "any");
+        LoginRequest loginRequest = new LoginRequest("any@gmail.com", "any");
         AuthenticationResponse authenticationResponse = new AuthenticationResponse("token");
 
-        when(authenticationService.authenticate(authenticationRequest)).thenReturn(authenticationResponse);
+        when(authenticationService.login(loginRequest)).thenReturn(authenticationResponse);
 
         // then
-        mockMvc.perform(post("/api/auth/authenticate")
+        mockMvc.perform(post("/api/auth/login")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(authenticationRequest)))
+            .content(objectMapper.writeValueAsString(loginRequest)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.access_token").value("token"));
     }
@@ -204,12 +203,12 @@ public class AuthenticationControllerTest {
     @Test
     public void authenticate_AuthenticateRequestWithEmptyEmail_ApiErrorWithStatus400() throws Exception {
         // given
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest("", "any");
+        LoginRequest loginRequest = new LoginRequest("", "any");
 
         // then
-        mockMvc.perform(post("/api/auth/authenticate")
+        mockMvc.perform(post("/api/auth/login")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(authenticationRequest)))
+            .content(objectMapper.writeValueAsString(loginRequest)))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.statusCode").value(400));
     }
@@ -217,12 +216,12 @@ public class AuthenticationControllerTest {
     @Test
     public void authenticate_AuthenticateRequestWithEmptyPassword_ApiErrorWithStatus400() throws Exception {
         // given
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest("any@gmail.com", "");
+        LoginRequest loginRequest = new LoginRequest("any@gmail.com", "");
 
         // then
-        mockMvc.perform(post("/api/auth/authenticate")
+        mockMvc.perform(post("/api/auth/login")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(authenticationRequest)))
+            .content(objectMapper.writeValueAsString(loginRequest)))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.statusCode").value(400));
     }
@@ -230,16 +229,16 @@ public class AuthenticationControllerTest {
     @Test
     public void authenticate_AuthenticateRequestWithInvalidEmailFormat_ApiErrorWithStatus400() throws Exception {
         // given
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest("invalid-format", "any");
-        String message = authenticationRequest.email() + " format is invalid.";
+        LoginRequest loginRequest = new LoginRequest("invalid-format", "any");
+        String message = loginRequest.email() + " format is invalid.";
 
-        when(authenticationService.authenticate(authenticationRequest))
+        when(authenticationService.login(loginRequest))
                 .thenThrow(new InvalidEmailFormatException(message));
 
         // then
-        mockMvc.perform(post("/api/auth/authenticate")
+        mockMvc.perform(post("/api/auth/login")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(authenticationRequest)))
+            .content(objectMapper.writeValueAsString(loginRequest)))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.statusCode").value(400))
             .andExpect(jsonPath("$.message").value(message));
@@ -248,13 +247,13 @@ public class AuthenticationControllerTest {
     @Test
     public void authenticate_AuthenticationRequestInUnsupportedMediaType_ApiErrorWithStatus415() throws Exception {
         // given
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest("any@gmail.com", "any");
+        LoginRequest loginRequest = new LoginRequest("any@gmail.com", "any");
         String message = "Content-Type 'text/plain;charset=UTF-8' is not supported";
 
         // then
-        mockMvc.perform(post("/api/auth/authenticate")
+        mockMvc.perform(post("/api/auth/login")
             .contentType(MediaType.TEXT_PLAIN_VALUE)
-            .content(objectMapper.writeValueAsString(authenticationRequest)))
+            .content(objectMapper.writeValueAsString(loginRequest)))
             .andExpect(status().isUnsupportedMediaType())
             .andExpect(jsonPath("$.statusCode").value(415))
             .andExpect(jsonPath("$.message").value(message));
@@ -263,15 +262,15 @@ public class AuthenticationControllerTest {
     @Test
     public void authenticate_AuthenticationRequestWithNonExistingEmail_ApiErrorWithStatus404() throws Exception {
         // given
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest("non-existing@gmail.com", "any");
+        LoginRequest loginRequest = new LoginRequest("non-existing@gmail.com", "any");
         String message = "User not found.";
 
-        when(authenticationService.authenticate(authenticationRequest)).thenThrow(new UserNotFoundException(message));
+        when(authenticationService.login(loginRequest)).thenThrow(new UserNotFoundException(message));
 
         // then
-        mockMvc.perform(post("/api/auth/authenticate")
+        mockMvc.perform(post("/api/auth/login")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(authenticationRequest)))
+            .content(objectMapper.writeValueAsString(loginRequest)))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.statusCode").value(404))
             .andExpect(jsonPath("$.message").value(message));

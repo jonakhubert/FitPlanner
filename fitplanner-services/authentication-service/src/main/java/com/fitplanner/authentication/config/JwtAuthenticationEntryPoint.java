@@ -22,10 +22,10 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         AuthenticationException authException
     ) throws IOException {
         ApiError apiError = new ApiError(
-                request.getRequestURI(),
-                authException.getMessage(),
-                HttpStatus.UNAUTHORIZED.value(),
-                LocalDateTime.now().toString()
+            request.getRequestURI(),
+            authException.getMessage(),
+            HttpStatus.UNAUTHORIZED.value(),
+            LocalDateTime.now().toString()
         );
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());

@@ -3,7 +3,7 @@ package com.fitplanner.authentication.service;
 import com.fitplanner.authentication.exception.model.InvalidEmailFormatException;
 import com.fitplanner.authentication.exception.model.UserAlreadyExistException;
 import com.fitplanner.authentication.exception.model.UserNotFoundException;
-import com.fitplanner.authentication.model.api.AuthenticationRequest;
+import com.fitplanner.authentication.model.api.LoginRequest;
 import com.fitplanner.authentication.model.api.AuthenticationResponse;
 import com.fitplanner.authentication.model.api.RegisterRequest;
 import com.fitplanner.authentication.repository.TokenRepository;
@@ -66,17 +66,17 @@ public class AuthenticationService {
         return new AuthenticationResponse(jwt);
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
-        if(!isEmailValid(authenticationRequest.email()))
-            throw new InvalidEmailFormatException(authenticationRequest.email() + " format is invalid.");
+    public AuthenticationResponse login(LoginRequest loginRequest) {
+        if(!isEmailValid(loginRequest.email()))
+            throw new InvalidEmailFormatException(loginRequest.email() + " format is invalid.");
 
-        User user = userRepository.findByEmail(authenticationRequest.email())
+        User user = userRepository.findByEmail(loginRequest.email())
                 .orElseThrow(() -> new UserNotFoundException("User not found."));
 
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
-                authenticationRequest.email(),
-                authenticationRequest.password()
+                loginRequest.email(),
+                loginRequest.password()
             )
         );
 
