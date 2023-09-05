@@ -5,36 +5,52 @@
         <div class="card" style="border-radius: 15px;">
           <div class="card-body p-5">
             <h2 class="text-uppercase text-center mb-5">Create an account</h2>
-            <form [formGroup]="registerForm">
+            
+            <div *ngIf="message">
+              <div class="alert alert-danger" role="alert">
+                {{ message }}
+              </div>
+            </div>
+            
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+              
               <div class="form-outline mb-4">
-                <input type="text" class="form-control form-control-lg" formControlName="firstName" required/>
+                <input type="text" class="form-control form-control-lg" formControlName="firstName" [ngClass]="{'is-invalid': submitted && registerForm.controls['firstName'].errors}"/>
                 <label class="form-label" for="form3Example1cg">First Name</label>
               </div>
+              
               <div class="form-outline mb-4">
-                <input type="text" class="form-control form-control-lg" formControlName="lastName" required/>
+                <input type="text" class="form-control form-control-lg" formControlName="lastName" [ngClass]="{'is-invalid': submitted && registerForm.controls['lastName'].errors}"/>
                 <label class="form-label" for="form3Example1cg">Last Name</label>
               </div>
+
               <div class="form-outline mb-4">
-                <input type="email" class="form-control form-control-lg" formControlName="email" required/>
+                <input type="email" class="form-control form-control-lg" formControlName="email" [ngClass]="{'is-invalid': submitted && registerForm.controls['email'].errors}"/>
                 <label class="form-label" for="form3Example3cg">Email Address</label>
+                <div *ngIf="submitted && registerForm.controls['email'].errors" class="text-danger">
+                  <div *ngIf="registerForm.controls['email'].errors['pattern']">Email is not valid</div>
+                </div>
               </div>
+
               <div class="form-outline mb-4">
-                <input type="password" class="form-control form-control-lg" formControlName="password" required/>
+                <input type="password" class="form-control form-control-lg" formControlName="password" [ngClass]="{'is-invalid': submitted && registerForm.controls['password'].errors}"/>
                 <label class="form-label" for="form3Example4cg">Password</label>
+                <div *ngIf="submitted && registerForm.controls['password'].errors" class="text-danger">
+                  <div *ngIf="registerForm.controls['password'].errors['minlength']">Password should be at least 6 characters</div>
+                </div>
               </div>
-              <div class="form-outline mb-4">
-                <input type="password" class="form-control form-control-lg" formControlName="confirmPassword" required/>
-                <label class="form-label" for="form3Example4cdg">Repeat your password</label>
-              </div>
+
               <div class="d-flex justify-content-center">
-                <button type="button" class="btn btn-primary btn-lg" (click)="register()" [disabled]="registerForm.invalid">
+                <button type="sumbit" class="btn btn-primary btn-lg">
                   Register
                 </button>
               </div>
+
               <p class="text-center text-muted mt-5 mb-0">
                 Already a member?
                 <a class="fw-bold text-body" href="/login">Login here</a>
               </p>
+
             </form>
           </div>
         </div>

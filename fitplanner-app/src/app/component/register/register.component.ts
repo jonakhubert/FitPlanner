@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RegisterRequest } from 'src/app/interface/register-request';
 import { AuthenticationService } from 'src/app/service/authentication.service';
 
 @Component({
@@ -10,7 +9,9 @@ import { AuthenticationService } from 'src/app/service/authentication.service';
 })
 export class RegisterComponent {
   
-  public registerForm!: FormGroup;
+  registerForm!: FormGroup;
+  submitted = false;
+  message = '';
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -19,37 +20,31 @@ export class RegisterComponent {
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', Validators.required],
-      password: ['', Validators.required],
-      confirmPassword: ['', Validators.required]
-    }, { validator: this.confirmationValidator })
-  }
-
-  private confirmationValidator(formGroup: FormGroup) {
-    const password = formGroup.get('password')?.value;
-    const confirmPassword = formGroup.get('confirmPassword')?.value;
-
-    if(password !== confirmPassword)
-      formGroup.get('confirmPassword')?.setErrors({ passwordMismatch: true });
-    else
-      formGroup.get('confirmPassword')?.setErrors(null);
-  }
-
-  private extractRegisterRequest(formGroup: FormGroup): RegisterRequest {
-    return {
-      firstName: this.registerForm.get('firstName')?.value,
-      lastName: this.registerForm.get('lastName')?.value,
-      email: this.registerForm.get('email')?.value,
-      password: this.registerForm.get('password')?.value,
-    };
-  }
-
-  public register() {
-    console.log(this.registerForm?.value);
-    this.authenticationService.register(this.extractRegisterRequest(this.registerForm)).subscribe((response) => {
-      console.log(response);
+      firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
+      lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
+      email: ['', [Validators.required, Validators.pattern("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+      + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
     })
+  }
+
+  onSubmit() {
+    this.submitted = true;
+
+    if(this.registerForm.invalid) {
+      return;
+    }
+
+    this.authenticationService.register(this.registerForm.value).subscribe(
+    {
+      next: (response) => {
+        console.log(response);
+      },
+      error: (error) => {
+        if(error.statusCode === 409) {
+          this.message = this.registerForm.get('email')?.value + " already exists in database.";
+        }
+      }
+    });
   }
 }
