@@ -1,1 +1,7 @@
 @import "../node_modules/bootstrap/scss/bootstrap";
+
+body {
+    background: rgb(0,129,255);
+    background: radial-gradient(circle, rgba(0,129,255,1) 0%, rgba(0,0,0,1) 100%);
+    color: white;
+}
