@@ -4,7 +4,7 @@ import { Observable, catchError, tap } from 'rxjs';
 import { RegisterRequest } from '../interface/register-request';
 import { AuthenticationResponse } from '../interface/authentication-response';
 import { LoginRequest } from '../interface/login-request';
-import { ApiError } from '../interface/api-error';
+import { ApiError } from '../../interface/api-error';
 
 @Injectable({
   providedIn: 'root'
