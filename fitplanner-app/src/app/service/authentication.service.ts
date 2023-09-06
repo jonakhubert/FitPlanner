@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, tap, throwError } from 'rxjs';
 import { RegisterRequest } from '../interface/register-request';
 import { AuthenticationResponse } from '../interface/authentication-response';
 import { LoginRequest } from '../interface/login-request';
@@ -20,6 +20,10 @@ export class AuthenticationService {
       .pipe(
         catchError((error: HttpErrorResponse) => {
           throw this.buildApiError(error);
+        }),
+        tap((response: AuthenticationResponse) => {
+          localStorage.setItem('userEmail', request.email);
+          localStorage.setItem('token', response.access_token);
         })
       );
   }
@@ -29,6 +33,10 @@ export class AuthenticationService {
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw this.buildApiError(error);
+      }),
+      tap((response: AuthenticationResponse) => {
+        localStorage.setItem('userEmail', request.email);
+        localStorage.setItem('token', response.access_token);
       })
     );
   }
