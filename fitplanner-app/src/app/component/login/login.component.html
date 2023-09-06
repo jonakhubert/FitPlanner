@@ -1,4 +1,4 @@
-<div class="mask d-flex align-items-center h-100" style="margin-top: 20px;">
+<div class="mask d-flex align-items-center">
     <div class="container h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12 col-md-9 col-lg-7 col-xl-6">
@@ -15,16 +15,14 @@
               <form form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
                 <div class="form-outline mb-4">
-                  <input type="email" class="form-control form-control-lg" formControlName="email" [ngClass]="{'is-invalid': submitted && loginForm.controls['email'].errors}"/>
-                  <label class="form-label" for="form3Example3cg">Email Address</label>
+                  <input type="email" placeholder="Email Address" class="form-control form-control-lg" formControlName="email" [ngClass]="{'is-invalid': submitted && loginForm.controls['email'].errors}"/>
                   <div *ngIf="submitted && loginForm.controls['email'].errors" class="text-danger">
                     <div *ngIf="loginForm.controls['email'].errors['pattern']">Email is not valid</div>
                   </div>
                 </div>
 
                 <div class="form-outline mb-4">
-                  <input type="password" class="form-control form-control-lg" formControlName="password" [ngClass]="{'is-invalid': submitted && loginForm.controls['password'].errors}"/>
-                  <label class="form-label" for="form3Example4cg">Password</label>
+                  <input type="password" placeholder="Password" class="form-control form-control-lg" formControlName="password" [ngClass]="{'is-invalid': submitted && loginForm.controls['password'].errors}"/>
                 </div>
 
                 <div class="d-flex justify-content-center">
@@ -35,7 +33,7 @@
 
                 <p class="text-center text-muted mt-5 mb-0">
                   Not a member?
-                  <a class="fw-bold text-body" href="/register">Register here</a>
+                  <a class="fw-bold text-body" routerLink="/register">Register here</a>
                 </p>
 
               </form>
@@ -44,4 +42,4 @@
         </div>
       </div>
     </div>
-  </div>
+</div>
