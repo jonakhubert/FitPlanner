@@ -1,6 +1,6 @@
 package com.fitplanner.authentication.controller;
 
-import com.fitplanner.authentication.model.api.AuthenticationRequest;
+import com.fitplanner.authentication.model.api.LoginRequest;
 import com.fitplanner.authentication.model.api.AuthenticationResponse;
 import com.fitplanner.authentication.service.AuthenticationService;
 import com.fitplanner.authentication.model.api.RegisterRequest;
@@ -34,13 +34,13 @@ public class AuthenticationController {
     }
 
     @PostMapping(
-        path = "/authenticate",
+        path = "/login",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<AuthenticationResponse> authenticate(
-        @Valid @RequestBody AuthenticationRequest authenticationRequest
+    public ResponseEntity<AuthenticationResponse> login(
+        @Valid @RequestBody LoginRequest loginRequest
     ) {
-        return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
+        return ResponseEntity.ok(authenticationService.login(loginRequest));
     }
 
     @PostMapping(

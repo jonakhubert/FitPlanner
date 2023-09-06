@@ -3,7 +3,7 @@ package com.fitplanner.authentication.service;
 import com.fitplanner.authentication.exception.model.InvalidEmailFormatException;
 import com.fitplanner.authentication.exception.model.UserAlreadyExistException;
 import com.fitplanner.authentication.exception.model.UserNotFoundException;
-import com.fitplanner.authentication.model.api.AuthenticationRequest;
+import com.fitplanner.authentication.model.api.LoginRequest;
 import com.fitplanner.authentication.model.api.AuthenticationResponse;
 import com.fitplanner.authentication.model.api.RegisterRequest;
 import com.fitplanner.authentication.model.token.Token;
@@ -94,15 +94,15 @@ public class AuthenticationServiceTest {
     @Test
     public void authenticate_ValidAuthenticationRequest_AuthenticationResponseWithAccessToken() {
         // given
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest("any@email.com", "any");
+        LoginRequest loginRequest = new LoginRequest("any@email.com", "any");
 
         when(authenticationManager.authenticate(any())).thenReturn(null);
-        when(userRepository.findByEmail(authenticationRequest.email())).thenReturn(Optional.of(new User()));
+        when(userRepository.findByEmail(loginRequest.email())).thenReturn(Optional.of(new User()));
         when(jwtService.generateToken(any())).thenReturn("token");
         when(tokenRepository.findByUserEmail(any())).thenReturn(Optional.of(new Token()));
 
         // when
-        AuthenticationResponse response = underTest.authenticate(authenticationRequest);
+        AuthenticationResponse response = underTest.login(loginRequest);
 
         // then
         assertNotNull(response);
@@ -114,10 +114,10 @@ public class AuthenticationServiceTest {
     @Test
     public void authenticate_AuthenticateRequestWithInvalidEmail_InvalidEmailFormatException() {
         // given
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest("invalid", "any");
+        LoginRequest loginRequest = new LoginRequest("invalid", "any");
 
         // then
-        assertThrows(InvalidEmailFormatException.class, () -> underTest.authenticate(authenticationRequest));
+        assertThrows(InvalidEmailFormatException.class, () -> underTest.login(loginRequest));
         verify(authenticationManager, never()).authenticate(any());
         verify(userRepository, never()).findByEmail(anyString());
         verify(jwtService, never()).generateToken(any(User.class));
@@ -129,10 +129,10 @@ public class AuthenticationServiceTest {
     @Test
     public void authenticate_AuthenticationRequestWithNonExistingEmail_UserNotFoundException() {
         // given
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest("any@gmail.com", "any");
+        LoginRequest loginRequest = new LoginRequest("any@gmail.com", "any");
 
         // then
-        assertThrows(UserNotFoundException.class, () -> underTest.authenticate(authenticationRequest));
+        assertThrows(UserNotFoundException.class, () -> underTest.login(loginRequest));
         verify(authenticationManager, never()).authenticate(any());
         verify(jwtService, never()).generateToken(any(User.class));
         verify(tokenRepository, never()).save((any(Token.class)));
