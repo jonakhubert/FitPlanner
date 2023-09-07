@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { AuthenticationService } from 'src/app/auth/service/authentication.service';
+import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/service/authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,8 @@ export class LoginComponent {
 
   constructor(
     private authenticationService: AuthenticationService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -37,6 +39,7 @@ export class LoginComponent {
     {
       next: (response) => {
         console.log(response);
+        // this.router.navigateByUrl("user/dashboard");
       },
       error: (error) => {
         if(error.statusCode === 404) {

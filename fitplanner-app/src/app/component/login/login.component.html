@@ -12,7 +12,7 @@
                 </div>
               </div>
 
-              <form form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+              <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
                 <div class="form-outline mb-4">
                   <input type="email" placeholder="Email Address" class="form-control form-control-lg" formControlName="email" [ngClass]="{'is-invalid': submitted && loginForm.controls['email'].errors}"/>

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthenticationService } from 'src/app/auth/service/authentication.service';
+import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/service/authentication.service';
 
 @Component({
   selector: 'app-register',
@@ -15,7 +16,8 @@ export class RegisterComponent {
 
   constructor(
     private authenticationService: AuthenticationService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -39,6 +41,7 @@ export class RegisterComponent {
     {
       next: (response) => {
         console.log(response);
+        // this.router.navigateByUrl("user/dashboard");
       },
       error: (error) => {
         if(error.statusCode === 409) {
