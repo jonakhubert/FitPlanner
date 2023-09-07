@@ -21,6 +21,10 @@ export class RegisterComponent {
   ) {}
 
   ngOnInit() {
+    if(this.authenticationService.isLoggedIn()) {
+      this.router.navigate(['user']);
+    }
+    
     this.registerForm = this.formBuilder.group({
       firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
       lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
@@ -41,7 +45,7 @@ export class RegisterComponent {
     {
       next: (response) => {
         console.log(response);
-        // this.router.navigateByUrl("user/dashboard");
+        this.router.navigate(['user']);
       },
       error: (error) => {
         if(error.statusCode === 409) {

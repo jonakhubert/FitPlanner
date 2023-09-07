@@ -21,6 +21,10 @@ export class LoginComponent {
   ) {}
 
   ngOnInit() {
+    if(this.authenticationService.isLoggedIn()) {
+      this.router.navigate(['user']);
+    }
+
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.pattern("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
       + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")]],
@@ -39,7 +43,7 @@ export class LoginComponent {
     {
       next: (response) => {
         console.log(response);
-        // this.router.navigateByUrl("user/dashboard");
+        this.router.navigate(['user']);
       },
       error: (error) => {
         if(error.statusCode === 404) {
