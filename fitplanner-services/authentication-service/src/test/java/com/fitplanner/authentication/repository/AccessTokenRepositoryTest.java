@@ -1,7 +1,7 @@
 package com.fitplanner.authentication.repository;
 
 import com.fitplanner.authentication.MongoDBContainerConfig;
-import com.fitplanner.authentication.model.token.Token;
+import com.fitplanner.authentication.model.accesstoken.AccessToken;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -16,20 +16,20 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TokenRepositoryTest {
 
     @Autowired
-    private TokenRepository underTest;
+    private AccessTokenRepository underTest;
 
     @Test
     public void findByToken_ExistingAccessToken_AccessToken() {
         // given
         String validToken = "john-token";
-        Token token = new Token(
+        AccessToken token = new AccessToken(
             validToken,
             "johnsmith@gmail.com"
         );
         underTest.save(token);
 
         // when
-        Token result = underTest.findByToken(validToken).orElse(null);
+        AccessToken result = underTest.findByToken(validToken).orElse(null);
 
         // then
         assertEquals(result, token);
@@ -41,7 +41,7 @@ public class TokenRepositoryTest {
         String invalidToken = "invalid-token";
 
         // when
-        Token result = underTest.findByToken(invalidToken).orElse(null);
+        AccessToken result = underTest.findByToken(invalidToken).orElse(null);
 
         // then
         assertNull(result);
@@ -51,14 +51,14 @@ public class TokenRepositoryTest {
     public void findByUserEmail_ExistingUserEmail_AccessToken() {
         // given
         String email = "emmabrown@gmail.com";
-        Token token = new Token(
+        AccessToken token = new AccessToken(
             "emma-token",
             email
         );
         underTest.save(token);
 
         // when
-        Token result = underTest.findByUserEmail(email).orElse(null);
+        AccessToken result = underTest.findByUserEmail(email).orElse(null);
 
         // then
         assertEquals(result, token);
@@ -70,7 +70,7 @@ public class TokenRepositoryTest {
         String email = "invalid";
 
         // when
-        Token result = underTest.findByUserEmail(email).orElse(null);
+        AccessToken result = underTest.findByUserEmail(email).orElse(null);
 
         // then
         assertNull(result);
