@@ -1,4 +1,4 @@
-package com.fitplanner.authentication.model.access_token;
+package com.fitplanner.authentication.model.accesstoken;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -7,8 +7,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Objects;
 
-@Document(value = "tokens")
-public class Token {
+@Document(value = "access_tokens")
+public class AccessToken {
 
     @Id
     private String id;
@@ -16,24 +16,24 @@ public class Token {
     private String token;
 
     @Enumerated(EnumType.STRING)
-    private TokenType tokenType = TokenType.BEARER;
+    private AccessTokenType tokenType = AccessTokenType.BEARER;
 
     private String userEmail;
 
-    public Token(String token, String userEmail) {
+    public AccessToken(String token, String userEmail) {
         this.token = token;
         this.userEmail = userEmail;
     }
 
-    public Token() {}
+    public AccessToken() {}
 
-    public void setTokenType(TokenType tokenType) { this.tokenType = tokenType; }
+    public void setTokenType(AccessTokenType tokenType) { this.tokenType = tokenType; }
 
     @Override
     public boolean equals(Object o) {
         if(o == this)
             return true;
-        if(!(o instanceof Token other))
+        if(!(o instanceof AccessToken other))
             return false;
 
         return  Objects.equals(id, other.id) &&

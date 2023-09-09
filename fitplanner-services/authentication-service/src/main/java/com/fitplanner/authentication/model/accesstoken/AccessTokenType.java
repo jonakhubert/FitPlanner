@@ -1,5 +1,5 @@
-package com.fitplanner.authentication.model.access_token;
+package com.fitplanner.authentication.model.accesstoken;
 
-public enum TokenType {
+public enum AccessTokenType {
     BEARER
 }
