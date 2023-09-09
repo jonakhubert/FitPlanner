@@ -44,9 +44,14 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.login(loginRequest));
     }
 
-    @GetMapping(path = "/confirm")
-    public ConfirmationResponse confirm(@RequestParam("token") String confirmationToken) {
-        return authenticationService.confirmToken(confirmationToken);
+    @GetMapping(
+        path = "/verify",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ConfirmationResponse confirm(
+        @RequestParam("confirmation_token") String confirmationToken
+    ) {
+        return authenticationService.verify(confirmationToken);
     }
 
 
