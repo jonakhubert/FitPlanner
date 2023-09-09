@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataMongoTest
 @Testcontainers
 @ContextConfiguration(classes = MongoDBContainerConfig.class)
-public class TokenRepositoryTest {
+public class AccessTokenRepositoryTest {
 
     @Autowired
     private AccessTokenRepository underTest;
