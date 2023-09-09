@@ -3,6 +3,7 @@ package com.fitplanner.authentication.service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -30,7 +31,7 @@ public class EmailService {
             helper.setFrom("support@fitplanner.com");
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            throw new IllegalStateException("Failed to send an email.");
+            throw new MailSendException("Failed to send an email.");
         }
     }
 }
