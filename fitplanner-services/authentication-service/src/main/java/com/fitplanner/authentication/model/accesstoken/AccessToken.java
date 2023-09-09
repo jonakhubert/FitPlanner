@@ -1,6 +1,5 @@
-package com.fitplanner.authentication.model.token;
+package com.fitplanner.authentication.model.access_token;
 
-import com.fitplanner.authentication.model.user.User;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import org.springframework.data.annotation.Id;
