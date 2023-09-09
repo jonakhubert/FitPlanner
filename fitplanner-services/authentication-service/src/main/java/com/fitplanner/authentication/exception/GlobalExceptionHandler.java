@@ -1,13 +1,13 @@
 package com.fitplanner.authentication.exception;
 
-import com.fitplanner.authentication.exception.model.InvalidEmailFormatException;
-import com.fitplanner.authentication.exception.model.UserAlreadyExistException;
-import com.fitplanner.authentication.exception.model.UserNotFoundException;
+import com.fitplanner.authentication.exception.model.*;
 import com.fitplanner.authentication.model.api.ApiError;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.mail.MailSendException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -154,5 +154,80 @@ public class GlobalExceptionHandler {
         );
 
         return new ResponseEntity<>(apiError, HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<ApiError> handleTokenExpiredException(
+        TokenExpiredException ex,
+        HttpServletRequest request
+    ) {
+        ApiError apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.UNAUTHORIZED.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(UserAlreadyVerifiedException.class)
+    public ResponseEntity<ApiError> handleUserAlreadyVerifiedException(
+        UserAlreadyVerifiedException ex,
+        HttpServletRequest request
+    ) {
+        ApiError apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.OK.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.OK);
+    }
+
+    @ExceptionHandler(UserNotVerifiedException.class)
+    public ResponseEntity<ApiError> handleUserNotVerifiedException(
+        UserNotVerifiedException ex,
+        HttpServletRequest request
+    ) {
+        ApiError apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.FORBIDDEN.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(MailSendException.class)
+    public ResponseEntity<ApiError> handleMessagingException(
+        MessagingException ex,
+        HttpServletRequest request
+    ) {
+        ApiError apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(TokenNotFoundException.class)
+    public ResponseEntity<ApiError> handleTokenNotFoundException(
+        TokenNotFoundException ex,
+        HttpServletRequest request
+    ) {
+        ApiError apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.NOT_FOUND.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 }
