@@ -2,6 +2,7 @@ package com.fitplanner.authentication.exception;
 
 import com.fitplanner.authentication.exception.model.*;
 import com.fitplanner.authentication.model.api.ApiError;
+import com.mongodb.MongoTimeoutException;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -229,5 +231,35 @@ public class GlobalExceptionHandler {
         );
 
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiError> handleMissingParameterException(
+        MissingServletRequestParameterException ex,
+        HttpServletRequest request
+    ) {
+        ApiError apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.UNAUTHORIZED.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(MongoTimeoutException.class)
+    public ResponseEntity<ApiError> handleMongoTimeoutException(
+        MongoTimeoutException ex,
+        HttpServletRequest request
+    ) {
+        ApiError apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.REQUEST_TIMEOUT.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.REQUEST_TIMEOUT);
     }
 }
