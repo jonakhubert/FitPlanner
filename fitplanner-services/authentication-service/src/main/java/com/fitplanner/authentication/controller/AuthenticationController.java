@@ -48,7 +48,7 @@ public class AuthenticationController {
         path = "/verify",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ConfirmationResponse confirm(
+    public ConfirmationResponse verify(
         @RequestParam("confirmation_token") String confirmationToken
     ) {
         return authenticationService.verify(confirmationToken);
