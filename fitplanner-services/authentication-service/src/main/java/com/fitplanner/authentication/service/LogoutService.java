@@ -1,6 +1,6 @@
 package com.fitplanner.authentication.service;
 
-import com.fitplanner.authentication.repository.TokenRepository;
+import com.fitplanner.authentication.repository.AccessTokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class LogoutService implements LogoutHandler {
 
-    private final TokenRepository tokenRepository;
+    private final AccessTokenRepository accessTokenRepository;
 
     @Autowired
-    public LogoutService(TokenRepository tokenRepository) {
-        this.tokenRepository = tokenRepository;
+    public LogoutService(AccessTokenRepository accessTokenRepository) {
+        this.accessTokenRepository = accessTokenRepository;
     }
 
     @Override
@@ -27,6 +27,6 @@ public class LogoutService implements LogoutHandler {
            return;
 
         token = authHeader.substring(7);
-        tokenRepository.findByToken(token).ifPresent(tokenRepository::delete);
+        accessTokenRepository.findByToken(token).ifPresent(accessTokenRepository::delete);
     }
 }

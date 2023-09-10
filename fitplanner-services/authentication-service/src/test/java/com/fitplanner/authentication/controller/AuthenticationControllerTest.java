@@ -2,13 +2,12 @@ package com.fitplanner.authentication.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitplanner.authentication.config.SecurityConfig;
-import com.fitplanner.authentication.exception.model.InvalidEmailFormatException;
-import com.fitplanner.authentication.exception.model.UserAlreadyExistException;
-import com.fitplanner.authentication.exception.model.UserNotFoundException;
+import com.fitplanner.authentication.exception.model.*;
+import com.fitplanner.authentication.model.api.ConfirmationResponse;
 import com.fitplanner.authentication.model.api.LoginRequest;
-import com.fitplanner.authentication.model.api.AuthenticationResponse;
+import com.fitplanner.authentication.model.api.LoginResponse;
 import com.fitplanner.authentication.model.api.RegisterRequest;
-import com.fitplanner.authentication.repository.TokenRepository;
+import com.fitplanner.authentication.repository.AccessTokenRepository;
 import com.fitplanner.authentication.service.AuthenticationService;
 import com.fitplanner.authentication.service.JwtService;
 import org.junit.jupiter.api.Test;
@@ -30,45 +29,39 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AuthenticationController.class)
 @Import(SecurityConfig.class)
-public class AuthenticationControllerTest {
+public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mongodb exception
 
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private JwtService jwtService;
-
     @MockBean
-    private TokenRepository tokenRepository;
-
+    private AccessTokenRepository accessTokenRepository;
     @MockBean
     private AuthenticationProvider authenticationProvider;
-
     @MockBean
     private LogoutHandler logoutHandler;
-
     @MockBean
     private AuthenticationEntryPoint authenticationEntryPoint;
-
     @MockBean
     private AuthenticationService authenticationService;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    public void register_ValidRegisterRequest_AuthenticationResponseWithAccessToken() throws Exception {
+    public void register_ValidRegisterRequest_ConfirmationMessage() throws Exception {
         // given
         RegisterRequest registerRequest = new RegisterRequest("any", "any", "any@gmail.com", "any");
-        AuthenticationResponse authenticationResponse = new AuthenticationResponse("token");
+        ConfirmationResponse confirmationResponse = new ConfirmationResponse("Verification email has been sent.");
 
-        when(authenticationService.register(registerRequest)).thenReturn(authenticationResponse);
+        when(authenticationService.register(registerRequest)).thenReturn(confirmationResponse);
 
         // then
         mockMvc.perform(post("/api/auth/register")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(registerRequest)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.access_token").value("token"));
+            .andExpect(jsonPath("$.confirmation_message").value("Verification email has been sent."));
     }
 
     @Test
@@ -185,10 +178,10 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    public void authenticate_ValidAuthenticateRequest_AuthenticationResponseWithAccessToken() throws Exception {
+    public void login_ValidLoginRequest_LoginResponseWithAccessToken() throws Exception {
         // given
         LoginRequest loginRequest = new LoginRequest("any@gmail.com", "any");
-        AuthenticationResponse authenticationResponse = new AuthenticationResponse("token");
+        LoginResponse authenticationResponse = new LoginResponse("token");
 
         when(authenticationService.login(loginRequest)).thenReturn(authenticationResponse);
 
@@ -201,7 +194,7 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    public void authenticate_AuthenticateRequestWithEmptyEmail_ApiErrorWithStatus400() throws Exception {
+    public void login_LoginRequestWithEmptyEmail_ApiErrorWithStatus400() throws Exception {
         // given
         LoginRequest loginRequest = new LoginRequest("", "any");
 
@@ -227,7 +220,7 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    public void authenticate_AuthenticateRequestWithInvalidEmailFormat_ApiErrorWithStatus400() throws Exception {
+    public void login_LoginRequestWithInvalidEmailFormat_ApiErrorWithStatus400() throws Exception {
         // given
         LoginRequest loginRequest = new LoginRequest("invalid-format", "any");
         String message = loginRequest.email() + " format is invalid.";
@@ -245,7 +238,7 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    public void authenticate_AuthenticationRequestInUnsupportedMediaType_ApiErrorWithStatus415() throws Exception {
+    public void login_LoginRequestInUnsupportedMediaType_ApiErrorWithStatus415() throws Exception {
         // given
         LoginRequest loginRequest = new LoginRequest("any@gmail.com", "any");
         String message = "Content-Type 'text/plain;charset=UTF-8' is not supported";
@@ -260,7 +253,7 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    public void authenticate_AuthenticationRequestWithNonExistingEmail_ApiErrorWithStatus404() throws Exception {
+    public void login_LoginRequestWithNonExistingEmail_ApiErrorWithStatus404() throws Exception {
         // given
         LoginRequest loginRequest = new LoginRequest("non-existing@gmail.com", "any");
         String message = "User not found.";
@@ -274,6 +267,74 @@ public class AuthenticationControllerTest {
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.statusCode").value(404))
             .andExpect(jsonPath("$.message").value(message));
+    }
+
+    @Test
+    public void verify_ValidConfirmationToken_ConfirmationMessage() throws Exception {
+        // given
+        String confirmationToken = "valid-token";
+        String message = "User account verified.";
+        ConfirmationResponse confirmationResponse = new ConfirmationResponse(message);
+
+        when(authenticationService.verify(confirmationToken)).thenReturn(confirmationResponse);
+
+        // then
+        mockMvc.perform(get("/api/auth/verify")
+            .param("confirmation_token", confirmationToken))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.confirmation_message").value(message));
+    }
+
+    @Test
+    public void verify_InvalidConfirmationToken_Status404() throws Exception {
+        // given
+        String confirmationToken = "invalid-token";
+        String message = "Token not found " + confirmationToken;
+
+        when(authenticationService.verify(confirmationToken)).thenThrow(new TokenNotFoundException(message));
+
+        // then
+        mockMvc.perform(get("/api/auth/verify")
+            .param("confirmation_token", confirmationToken))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.message").value(message));
+    }
+
+    @Test
+    public void verify_ConfirmedToken_Status200() throws Exception {
+        // given
+        String confirmationToken = "confirmed_token";
+        String message = "User has been already verified.";
+
+        when(authenticationService.verify(confirmationToken)).thenThrow(new UserAlreadyVerifiedException(message));
+
+        // then
+        mockMvc.perform(get("/api/auth/verify")
+            .param("confirmation_token", confirmationToken))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message").value(message));
+    }
+
+    @Test
+    public void verify_ExpiredToken_Status401() throws Exception {
+        // given
+        String confirmationToken = "expired_token";
+        String message = "Token is expired.";
+
+        when(authenticationService.verify(confirmationToken)).thenThrow(new TokenExpiredException(message));
+
+        // then
+        mockMvc.perform(get("/api/auth/verify")
+            .param("confirmation_token", confirmationToken))
+            .andExpect(status().isUnauthorized())
+            .andExpect(jsonPath("$.message").value(message));
+    }
+
+    @Test
+    public void verify_ConfirmationTokenNotProvided_Status401() throws Exception {
+        // then
+        mockMvc.perform(get("/api/auth/verify"))
+            .andExpect(status().isUnauthorized());
     }
 
     @Test

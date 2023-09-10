@@ -1,7 +1,7 @@
 package com.fitplanner.authentication.service;
 
-import com.fitplanner.authentication.model.token.Token;
-import com.fitplanner.authentication.repository.TokenRepository;
+import com.fitplanner.authentication.model.accesstoken.AccessToken;
+import com.fitplanner.authentication.repository.AccessTokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Test;
@@ -19,14 +19,11 @@ import static org.mockito.Mockito.*;
 public class LogoutServiceTest {
 
     @Mock
-    private TokenRepository tokenRepository;
-
+    private AccessTokenRepository accessTokenRepository;
     @Mock
     private HttpServletRequest request;
-
     @Mock
     private HttpServletResponse response;
-
     @Mock
     private Authentication authentication;
 
@@ -40,13 +37,13 @@ public class LogoutServiceTest {
         String authHeader = "Bearer " + validToken;
 
         when(request.getHeader("Authorization")).thenReturn(authHeader);
-        when(tokenRepository.findByToken(validToken)).thenReturn(Optional.of(new Token()));
+        when(accessTokenRepository.findByToken(validToken)).thenReturn(Optional.of(new AccessToken()));
 
         // when
         underTest.logout(request, response, authentication);
 
         // then
-        verify(tokenRepository, times(1)).delete(any());
+        verify(accessTokenRepository, times(1)).delete(any());
     }
 
     @Test
@@ -58,7 +55,7 @@ public class LogoutServiceTest {
         underTest.logout(request, response, authentication);
 
         // then
-        verify(tokenRepository, never()).delete(any());
+        verify(accessTokenRepository, never()).delete(any());
     }
 
     @Test
@@ -72,6 +69,6 @@ public class LogoutServiceTest {
         underTest.logout(request, response, authentication);
 
         // then
-        verify(tokenRepository, never()).delete(any());
+        verify(accessTokenRepository, never()).delete(any());
     }
 }

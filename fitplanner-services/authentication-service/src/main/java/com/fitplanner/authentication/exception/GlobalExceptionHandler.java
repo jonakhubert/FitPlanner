@@ -1,20 +1,23 @@
 package com.fitplanner.authentication.exception;
 
-import com.fitplanner.authentication.exception.model.InvalidEmailFormatException;
-import com.fitplanner.authentication.exception.model.UserAlreadyExistException;
-import com.fitplanner.authentication.exception.model.UserNotFoundException;
+import com.fitplanner.authentication.exception.model.*;
 import com.fitplanner.authentication.model.api.ApiError;
+import com.mongodb.MongoTimeoutException;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.mail.MailSendException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.net.ConnectException;
 import java.time.LocalDateTime;
 
 @ControllerAdvice
@@ -138,5 +141,125 @@ public class GlobalExceptionHandler {
         );
 
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConnectException.class)
+    public ResponseEntity<ApiError> handleConnectException(
+        ConnectException ex,
+        HttpServletRequest request
+    ) {
+        ApiError apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.SERVICE_UNAVAILABLE.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<ApiError> handleTokenExpiredException(
+        TokenExpiredException ex,
+        HttpServletRequest request
+    ) {
+        ApiError apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.UNAUTHORIZED.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(UserAlreadyVerifiedException.class)
+    public ResponseEntity<ApiError> handleUserAlreadyVerifiedException(
+        UserAlreadyVerifiedException ex,
+        HttpServletRequest request
+    ) {
+        ApiError apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.OK.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.OK);
+    }
+
+    @ExceptionHandler(UserNotVerifiedException.class)
+    public ResponseEntity<ApiError> handleUserNotVerifiedException(
+        UserNotVerifiedException ex,
+        HttpServletRequest request
+    ) {
+        ApiError apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.FORBIDDEN.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(MailSendException.class)
+    public ResponseEntity<ApiError> handleMessagingException(
+        MessagingException ex,
+        HttpServletRequest request
+    ) {
+        ApiError apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(TokenNotFoundException.class)
+    public ResponseEntity<ApiError> handleTokenNotFoundException(
+        TokenNotFoundException ex,
+        HttpServletRequest request
+    ) {
+        ApiError apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.NOT_FOUND.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiError> handleMissingParameterException(
+        MissingServletRequestParameterException ex,
+        HttpServletRequest request
+    ) {
+        ApiError apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.UNAUTHORIZED.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(MongoTimeoutException.class)
+    public ResponseEntity<ApiError> handleMongoTimeoutException(
+        MongoTimeoutException ex,
+        HttpServletRequest request
+    ) {
+        ApiError apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.REQUEST_TIMEOUT.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.REQUEST_TIMEOUT);
     }
 }
