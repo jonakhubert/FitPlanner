@@ -79,6 +79,7 @@
             <artifactId>mongodb</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.eclipse.angus</groupId>
             <artifactId>jakarta.mail</artifactId>
