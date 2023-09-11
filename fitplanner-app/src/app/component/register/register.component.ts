@@ -54,7 +54,7 @@ export class RegisterComponent {
           this.confirmationMessage = '';
           this.alertMessage = this.registerForm.get('email')?.value + " already exists in database.";
         }
-        else if(error.statusCode === 500) {
+        else {
           this.confirmationMessage = '';
           this.alertMessage = "Something went wrong. Try again later.";
         }

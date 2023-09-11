@@ -52,6 +52,8 @@ export class LoginComponent {
           this.message = "Invalid password.";
         else if(error.statusCode === 403)
           this.message = error.message;
+        else
+          this.message = "Something went wrong. Try again later.";
       }
     });
   }
