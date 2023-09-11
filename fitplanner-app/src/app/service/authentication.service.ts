@@ -2,9 +2,10 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { Observable, catchError, tap } from 'rxjs';
 import { RegisterRequest } from '../interface/register-request';
-import { AuthenticationResponse } from '../interface/authentication-response';
+import { LoginResponse } from '../interface/login-response';
 import { LoginRequest } from '../interface/login-request';
 import { ApiError } from '../interface/api-error';
+import { ConfirmationResponse } from '../interface/confirmation-response';
 
 @Injectable({
   providedIn: 'root'
@@ -15,26 +16,22 @@ export class AuthenticationService {
 
   constructor(private http: HttpClient) {}
 
-  public register(request: RegisterRequest): Observable<AuthenticationResponse> {
-    return this.http.post<AuthenticationResponse>(`${this.apiUrl}/register`, request)
+  public register(request: RegisterRequest): Observable<ConfirmationResponse> {
+    return this.http.post<ConfirmationResponse>(`${this.apiUrl}/register`, request)
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw this.buildApiError(error);
-      }),
-      tap((response: AuthenticationResponse) => {
-        localStorage.setItem('userEmail', request.email);
-        localStorage.setItem('token', response.access_token);
       })
     );
   }
 
-  public login(request: LoginRequest): Observable<AuthenticationResponse> {
-    return this.http.post<AuthenticationResponse>(`${this.apiUrl}/login`, request)
+  public login(request: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, request)
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw this.buildApiError(error);
       }),
-      tap((response: AuthenticationResponse) => {
+      tap((response: LoginResponse) => {
         localStorage.setItem('userEmail', request.email);
         localStorage.setItem('token', response.access_token);
       })

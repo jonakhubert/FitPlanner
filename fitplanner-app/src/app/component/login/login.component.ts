@@ -46,11 +46,14 @@ export class LoginComponent {
         this.router.navigate(['user']);
       },
       error: (error) => {
-        if(error.statusCode === 404) {
+        if(error.statusCode === 404)
           this.message = this.loginForm.get('email')?.value + " doesn't exist.";
-        } else if(error.statusCode === 400) {
+        else if(error.statusCode === 400)
           this.message = "Invalid password.";
-        }
+        else if(error.statusCode === 403)
+          this.message = error.message;
+        else
+          this.message = "Something went wrong. Try again later.";
       }
     });
   }

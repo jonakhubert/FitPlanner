@@ -6,9 +6,15 @@
           <div class="card-body p-5">
             <h2 class="text-uppercase text-center mb-5">Create an account</h2>
             
-            <div *ngIf="message">
+            <div *ngIf="alertMessage">
               <div class="alert alert-danger" role="alert">
-                {{ message }}
+                {{ alertMessage }}
+              </div>
+            </div>
+
+            <div *ngIf="confirmationMessage">
+              <div class="alert alert-primary" role="alert">
+                {{ confirmationMessage }}
               </div>
             </div>
             

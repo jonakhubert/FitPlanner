@@ -75,7 +75,7 @@ public class AuthenticationService {
             confirmationTokenService.deleteToken(registerRequest.email());
             saveConfirmationToken(token, registerRequest.email());
 
-            return new ConfirmationResponse("Confirmation email has been resend.");
+            return new ConfirmationResponse("Verification email has been resent.");
         }
 
         emailService.send(
