@@ -12,7 +12,8 @@ export class RegisterComponent {
   
   registerForm!: FormGroup;
   submitted = false;
-  message = '';
+  alertMessage = '';
+  confirmationMessage = '';
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -45,11 +46,17 @@ export class RegisterComponent {
     {
       next: (response) => {
         console.log(response);
-        this.router.navigate(['user']);
+        this.alertMessage = '';
+        this.confirmationMessage = response.confirmation_message;
       },
       error: (error) => {
         if(error.statusCode === 409) {
-          this.message = this.registerForm.get('email')?.value + " already exists in database.";
+          this.confirmationMessage = '';
+          this.alertMessage = this.registerForm.get('email')?.value + " already exists in database.";
+        }
+        else {
+          this.confirmationMessage = '';
+          this.alertMessage = "Something went wrong. Try again later.";
         }
       }
     });
