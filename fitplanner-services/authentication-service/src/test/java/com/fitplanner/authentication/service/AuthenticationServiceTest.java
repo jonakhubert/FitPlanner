@@ -84,6 +84,7 @@ public class AuthenticationServiceTest {
     public void register_RegisterRequestWithExistingEmailAndNotEnabledUser_ConfirmationMessage() {
         // given
         RegisterRequest registerRequest = new RegisterRequest("any", "any", "valid@gmail.com", "any");
+        String message = "Verification email has been resent.";
 
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
 
@@ -91,7 +92,7 @@ public class AuthenticationServiceTest {
         ConfirmationResponse result = underTest.register(registerRequest);
 
         // then
-        assertEquals(result.message(), "Confirmation email has been resend.");
+        assertEquals(result.message(), message);
         verify(emailService, times(1)).send(eq(registerRequest.email()), anyString());
         verify(confirmationTokenService, times(1)).deleteToken(eq(registerRequest.email()));
         verify(confirmationTokenService, times(1)).saveToken(any(ConfirmationToken.class));
