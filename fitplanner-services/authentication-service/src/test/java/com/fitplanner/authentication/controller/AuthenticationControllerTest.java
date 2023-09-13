@@ -1,5 +1,6 @@
 package com.fitplanner.authentication.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitplanner.authentication.config.SecurityConfig;
 import com.fitplanner.authentication.exception.model.*;
@@ -51,7 +52,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void register_ValidRegisterRequest_ConfirmationMessage() throws Exception {
         // given
-        RegisterRequest registerRequest = new RegisterRequest("any", "any", "any@gmail.com", "any");
+        RegisterRequest registerRequest = new RegisterRequest("any", "any", "any@gmail.com", "anyany");
         ConfirmationResponse confirmationResponse = new ConfirmationResponse("Verification email has been sent.");
 
         when(authenticationService.register(registerRequest)).thenReturn(confirmationResponse);
@@ -117,9 +118,22 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     }
 
     @Test
-    public void register_RegisterRequestWithInvalidEmailFormat_ApiErrorWithStatus400() throws Exception {
+    public void register_RegisterRequestWithPasswordLengthLessThanSixCharacters_Status400() throws Exception {
         // given
         RegisterRequest registerRequest = new RegisterRequest("any", "any", "invalid-format", "any");
+
+        // then
+        mockMvc.perform(post("/api/auth/register")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(registerRequest)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.statusCode").value(400));
+    }
+
+    @Test
+    public void register_RegisterRequestWithInvalidEmailFormat_ApiErrorWithStatus400() throws Exception {
+        // given
+        RegisterRequest registerRequest = new RegisterRequest("any", "any", "invalid-format", "anyany");
         String message = registerRequest.email() + " format is invalid.";
 
         when(authenticationService.register(registerRequest)).thenThrow(new InvalidEmailFormatException(message));
@@ -151,7 +165,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void register_RegisterRequestWithExistingEmail_ApiErrorWithStatus409() throws Exception {
         // given
-        RegisterRequest registerRequest = new RegisterRequest("any", "any", "any@gmail.com", "any");
+        RegisterRequest registerRequest = new RegisterRequest("any", "any", "any@gmail.com", "anyany");
         String message = registerRequest.email() + " already exist.";
 
         when(authenticationService.register(registerRequest)).thenThrow(new UserAlreadyExistException(message));
