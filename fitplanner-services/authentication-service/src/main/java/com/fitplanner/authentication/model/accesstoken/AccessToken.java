@@ -12,12 +12,9 @@ public class AccessToken {
 
     @Id
     private String id;
-
     private String token;
-
     @Enumerated(EnumType.STRING)
     private AccessTokenType tokenType = AccessTokenType.BEARER;
-
     private String userEmail;
 
     public AccessToken(String token, String userEmail) {

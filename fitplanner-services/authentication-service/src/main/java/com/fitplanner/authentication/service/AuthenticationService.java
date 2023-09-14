@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -55,44 +54,22 @@ public class AuthenticationService {
 
     @Transactional
     public ConfirmationResponse register(RegisterRequest registerRequest) {
-        String token = UUID.randomUUID().toString();
-        String link = "http://localhost:8222/api/auth/verify?confirmation_token=" + token;
+        var token = UUID.randomUUID().toString();
+        var link = "http://localhost:8222/api/auth/verify?confirmation_token=" + token;
 
         if(!isEmailValid(registerRequest.email()))
             throw new InvalidEmailFormatException(registerRequest.email() + " format is invalid.");
 
-        Optional<User> newUser = userRepository.findByEmail(registerRequest.email());
-
-        if(newUser.isPresent() && newUser.get().isEnabled())
+        if(userRepository.findByEmail(registerRequest.email()).isPresent())
             throw new UserAlreadyExistException(registerRequest.email() + " already exist.");
 
-        if(newUser.isPresent() && !newUser.get().isEnabled()) {
-            emailService.send(
-                registerRequest.email(),
-                EmailBuilder.buildEmail(registerRequest.firstName(), link)
-            );
-
-            confirmationTokenService.deleteToken(registerRequest.email());
-            saveConfirmationToken(token, registerRequest.email());
-
-            return new ConfirmationResponse("Verification email has been resent.");
-        }
+        var savedUser = saveUser(registerRequest);
+        saveConfirmationToken(token, savedUser.getUsername());
 
         emailService.send(
             registerRequest.email(),
-                EmailBuilder.buildEmail(registerRequest.firstName(), link)
+            EmailBuilder.buildEmail(registerRequest.firstName(), link)
         );
-
-        User user = new User(
-            registerRequest.firstName(),
-            registerRequest.lastName(),
-            registerRequest.email(),
-            passwordEncoder.encode(registerRequest.password()),
-            Role.USER
-        );
-
-        User savedUser = userRepository.save(user);
-        saveConfirmationToken(token, savedUser.getUsername());
 
         return new ConfirmationResponse("Verification email has been sent.");
     }
@@ -102,11 +79,23 @@ public class AuthenticationService {
         if(!isEmailValid(loginRequest.email()))
             throw new InvalidEmailFormatException(loginRequest.email() + " format is invalid.");
 
-        User user = userRepository.findByEmail(loginRequest.email())
+        var user = userRepository.findByEmail(loginRequest.email())
             .orElseThrow(() -> new UserNotFoundException("User not found."));
 
-        if(!user.isEnabled())
-            throw new UserNotVerifiedException("User is not verified.");
+        if(!user.isEnabled()) {
+            var token = UUID.randomUUID().toString();
+            var link = "http://localhost:8222/api/auth/verify?confirmation_token=" + token;
+
+            emailService.send(
+                user.getUsername(),
+                EmailBuilder.buildEmail(user.getFirstName(), link)
+            );
+
+            confirmationTokenService.deleteToken(user.getUsername());
+            saveConfirmationToken(token, user.getUsername());
+
+            throw new UserNotVerifiedException("User is not verified. Verification email has been resent.");
+        }
 
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
@@ -115,8 +104,8 @@ public class AuthenticationService {
             )
         );
 
-        String jwt = jwtService.generateToken(user);
-        AccessToken accessToken = new AccessToken(jwt, user.getUsername());
+        var jwt = jwtService.generateToken(user);
+        var accessToken = new AccessToken(jwt, user.getUsername());
 
         accessTokenService.deleteToken(user);
         accessTokenService.saveToken(accessToken);
@@ -126,12 +115,12 @@ public class AuthenticationService {
 
     @Transactional
     public ConfirmationResponse verify(String token) {
-        ConfirmationToken confirmationToken = confirmationTokenService.getToken(token);
+        var confirmationToken = confirmationTokenService.getToken(token);
 
         if(confirmationToken.getConfirmedAt() != null)
             throw new UserAlreadyVerifiedException("User has been already verified.");
 
-        LocalDateTime expiredAt = confirmationToken.getExpiredAt();
+        var expiredAt = confirmationToken.getExpiredAt();
 
         if(expiredAt.isBefore(LocalDateTime.now()))
             throw new TokenExpiredException("Token is expired.");
@@ -147,15 +136,27 @@ public class AuthenticationService {
     }
 
     private void verifyUser(String email) {
-        User user = userRepository.findByEmail(email)
+        var user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UserNotFoundException("User not found."));
 
         user.setEnabled(true);
         userRepository.save(user);
     }
 
+    private User saveUser(RegisterRequest registerRequest) {
+        var user = new User(
+            registerRequest.firstName(),
+            registerRequest.lastName(),
+            registerRequest.email(),
+            passwordEncoder.encode(registerRequest.password()),
+            Role.USER
+        );
+
+        return userRepository.save(user);
+    }
+
     private void saveConfirmationToken(String token, String email) {
-        ConfirmationToken confirmationToken = new ConfirmationToken(
+        var confirmationToken = new ConfirmationToken(
             token,
             LocalDateTime.now(),
             LocalDateTime.now().plusMinutes(15),
@@ -166,8 +167,8 @@ public class AuthenticationService {
     }
 
     private boolean isEmailValid(String email) {
-        String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
-                + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+        var regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+            + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 
         return Pattern.compile(regexPattern)
                 .matcher(email)

@@ -62,7 +62,7 @@ public class AuthenticationController {
         @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
     ) {
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring(7);
+            var token = authorizationHeader.substring(7);
 
             if(authenticationService.isTokenValid(token))
                 return ResponseEntity.ok().build();

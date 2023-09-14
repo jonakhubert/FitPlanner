@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
         HttpRequestMethodNotSupportedException ex,
         HttpServletRequest request
     ) {
-        ApiError apiError = new ApiError(
+        var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
             HttpStatus.METHOD_NOT_ALLOWED.value(),
@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
         UserNotFoundException ex,
         HttpServletRequest request
     ) {
-        ApiError apiError = new ApiError(
+        var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
             HttpStatus.NOT_FOUND.value(),
@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
         UserAlreadyExistException ex,
         HttpServletRequest request
     ) {
-        ApiError apiError = new ApiError(
+        var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
             HttpStatus.CONFLICT.value(),
@@ -73,7 +73,7 @@ public class GlobalExceptionHandler {
         HttpMessageNotReadableException ex,
         HttpServletRequest request
     ) {
-        ApiError apiError = new ApiError(
+        var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
             HttpStatus.BAD_REQUEST.value(),
@@ -88,7 +88,7 @@ public class GlobalExceptionHandler {
         HttpMediaTypeNotSupportedException ex,
         HttpServletRequest request
     ) {
-        ApiError apiError = new ApiError(
+        var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
             HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(),
@@ -103,7 +103,7 @@ public class GlobalExceptionHandler {
         MethodArgumentNotValidException ex,
         HttpServletRequest request
     ) {
-        ApiError apiError = new ApiError(
+        var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
             HttpStatus.BAD_REQUEST.value(),
@@ -118,7 +118,7 @@ public class GlobalExceptionHandler {
         InvalidEmailFormatException ex,
         HttpServletRequest request
     ) {
-        ApiError apiError = new ApiError(
+        var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
             HttpStatus.BAD_REQUEST.value(),
@@ -133,7 +133,7 @@ public class GlobalExceptionHandler {
         BadCredentialsException ex,
         HttpServletRequest request
     ) {
-        ApiError apiError = new ApiError(
+        var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
             HttpStatus.BAD_REQUEST.value(),
@@ -148,7 +148,7 @@ public class GlobalExceptionHandler {
         ConnectException ex,
         HttpServletRequest request
     ) {
-        ApiError apiError = new ApiError(
+        var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
             HttpStatus.SERVICE_UNAVAILABLE.value(),
@@ -163,7 +163,7 @@ public class GlobalExceptionHandler {
         TokenExpiredException ex,
         HttpServletRequest request
     ) {
-        ApiError apiError = new ApiError(
+        var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
             HttpStatus.UNAUTHORIZED.value(),
@@ -178,7 +178,7 @@ public class GlobalExceptionHandler {
         UserAlreadyVerifiedException ex,
         HttpServletRequest request
     ) {
-        ApiError apiError = new ApiError(
+        var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
             HttpStatus.OK.value(),
@@ -193,7 +193,7 @@ public class GlobalExceptionHandler {
         UserNotVerifiedException ex,
         HttpServletRequest request
     ) {
-        ApiError apiError = new ApiError(
+        var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
             HttpStatus.FORBIDDEN.value(),
@@ -208,7 +208,7 @@ public class GlobalExceptionHandler {
         MessagingException ex,
         HttpServletRequest request
     ) {
-        ApiError apiError = new ApiError(
+        var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
             HttpStatus.INTERNAL_SERVER_ERROR.value(),
@@ -223,7 +223,7 @@ public class GlobalExceptionHandler {
         TokenNotFoundException ex,
         HttpServletRequest request
     ) {
-        ApiError apiError = new ApiError(
+        var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
             HttpStatus.NOT_FOUND.value(),
@@ -238,7 +238,7 @@ public class GlobalExceptionHandler {
         MissingServletRequestParameterException ex,
         HttpServletRequest request
     ) {
-        ApiError apiError = new ApiError(
+        var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
             HttpStatus.UNAUTHORIZED.value(),
@@ -253,7 +253,7 @@ public class GlobalExceptionHandler {
         MongoTimeoutException ex,
         HttpServletRequest request
     ) {
-        ApiError apiError = new ApiError(
+        var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
             HttpStatus.REQUEST_TIMEOUT.value(),

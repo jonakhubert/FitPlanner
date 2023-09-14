@@ -31,8 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(SecurityConfig.class)
 public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mongodb exception
 
-    @Autowired
-    private MockMvc mockMvc;
     @MockBean
     private JwtService jwtService;
     @MockBean
@@ -46,13 +44,16 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @MockBean
     private AuthenticationService authenticationService;
 
+    @Autowired
+    private MockMvc mockMvc;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     public void register_ValidRegisterRequest_ConfirmationMessage() throws Exception {
         // given
-        RegisterRequest registerRequest = new RegisterRequest("any", "any", "any@gmail.com", "any");
-        ConfirmationResponse confirmationResponse = new ConfirmationResponse("Verification email has been sent.");
+        var registerRequest = new RegisterRequest("any", "any", "any@gmail.com", "anyany");
+        var confirmationResponse = new ConfirmationResponse("Verification email has been sent.");
 
         when(authenticationService.register(registerRequest)).thenReturn(confirmationResponse);
 
@@ -67,7 +68,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void register_RegisterRequestWithEmptyFirstName_ApiErrorWithStatus400() throws Exception {
         // given
-        RegisterRequest registerRequest = new RegisterRequest("", "any", "any@gmail.com", "any");
+        var registerRequest = new RegisterRequest("", "any", "any@gmail.com", "any");
 
         // then
         mockMvc.perform(post("/api/auth/register")
@@ -80,7 +81,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void register_RegisterRequestWithEmptyLastName_ApiErrorWithStatus400() throws Exception {
         // given
-        RegisterRequest registerRequest = new RegisterRequest("any", "", "any@gmail.com", "any");
+        var registerRequest = new RegisterRequest("any", "", "any@gmail.com", "any");
 
         // then
         mockMvc.perform(post("/api/auth/register")
@@ -93,7 +94,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void register_RegisterRequestWithEmptyEmail_ApiErrorWithStatus400() throws Exception {
         // given
-        RegisterRequest registerRequest = new RegisterRequest("any", "any", "", "any");
+        var registerRequest = new RegisterRequest("any", "any", "", "any");
 
         // then
         mockMvc.perform(post("/api/auth/register")
@@ -106,7 +107,20 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void register_RegisterRequestWithEmptyPassword_ApiErrorWithStatus400() throws Exception {
         // given
-        RegisterRequest registerRequest = new RegisterRequest("any", "any", "any@gmail.com", "");
+        var registerRequest = new RegisterRequest("any", "any", "any@gmail.com", "");
+
+        // then
+        mockMvc.perform(post("/api/auth/register")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(registerRequest)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.statusCode").value(400));
+    }
+
+    @Test
+    public void register_RegisterRequestWithPasswordLengthLessThanSixCharacters_Status400() throws Exception {
+        // given
+        var registerRequest = new RegisterRequest("any", "any", "invalid-format", "any");
 
         // then
         mockMvc.perform(post("/api/auth/register")
@@ -119,8 +133,8 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void register_RegisterRequestWithInvalidEmailFormat_ApiErrorWithStatus400() throws Exception {
         // given
-        RegisterRequest registerRequest = new RegisterRequest("any", "any", "invalid-format", "any");
-        String message = registerRequest.email() + " format is invalid.";
+        var registerRequest = new RegisterRequest("any", "any", "invalid-format", "anyany");
+        var message = registerRequest.email() + " format is invalid.";
 
         when(authenticationService.register(registerRequest)).thenThrow(new InvalidEmailFormatException(message));
 
@@ -136,8 +150,8 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void register_RegisterRequestInUnsupportedMediaType_ApiErrorWithStatus415() throws Exception {
         // given
-        RegisterRequest registerRequest = new RegisterRequest("any", "any", "any@gmail.com", "any");
-        String message = "Content-Type 'text/plain;charset=UTF-8' is not supported";
+        var registerRequest = new RegisterRequest("any", "any", "any@gmail.com", "any");
+        var message = "Content-Type 'text/plain;charset=UTF-8' is not supported";
 
         // then
         mockMvc.perform(post("/api/auth/register")
@@ -151,8 +165,8 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void register_RegisterRequestWithExistingEmail_ApiErrorWithStatus409() throws Exception {
         // given
-        RegisterRequest registerRequest = new RegisterRequest("any", "any", "any@gmail.com", "any");
-        String message = registerRequest.email() + " already exist.";
+        var registerRequest = new RegisterRequest("any", "any", "any@gmail.com", "anyany");
+        var message = registerRequest.email() + " already exist.";
 
         when(authenticationService.register(registerRequest)).thenThrow(new UserAlreadyExistException(message));
 
@@ -168,7 +182,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void register_NotAllowedMethod_ApiErrorWithStatus405() throws Exception {
         // given
-        String message = "Request method 'GET' is not supported";
+        var message = "Request method 'GET' is not supported";
 
         // then
         mockMvc.perform(get("/api/auth/register"))
@@ -180,8 +194,8 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void login_ValidLoginRequest_LoginResponseWithAccessToken() throws Exception {
         // given
-        LoginRequest loginRequest = new LoginRequest("any@gmail.com", "any");
-        LoginResponse authenticationResponse = new LoginResponse("token");
+        var loginRequest = new LoginRequest("any@gmail.com", "any");
+        var authenticationResponse = new LoginResponse("token");
 
         when(authenticationService.login(loginRequest)).thenReturn(authenticationResponse);
 
@@ -196,7 +210,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void login_LoginRequestWithEmptyEmail_ApiErrorWithStatus400() throws Exception {
         // given
-        LoginRequest loginRequest = new LoginRequest("", "any");
+        var loginRequest = new LoginRequest("", "any");
 
         // then
         mockMvc.perform(post("/api/auth/login")
@@ -209,7 +223,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void authenticate_AuthenticateRequestWithEmptyPassword_ApiErrorWithStatus400() throws Exception {
         // given
-        LoginRequest loginRequest = new LoginRequest("any@gmail.com", "");
+        var loginRequest = new LoginRequest("any@gmail.com", "");
 
         // then
         mockMvc.perform(post("/api/auth/login")
@@ -222,8 +236,8 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void login_LoginRequestWithInvalidEmailFormat_ApiErrorWithStatus400() throws Exception {
         // given
-        LoginRequest loginRequest = new LoginRequest("invalid-format", "any");
-        String message = loginRequest.email() + " format is invalid.";
+        var loginRequest = new LoginRequest("invalid-format", "any");
+        var message = loginRequest.email() + " format is invalid.";
 
         when(authenticationService.login(loginRequest))
                 .thenThrow(new InvalidEmailFormatException(message));
@@ -240,8 +254,8 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void login_LoginRequestInUnsupportedMediaType_ApiErrorWithStatus415() throws Exception {
         // given
-        LoginRequest loginRequest = new LoginRequest("any@gmail.com", "any");
-        String message = "Content-Type 'text/plain;charset=UTF-8' is not supported";
+        var loginRequest = new LoginRequest("any@gmail.com", "any");
+        var message = "Content-Type 'text/plain;charset=UTF-8' is not supported";
 
         // then
         mockMvc.perform(post("/api/auth/login")
@@ -255,8 +269,8 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void login_LoginRequestWithNonExistingEmail_ApiErrorWithStatus404() throws Exception {
         // given
-        LoginRequest loginRequest = new LoginRequest("non-existing@gmail.com", "any");
-        String message = "User not found.";
+        var loginRequest = new LoginRequest("non-existing@gmail.com", "any");
+        var message = "User not found.";
 
         when(authenticationService.login(loginRequest)).thenThrow(new UserNotFoundException(message));
 
@@ -272,9 +286,9 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void verify_ValidConfirmationToken_ConfirmationMessage() throws Exception {
         // given
-        String confirmationToken = "valid-token";
-        String message = "User account verified.";
-        ConfirmationResponse confirmationResponse = new ConfirmationResponse(message);
+        var confirmationToken = "valid-token";
+        var message = "User account verified.";
+        var confirmationResponse = new ConfirmationResponse(message);
 
         when(authenticationService.verify(confirmationToken)).thenReturn(confirmationResponse);
 
@@ -288,8 +302,8 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void verify_InvalidConfirmationToken_Status404() throws Exception {
         // given
-        String confirmationToken = "invalid-token";
-        String message = "Token not found " + confirmationToken;
+        var confirmationToken = "invalid-token";
+        var message = "Token not found " + confirmationToken;
 
         when(authenticationService.verify(confirmationToken)).thenThrow(new TokenNotFoundException(message));
 
@@ -303,8 +317,8 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void verify_ConfirmedToken_Status200() throws Exception {
         // given
-        String confirmationToken = "confirmed_token";
-        String message = "User has been already verified.";
+        var confirmationToken = "confirmed_token";
+        var message = "User has been already verified.";
 
         when(authenticationService.verify(confirmationToken)).thenThrow(new UserAlreadyVerifiedException(message));
 
@@ -318,8 +332,8 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void verify_ExpiredToken_Status401() throws Exception {
         // given
-        String confirmationToken = "expired_token";
-        String message = "Token is expired.";
+        var confirmationToken = "expired_token";
+        var message = "Token is expired.";
 
         when(authenticationService.verify(confirmationToken)).thenThrow(new TokenExpiredException(message));
 
@@ -340,7 +354,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void validateToken_ValidAuthorization_Status200() throws Exception {
         // given
-        String token = "valid-token";
+        var token = "valid-token";
         
         when(authenticationService.isTokenValid(token)).thenReturn(true);
 

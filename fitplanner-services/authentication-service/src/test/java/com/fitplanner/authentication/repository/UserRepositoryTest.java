@@ -18,13 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class UserRepositoryTest {
 
     @Autowired
-    UserRepository underTest;
+    private UserRepository underTest;
 
     @Test
     public void findByEmail_ExistingEmail_User() {
         // given
-        String email = "johnsmith@gmail.com";
-        User user = new User(
+        var email = "johnsmith@gmail.com";
+        var user = new User(
             "John", "Smith",
             email,
             "1234",
@@ -33,7 +33,7 @@ public class UserRepositoryTest {
         underTest.save(user);
 
         // when
-        User result = underTest.findByEmail(email).orElse(null);
+        var result = underTest.findByEmail(email).orElse(null);
 
         // then
         assertEquals(user, result);
@@ -42,10 +42,10 @@ public class UserRepositoryTest {
     @Test
     public void findByEmail_NonExistingEmail_Null() {
         // given
-        String email = "non-existing";
+        var email = "non-existing";
 
         // when
-        User result = underTest.findByEmail(email).orElse(null);
+        var result = underTest.findByEmail(email).orElse(null);
 
         // then
         assertNull(result);

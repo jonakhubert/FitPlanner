@@ -21,8 +21,8 @@ public class ConfirmationTokenRepositoryTest {
     @Test
     public void findByToken_ExistingConfirmationToken_ConfirmationToken() {
         //given
-        String token = "conf_token";
-        ConfirmationToken confirmationToken = new ConfirmationToken(
+        var token = "conf_token";
+        var confirmationToken = new ConfirmationToken(
             token,
             null,
             null,
@@ -31,7 +31,7 @@ public class ConfirmationTokenRepositoryTest {
         underTest.save(confirmationToken);
 
         // when
-        ConfirmationToken result = underTest.findByToken(token).orElse(null);
+        var result = underTest.findByToken(token).orElse(null);
 
         // then
         assertEquals(result, confirmationToken);
@@ -40,10 +40,10 @@ public class ConfirmationTokenRepositoryTest {
     @Test
     public void findByToken_NonExistingConfirmationToken_Null() {
         // given
-        String invalidToken = "invalid-token";
+        var invalidToken = "invalid-token";
 
         // when
-        ConfirmationToken result = underTest.findByToken(invalidToken).orElse(null);
+        var result = underTest.findByToken(invalidToken).orElse(null);
 
         // then
         assertNull(result);
@@ -52,8 +52,8 @@ public class ConfirmationTokenRepositoryTest {
     @Test
     public void findByUserEmail_ExistingUserEmail_ConfirmationToken() {
         // given
-        String email = "any@gmail.com";
-        ConfirmationToken confirmationToken = new ConfirmationToken(
+        var email = "any@gmail.com";
+        var confirmationToken = new ConfirmationToken(
             "any-token",
             null,
             null,
@@ -62,7 +62,7 @@ public class ConfirmationTokenRepositoryTest {
         underTest.save(confirmationToken);
 
         // when
-        ConfirmationToken result = underTest.findByUserEmail(email).orElse(null);
+        var result = underTest.findByUserEmail(email).orElse(null);
 
         // then
         assertEquals(result, confirmationToken);
@@ -71,10 +71,10 @@ public class ConfirmationTokenRepositoryTest {
     @Test
     public void findByUserEmail_NonExistingUserEmail_Null() {
         // given
-        String invalidUserEmail = "invalid-email";
+        var invalidUserEmail = "invalid-email";
 
         // when
-        ConfirmationToken result = underTest.findByUserEmail(invalidUserEmail).orElse(null);
+        var result = underTest.findByUserEmail(invalidUserEmail).orElse(null);
 
         // then
         assertNull(result);
