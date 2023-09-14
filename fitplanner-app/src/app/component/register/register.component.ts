@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from 'src/app/service/authentication.service';
 
 @Component({
@@ -18,7 +19,8 @@ export class RegisterComponent {
   constructor(
     private authenticationService: AuthenticationService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -46,8 +48,9 @@ export class RegisterComponent {
     {
       next: (response) => {
         console.log(response);
-        this.alertMessage = '';
-        this.confirmationMessage = response.confirmation_message;
+        this.router.navigate(['login']);
+        this.toastr.success("User has been registered.", "Success");
+        this.toastr.info(response.confirmation_message, "Info");
       },
       error: (error) => {
         if(error.statusCode === 409) {
@@ -56,7 +59,7 @@ export class RegisterComponent {
         }
         else {
           this.confirmationMessage = '';
-          this.alertMessage = "Something went wrong. Try again later.";
+          this.toastr.error("Something went wrong. Try again later.", "Error");
         }
       }
     });

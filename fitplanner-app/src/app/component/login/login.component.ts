@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from 'src/app/service/authentication.service';
 
 @Component({
@@ -17,7 +18,8 @@ export class LoginComponent {
   constructor(
     private authenticationService: AuthenticationService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -44,6 +46,7 @@ export class LoginComponent {
       next: (response) => {
         console.log(response);
         this.router.navigate(['user']);
+        this.toastr.success('Login successfully!');
       },
       error: (error) => {
         if(error.statusCode === 404)
@@ -53,7 +56,7 @@ export class LoginComponent {
         else if(error.statusCode === 403)
           this.message = error.message;
         else
-          this.message = "Something went wrong. Try again later.";
+          this.toastr.error("Something went wrong. Try again later.", "Error");
       }
     });
   }
