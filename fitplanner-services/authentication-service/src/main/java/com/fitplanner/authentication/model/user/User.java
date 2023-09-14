@@ -17,18 +17,12 @@ public class User implements UserDetails {
 
     @Id
     private String id;
-
     private String firstName;
-
     private String lastName;
-
     private String email;
-
     private String password;
-
     @Enumerated(EnumType.STRING)
     private Role role;
-
     private Boolean enabled = false;
 
     public User(String firstName, String lastName, String email, String password, Role role) {
@@ -62,21 +56,12 @@ public class User implements UserDetails {
     }
 
     // getters
-    public String getId() { return this.id; }
-    public String getFirstName() { return this.firstName; }
-    public String getLastName() { return this.lastName; }
     @Override public String getUsername() { return email; }
     @Override public String getPassword() { return password; }
-    public Role getRole() { return role; }
     @Override  public boolean isEnabled() { return enabled; }
+    public String getFirstName() { return firstName; }
 
     // setters
-    public void setId(String id) { this.id = id; }
-    public void setFirstName(String firstName) { this.firstName = firstName; }
-    public void setLastName(String lastName) { this.lastName = lastName; }
-    public void setUsername(String email) { this.email = email; }
-    public void setPassword(String password) { this.password = password; }
-    public void setRole(Role role) { this.role = role; }
     public void setEnabled(Boolean enabled) { this.enabled = enabled; }
 
     @Override
