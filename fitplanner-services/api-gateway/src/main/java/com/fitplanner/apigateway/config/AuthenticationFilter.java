@@ -30,13 +30,13 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
             if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION))
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 
-            String authHeader = Objects.requireNonNull(exchange.getRequest().getHeaders()
+            var authHeader = Objects.requireNonNull(exchange.getRequest().getHeaders()
                     .get(HttpHeaders.AUTHORIZATION)).get(0);
 
             if (authHeader == null || !authHeader.startsWith("Bearer "))
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 
-            String token = authHeader.substring(7);
+            var token = authHeader.substring(7);
 
             return webClientBuilder.build()
                 .post()
@@ -45,15 +45,8 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                 .exchangeToMono(clientResponse -> {
                     if (clientResponse.statusCode().is2xxSuccessful())
                         return chain.filter(exchange);
-                    else {
-                        // if it's not successful, let the error pass through
-                        return clientResponse.bodyToMono(String.class).flatMap(errorBody -> {
-                            exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
-                            exchange.getResponse().setStatusCode(clientResponse.statusCode());
-                            return exchange.getResponse().writeWith(Mono.just(exchange.getResponse()
-                                .bufferFactory().wrap(errorBody.getBytes())));
-                        });
-                    }
+                    else
+                        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
                 });
         });
     }
