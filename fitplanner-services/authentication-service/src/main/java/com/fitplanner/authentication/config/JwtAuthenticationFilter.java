@@ -1,6 +1,7 @@
 package com.fitplanner.authentication.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fitplanner.authentication.exception.model.UserNotFoundException;
 import com.fitplanner.authentication.model.api.ApiError;
 import com.fitplanner.authentication.service.JwtService;
 import com.fitplanner.authentication.model.accesstoken.AccessToken;
@@ -49,9 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
         try {
-            final String authenticationHeader = request.getHeader("Authorization");
-            final String jwt;
-            final String username;
+            final var authenticationHeader = request.getHeader("Authorization");
 
             // check if authentication token is missing
             if(authenticationHeader == null || !authenticationHeader.startsWith("Bearer ")) {
@@ -59,18 +58,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            jwt = authenticationHeader.substring(7); // index 7 because of 'Bearer '
-            username = jwtService.extractUsername(jwt);
+            var jwt = authenticationHeader.substring(7); // index 7 because of 'Bearer '
+            var username = jwtService.extractUsername(jwt);
 
             // check if user is authenticated (connected)
             if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                var userDetails = userDetailsService.loadUserByUsername(username);
 
-                AccessToken token = accessTokenRepository.findByToken(jwt)
+                var token = accessTokenRepository.findByToken(jwt)
                     .orElse(null);
 
                 if(jwtService.isTokenValid(jwt, userDetails) && token != null) {
-                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    var authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
                         userDetails.getAuthorities()
@@ -85,7 +84,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             filterChain.doFilter(request, response);
-        } catch(JwtException ex) {
+        } catch(JwtException | UserNotFoundException ex) {
             handleJwtException(ex, request, response);
         }
     }
@@ -95,7 +94,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         HttpServletRequest request,
         HttpServletResponse response
     ) throws IOException {
-        ApiError apiError = new ApiError(
+        var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
             HttpStatus.UNAUTHORIZED.value(),
@@ -104,7 +103,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        ObjectMapper objectMapper = new ObjectMapper();
+        var objectMapper = new ObjectMapper();
         response.getWriter().write(objectMapper.writeValueAsString(apiError));
     }
 }

@@ -1,6 +1,5 @@
 package com.fitplanner.authentication.model.confirmationtoken;
 
-import com.fitplanner.authentication.model.accesstoken.AccessToken;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,15 +11,10 @@ public class ConfirmationToken {
 
     @Id
     private String id;
-
     private String token;
-
     private LocalDateTime createdAt;
-
     private LocalDateTime expiredAt;
-
     private LocalDateTime confirmedAt;
-
     private String userEmail;
 
     public ConfirmationToken() {}

@@ -20,13 +20,12 @@ public class LogoutService implements LogoutHandler {
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        final String authHeader = request.getHeader("Authorization");
-        final String token;
+        final var authHeader = request.getHeader("Authorization");
 
         if(authHeader == null || !authHeader.startsWith("Bearer "))
            return;
 
-        token = authHeader.substring(7);
+        var token = authHeader.substring(7);
         accessTokenRepository.findByToken(token).ifPresent(accessTokenRepository::delete);
     }
 }
