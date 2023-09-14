@@ -81,21 +81,17 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    public void register_RegisterRequestWithExistingEmailAndNotEnabledUser_ConfirmationMessage() {
+    public void register_RegisterRequestWithExistingEmailAndNotEnabledUser_UserAlreadyExistException() {
         // given
         RegisterRequest registerRequest = new RegisterRequest("any", "any", "valid@gmail.com", "any");
-        String message = "Verification email has been resent.";
 
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
 
-        // when
-        ConfirmationResponse result = underTest.register(registerRequest);
-
         // then
-        assertEquals(result.message(), message);
-        verify(emailService, times(1)).send(eq(registerRequest.email()), anyString());
-        verify(confirmationTokenService, times(1)).deleteToken(eq(registerRequest.email()));
-        verify(confirmationTokenService, times(1)).saveToken(any(ConfirmationToken.class));
+        assertThrows(UserAlreadyExistException.class, () -> underTest.register(registerRequest));
+        verify(userRepository, times(1)).findByEmail(eq(registerRequest.email()));
+        verify(emailService, never()).send(eq(registerRequest.email()), anyString());
+        verify(confirmationTokenService, never()).saveToken(any(ConfirmationToken.class));
     }
 
     @Test
@@ -145,6 +141,7 @@ public class AuthenticationServiceTest {
         // then
         assertThrows(UserNotVerifiedException.class, () -> underTest.login(loginRequest));
         verify(userRepository, times(1)).findByEmail(eq(loginRequest.email()));
+        verify(emailService, times(1)).send(any(), anyString());
         verify(authenticationManager, never()).authenticate(any());
         verify(jwtService, never()).generateToken(any(User.class));
         verify(accessTokenService, never()).deleteToken(any(User.class));

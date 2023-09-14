@@ -21,15 +21,15 @@ public class AccessTokenRepositoryTest {
     @Test
     public void findByToken_ExistingAccessToken_AccessToken() {
         // given
-        String validToken = "john-token";
-        AccessToken token = new AccessToken(
+        var validToken = "john-token";
+        var token = new AccessToken(
             validToken,
             "johnsmith@gmail.com"
         );
         underTest.save(token);
 
         // when
-        AccessToken result = underTest.findByToken(validToken).orElse(null);
+        var result = underTest.findByToken(validToken).orElse(null);
 
         // then
         assertEquals(result, token);
@@ -38,10 +38,10 @@ public class AccessTokenRepositoryTest {
     @Test
     public void findByToken_NonExistingAccessToken_Null() {
         // given
-        String invalidToken = "invalid-token";
+        var invalidToken = "invalid-token";
 
         // when
-        AccessToken result = underTest.findByToken(invalidToken).orElse(null);
+        var result = underTest.findByToken(invalidToken).orElse(null);
 
         // then
         assertNull(result);
@@ -50,15 +50,15 @@ public class AccessTokenRepositoryTest {
     @Test
     public void findByUserEmail_ExistingUserEmail_AccessToken() {
         // given
-        String email = "emmabrown@gmail.com";
-        AccessToken token = new AccessToken(
+        var email = "emmabrown@gmail.com";
+        var token = new AccessToken(
             "emma-token",
             email
         );
         underTest.save(token);
 
         // when
-        AccessToken result = underTest.findByUserEmail(email).orElse(null);
+        var result = underTest.findByUserEmail(email).orElse(null);
 
         // then
         assertEquals(result, token);
@@ -67,10 +67,10 @@ public class AccessTokenRepositoryTest {
     @Test
     public void findByUserEmail_NonExistingUserEmail_Null() {
         // given
-        String email = "invalid";
+        var email = "invalid";
 
         // when
-        AccessToken result = underTest.findByUserEmail(email).orElse(null);
+        var result = underTest.findByUserEmail(email).orElse(null);
 
         // then
         assertNull(result);
