@@ -5,7 +5,7 @@ import { RegisterRequest } from '../interface/register-request';
 import { LoginResponse } from '../interface/login-response';
 import { LoginRequest } from '../interface/login-request';
 import { ApiError } from '../interface/api-error';
-import { ConfirmationResponse } from '../interface/confirmation-response';
+import { RegisterResponse } from '../interface/register-response';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +16,8 @@ export class AuthenticationService {
 
   constructor(private http: HttpClient) {}
 
-  public register(request: RegisterRequest): Observable<ConfirmationResponse> {
-    return this.http.post<ConfirmationResponse>(`${this.apiUrl}/register`, request)
+  public register(request: RegisterRequest): Observable<RegisterResponse> {
+    return this.http.post<RegisterResponse>(`${this.apiUrl}/register`, request)
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw this.buildApiError(error);
