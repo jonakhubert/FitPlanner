@@ -1,8 +1,8 @@
 package com.fitplanner.authentication.service;
 
 import com.fitplanner.authentication.exception.model.TokenNotFoundException;
-import com.fitplanner.authentication.model.confirmationtoken.ConfirmationToken;
-import com.fitplanner.authentication.repository.ConfirmationTokenRepository;
+import com.fitplanner.authentication.model.verificationtoken.VerificationToken;
+import com.fitplanner.authentication.repository.VerificationTokenRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,95 +15,95 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ConfirmationTokenServiceTest {
+public class VerificationTokenServiceTest {
 
     @Mock
-    private ConfirmationTokenRepository confirmationTokenRepository;
+    private VerificationTokenRepository verificationTokenRepository;
 
     @InjectMocks
-    private ConfirmationTokenService underTest;
+    private VerificationTokenService underTest;
 
     @Test
     public void saveToken_ConfirmationToken_Saved() {
         // given
-        ConfirmationToken confirmationToken = new ConfirmationToken();
+        var verificationToken = new VerificationToken();
 
         // when
-        underTest.saveToken(confirmationToken);
+        underTest.saveToken(verificationToken);
 
         // then
-        verify(confirmationTokenRepository, times(1)).save(eq(confirmationToken));
+        verify(verificationTokenRepository, times(1)).save(eq(verificationToken));
     }
 
     @Test
     public void getToken_ExistingToken_ConfirmationToken() {
         // given
-        String token = "token";
-        ConfirmationToken confirmationToken = new ConfirmationToken();
+        var token = "token";
+        var verificationToken = new VerificationToken();
 
-        when(confirmationTokenRepository.findByToken(anyString())).thenReturn(Optional.of(confirmationToken));
+        when(verificationTokenRepository.findByToken(anyString())).thenReturn(Optional.of(verificationToken));
 
         // when
-        ConfirmationToken result = underTest.getToken(token);
+        var result = underTest.getToken(token);
 
         // then
-        assertEquals(result, confirmationToken);
-        verify(confirmationTokenRepository, times(1)).findByToken(eq(token));
+        assertEquals(result, verificationToken);
+        verify(verificationTokenRepository, times(1)).findByToken(eq(token));
     }
 
     @Test
     public void getToken_NonExistingToken_TokenNotFoundException() {
         // given
-        String token = "non-existing";
+        var token = "non-existing";
 
-        when(confirmationTokenRepository.findByToken(token)).thenReturn(Optional.empty());
+        when(verificationTokenRepository.findByToken(token)).thenReturn(Optional.empty());
 
         // then
         assertThrows(TokenNotFoundException.class, () -> underTest.getToken(token));
-        verify(confirmationTokenRepository, times(1)).findByToken(token);
+        verify(verificationTokenRepository, times(1)).findByToken(token);
     }
 
     @Test
     public void setConfirmedAt_ExistingToken_Updated() {
         // given
-        ConfirmationToken confirmationToken = new ConfirmationToken();
+        var verificationToken = new VerificationToken();
 
-        when(confirmationTokenRepository.findByToken(anyString())).thenReturn(Optional.of(confirmationToken));
+        when(verificationTokenRepository.findByToken(anyString())).thenReturn(Optional.of(verificationToken));
 
         // when
         underTest.setConfirmedAt(anyString());
 
         // then
-        assertNotNull(confirmationToken.getConfirmedAt());
-        verify(confirmationTokenRepository, times(1)).findByToken(anyString());
-        verify(confirmationTokenRepository, times(1)).save(any(ConfirmationToken.class));
+        assertNotNull(verificationToken.getConfirmedAt());
+        verify(verificationTokenRepository, times(1)).findByToken(anyString());
+        verify(verificationTokenRepository, times(1)).save(any(VerificationToken.class));
     }
 
     @Test
     public void setConfirmedAt_NonExistingToken_TokenNotFoundException() {
         // given
-        String token = "non-existing";
+        var token = "non-existing";
 
-        when(confirmationTokenRepository.findByToken(token)).thenReturn(Optional.empty());
+        when(verificationTokenRepository.findByToken(token)).thenReturn(Optional.empty());
 
         // then
         assertThrows(TokenNotFoundException.class, () -> underTest.setConfirmedAt(token));
-        verify(confirmationTokenRepository, times(1)).findByToken(anyString());
-        verify(confirmationTokenRepository, never()).save(any(ConfirmationToken.class));
+        verify(verificationTokenRepository, times(1)).findByToken(anyString());
+        verify(verificationTokenRepository, never()).save(any(VerificationToken.class));
     }
 
     @Test
     public void deleteToken_ExistingUserEmail_Removal() {
         // given
-        String email = "any@gmail.com";
+        var email = "any@gmail.com";
 
-        when(confirmationTokenRepository.findByUserEmail(email)).thenReturn(Optional.of(new ConfirmationToken()));
+        when(verificationTokenRepository.findByUserEmail(email)).thenReturn(Optional.of(new VerificationToken()));
 
         // when
         underTest.deleteToken(email);
 
         // then
-        verify(confirmationTokenRepository, times(1)).delete(any(ConfirmationToken.class));
-        verify(confirmationTokenRepository, times(1)).findByUserEmail(eq(email));
+        verify(verificationTokenRepository, times(1)).delete(any(VerificationToken.class));
+        verify(verificationTokenRepository, times(1)).findByUserEmail(eq(email));
     }
 }

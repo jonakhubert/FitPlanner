@@ -24,8 +24,8 @@ public class EmailServiceTest {
     @Test
     public void send_TestEmail_MessageSent() {
         // given
-        String to = "recipient@example.com";
-        String emailContent = "This is a test email.";
+        var to = "recipient@example.com";
+        var emailContent = "This is a test email.";
         MimeMessage mimeMessage = mock(MimeMessage.class);
 
         when(javaMailSender.createMimeMessage()).thenReturn(mimeMessage);
@@ -41,8 +41,8 @@ public class EmailServiceTest {
     @Test
     public void send_TestEmail_MailSendException() {
         // given
-        String to = "recipient@example.com";
-        String emailContent = "This is a test email.";
+        var to = "recipient@example.com";
+        var emailContent = "This is a test email.";
 
         when(javaMailSender.createMimeMessage()).thenThrow(new MailSendException("Failed to send an email."));
 

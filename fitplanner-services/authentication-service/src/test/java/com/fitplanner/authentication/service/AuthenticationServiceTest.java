@@ -1,14 +1,13 @@
 package com.fitplanner.authentication.service;
 
 import com.fitplanner.authentication.exception.model.*;
-import com.fitplanner.authentication.model.api.ConfirmationResponse;
+import com.fitplanner.authentication.model.api.RegisterResponse;
 import com.fitplanner.authentication.model.api.LoginRequest;
 import com.fitplanner.authentication.model.api.LoginResponse;
 import com.fitplanner.authentication.model.api.RegisterRequest;
 import com.fitplanner.authentication.model.accesstoken.AccessToken;
-import com.fitplanner.authentication.model.confirmationtoken.ConfirmationToken;
+import com.fitplanner.authentication.model.verificationtoken.VerificationToken;
 import com.fitplanner.authentication.model.user.User;
-import com.fitplanner.authentication.repository.AccessTokenRepository;
 import com.fitplanner.authentication.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +33,7 @@ public class AuthenticationServiceTest {
     @Mock
     private AccessTokenService accessTokenService;
     @Mock
-    private ConfirmationTokenService confirmationTokenService;
+    private VerificationTokenService verificationTokenService;
     @Mock
     private EmailService emailService;
     @Mock
@@ -48,29 +47,29 @@ public class AuthenticationServiceTest {
     private AuthenticationService underTest;
 
     @Test
-    public void register_RegisterRequestWithNonExistingEmail_ConfirmationMessage() {
+    public void register_RegisterRequestWithNonExistingEmail_VerificationMessage() {
         // given
-        RegisterRequest registerRequest = new RegisterRequest("any", "any", "valid@gmail.com", "any");
+        var registerRequest = new RegisterRequest("any", "any", "valid@gmail.com", "any");
 
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
         when(userRepository.save(any())).thenReturn(new User());
 
         // when
-        ConfirmationResponse response = underTest.register(registerRequest);
+        var response = underTest.register(registerRequest);
 
         // then
         assertNotNull(response);
         assertEquals("Verification email has been sent.", response.message());
         verify(emailService, times(1)).send(eq(registerRequest.email()), anyString());
         verify(userRepository, times(1)).save(any(User.class));
-        verify(confirmationTokenService, times(1)).saveToken(any(ConfirmationToken.class));
+        verify(verificationTokenService, times(1)).saveToken(any(VerificationToken.class));
     }
 
     @Test
     public void register_RegisterRequestWithExistingEmailAndEnabledUser_UserAlreadyExistException() {
         // given
-        RegisterRequest registerRequest = new RegisterRequest("any", "any", "valid@gmail.com", "any");
-        User user = new User();
+        var registerRequest = new RegisterRequest("any", "any", "valid@gmail.com", "any");
+        var user = new User();
         user.setEnabled(true);
 
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
@@ -83,7 +82,7 @@ public class AuthenticationServiceTest {
     @Test
     public void register_RegisterRequestWithExistingEmailAndNotEnabledUser_UserAlreadyExistException() {
         // given
-        RegisterRequest registerRequest = new RegisterRequest("any", "any", "valid@gmail.com", "any");
+        var registerRequest = new RegisterRequest("any", "any", "valid@gmail.com", "any");
 
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
 
@@ -91,28 +90,28 @@ public class AuthenticationServiceTest {
         assertThrows(UserAlreadyExistException.class, () -> underTest.register(registerRequest));
         verify(userRepository, times(1)).findByEmail(eq(registerRequest.email()));
         verify(emailService, never()).send(eq(registerRequest.email()), anyString());
-        verify(confirmationTokenService, never()).saveToken(any(ConfirmationToken.class));
+        verify(verificationTokenService, never()).saveToken(any(VerificationToken.class));
     }
 
     @Test
     public void register_RegisterRequestWithInvalidEmail_InvalidEmailFormatException() {
         // given
-        RegisterRequest registerRequest = new RegisterRequest("any", "any", "invalid", "any");
+        var registerRequest = new RegisterRequest("any", "any", "invalid", "any");
 
         // then
         assertThrows(InvalidEmailFormatException.class, () -> underTest.register(registerRequest));
         verify(userRepository, never()).findByEmail(eq(registerRequest.email()));
         verify(emailService, never()).send(eq(registerRequest.email()), anyString());
-        verify(confirmationTokenService, never()).deleteToken(eq(registerRequest.email()));
+        verify(verificationTokenService, never()).deleteToken(eq(registerRequest.email()));
         verify(userRepository, never()).save(any());
-        verify(confirmationTokenService, never()).saveToken(any(ConfirmationToken.class));
+        verify(verificationTokenService, never()).saveToken(any(VerificationToken.class));
     }
 
     @Test
-    public void login_LoginRequestWithVerifiedEmail_AuthenticationResponseWithAccessToken() {
+    public void login_LoginRequestWithVerifiedEmail_LoginResponseWithAccessToken() {
         // given
-        LoginRequest loginRequest = new LoginRequest("any@email.com", "any");
-        User user = new User();
+        var loginRequest = new LoginRequest("any@email.com", "any");
+        var user = new User();
         user.setEnabled(true);
 
         when(userRepository.findByEmail(loginRequest.email())).thenReturn(Optional.of(user));
@@ -120,7 +119,7 @@ public class AuthenticationServiceTest {
         when(jwtService.generateToken(any())).thenReturn("token");
 
         // when
-        LoginResponse result = underTest.login(loginRequest);
+        var result = underTest.login(loginRequest);
 
         // then
         assertNotNull(result);
@@ -134,7 +133,7 @@ public class AuthenticationServiceTest {
     @Test
     public void login_LoginRequestWithNotVerifiedEmail_UserNotVerifiedException() {
         // given
-        LoginRequest loginRequest = new LoginRequest("any@email.com", "any");
+        var loginRequest = new LoginRequest("any@email.com", "any");
 
         when(userRepository.findByEmail(loginRequest.email())).thenReturn(Optional.of(new User()));
 
@@ -151,7 +150,7 @@ public class AuthenticationServiceTest {
     @Test
     public void login_LoginRequestWithInvalidEmail_InvalidEmailFormatException() {
         // given
-        LoginRequest loginRequest = new LoginRequest("invalid", "any");
+        var loginRequest = new LoginRequest("invalid", "any");
 
         // then
         assertThrows(InvalidEmailFormatException.class, () -> underTest.login(loginRequest));
@@ -165,7 +164,7 @@ public class AuthenticationServiceTest {
     @Test
     public void login_LoginRequestWithNonExistingEmail_UserNotFoundException() {
         // given
-        LoginRequest loginRequest = new LoginRequest("any@gmail.com", "any");
+        var loginRequest = new LoginRequest("any@gmail.com", "any");
 
         // then
         assertThrows(UserNotFoundException.class, () -> underTest.login(loginRequest));
@@ -179,24 +178,24 @@ public class AuthenticationServiceTest {
     @Test
     public void verify_NotConfirmedToken_ConfirmationMessage() {
         // given
-        String token = "token";
-        String email = "any@gmail.com";
-        ConfirmationToken confirmationToken = new ConfirmationToken(
+        var token = "token";
+        var email = "any@gmail.com";
+        var verificationToken = new VerificationToken(
             token,
             LocalDateTime.now(),
             LocalDateTime.now().plusMinutes(5),
             email
         );
 
-        when(confirmationTokenService.getToken(token)).thenReturn(confirmationToken);
+        when(verificationTokenService.getToken(token)).thenReturn(verificationToken);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User()));
 
         // when
-        ConfirmationResponse result = underTest.verify(token);
+        var result = underTest.verify(token);
 
         // then
         assertEquals(result.message(), "User account verified.");
-        verify(confirmationTokenService, times(1)).setConfirmedAt(anyString());
+        verify(verificationTokenService, times(1)).setConfirmedAt(anyString());
         verify(userRepository, times(1)).findByEmail(eq(email));
         verify(userRepository, times(1)).save(any(User.class));
     }
@@ -204,15 +203,15 @@ public class AuthenticationServiceTest {
     @Test
     public void verify_ConfirmedToken_UserAlreadyVerifiedException() {
         // given
-        ConfirmationToken confirmationToken = new ConfirmationToken();
-        confirmationToken.setConfirmedAt(LocalDateTime.now());
+        var verificationToken = new VerificationToken();
+        verificationToken.setConfirmedAt(LocalDateTime.now());
 
-        when(confirmationTokenService.getToken(anyString())).thenReturn(confirmationToken);
+        when(verificationTokenService.getToken(anyString())).thenReturn(verificationToken);
 
         // then
         assertThrows(UserAlreadyVerifiedException.class, () -> underTest.verify("token"));
-        verify(confirmationTokenService, times(1)).getToken(anyString());
-        verify(confirmationTokenService, never()).setConfirmedAt(anyString());
+        verify(verificationTokenService, times(1)).getToken(anyString());
+        verify(verificationTokenService, never()).setConfirmedAt(anyString());
         verify(userRepository, never()).findByEmail(anyString());
         verify(userRepository, never()).save(any(User.class));
     }
@@ -220,21 +219,21 @@ public class AuthenticationServiceTest {
     @Test
     public void verify_ExpiredToken_TokenExpiredException() {
         // given
-        String token = "token";
-        String email = "any@gmail.com";
-        ConfirmationToken confirmationToken = new ConfirmationToken(
+        var token = "token";
+        var email = "any@gmail.com";
+        var verificationToken = new VerificationToken(
             token,
             LocalDateTime.now().minusMinutes(10),
             LocalDateTime.now().minusMinutes(5),
             email
         );
 
-        when(confirmationTokenService.getToken(anyString())).thenReturn(confirmationToken);
+        when(verificationTokenService.getToken(anyString())).thenReturn(verificationToken);
 
         // then
         assertThrows(TokenExpiredException.class, () -> underTest.verify(token));
-        verify(confirmationTokenService, times(1)).getToken(anyString());
-        verify(confirmationTokenService, never()).setConfirmedAt(anyString());
+        verify(verificationTokenService, times(1)).getToken(anyString());
+        verify(verificationTokenService, never()).setConfirmedAt(anyString());
         verify(userRepository, never()).findByEmail(anyString());
         verify(userRepository, never()).save(any(User.class));
     }
@@ -242,12 +241,12 @@ public class AuthenticationServiceTest {
     @Test
     public void isTokenValid_ValidToken_True() {
         // given
-        String token = "valid-token";
+        var token = "valid-token";
 
         when(accessTokenService.isTokenValid(token)).thenReturn(true);
 
         // when
-        boolean response = underTest.isTokenValid(token);
+        var response = underTest.isTokenValid(token);
 
         // then
         assertTrue(response);
@@ -257,12 +256,12 @@ public class AuthenticationServiceTest {
     @Test
     public void isTokenValid_InvalidToken_False() {
         // given
-        String token = "invalid-token";
+        var token = "invalid-token";
 
         when(accessTokenService.isTokenValid(token)).thenReturn(false);
 
         // when
-        boolean response = underTest.isTokenValid(token);
+        var response = underTest.isTokenValid(token);
 
         // then
         assertFalse(response);

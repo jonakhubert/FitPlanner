@@ -3,7 +3,7 @@ package com.fitplanner.authentication.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitplanner.authentication.config.SecurityConfig;
 import com.fitplanner.authentication.exception.model.*;
-import com.fitplanner.authentication.model.api.ConfirmationResponse;
+import com.fitplanner.authentication.model.api.RegisterResponse;
 import com.fitplanner.authentication.model.api.LoginRequest;
 import com.fitplanner.authentication.model.api.LoginResponse;
 import com.fitplanner.authentication.model.api.RegisterRequest;
@@ -50,19 +50,19 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    public void register_ValidRegisterRequest_ConfirmationMessage() throws Exception {
+    public void register_ValidRegisterRequest_VerificationMessage() throws Exception {
         // given
         var registerRequest = new RegisterRequest("any", "any", "any@gmail.com", "anyany");
-        var confirmationResponse = new ConfirmationResponse("Verification email has been sent.");
+        var verificationResponse = new RegisterResponse("Verification email has been sent.");
 
-        when(authenticationService.register(registerRequest)).thenReturn(confirmationResponse);
+        when(authenticationService.register(registerRequest)).thenReturn(verificationResponse);
 
         // then
         mockMvc.perform(post("/api/auth/register")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(registerRequest)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.confirmation_message").value("Verification email has been sent."));
+            .andExpect(jsonPath("$.verification_message").value("Verification email has been sent."));
     }
 
     @Test
@@ -284,32 +284,32 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     }
 
     @Test
-    public void verify_ValidConfirmationToken_ConfirmationMessage() throws Exception {
+    public void verify_ValidVerificationToken_VerificationMessage() throws Exception {
         // given
-        var confirmationToken = "valid-token";
+        var verificationToken = "valid-token";
         var message = "User account verified.";
-        var confirmationResponse = new ConfirmationResponse(message);
+        var registerResponse = new RegisterResponse(message);
 
-        when(authenticationService.verify(confirmationToken)).thenReturn(confirmationResponse);
+        when(authenticationService.verify(verificationToken)).thenReturn(registerResponse);
 
         // then
         mockMvc.perform(get("/api/auth/verify")
-            .param("confirmation_token", confirmationToken))
+            .param("verification_token", verificationToken))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.confirmation_message").value(message));
+            .andExpect(jsonPath("$.verification_message").value(message));
     }
 
     @Test
-    public void verify_InvalidConfirmationToken_Status404() throws Exception {
+    public void verify_InvalidVerificationToken_Status404() throws Exception {
         // given
-        var confirmationToken = "invalid-token";
-        var message = "Token not found " + confirmationToken;
+        var verificationToken = "invalid-token";
+        var message = "Token not found " + verificationToken;
 
-        when(authenticationService.verify(confirmationToken)).thenThrow(new TokenNotFoundException(message));
+        when(authenticationService.verify(verificationToken)).thenThrow(new TokenNotFoundException(message));
 
         // then
         mockMvc.perform(get("/api/auth/verify")
-            .param("confirmation_token", confirmationToken))
+            .param("verification_token", verificationToken))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.message").value(message));
     }
@@ -317,14 +317,14 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void verify_ConfirmedToken_Status200() throws Exception {
         // given
-        var confirmationToken = "confirmed_token";
+        var verificationToken = "confirmed_token";
         var message = "User has been already verified.";
 
-        when(authenticationService.verify(confirmationToken)).thenThrow(new UserAlreadyVerifiedException(message));
+        when(authenticationService.verify(verificationToken)).thenThrow(new UserAlreadyVerifiedException(message));
 
         // then
         mockMvc.perform(get("/api/auth/verify")
-            .param("confirmation_token", confirmationToken))
+            .param("verification_token", verificationToken))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.message").value(message));
     }
@@ -332,20 +332,20 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void verify_ExpiredToken_Status401() throws Exception {
         // given
-        var confirmationToken = "expired_token";
+        var verificationToken = "expired_token";
         var message = "Token is expired.";
 
-        when(authenticationService.verify(confirmationToken)).thenThrow(new TokenExpiredException(message));
+        when(authenticationService.verify(verificationToken)).thenThrow(new TokenExpiredException(message));
 
         // then
         mockMvc.perform(get("/api/auth/verify")
-            .param("confirmation_token", confirmationToken))
+            .param("verification_token", verificationToken))
             .andExpect(status().isUnauthorized())
             .andExpect(jsonPath("$.message").value(message));
     }
 
     @Test
-    public void verify_ConfirmationTokenNotProvided_Status401() throws Exception {
+    public void verify_VerificationTokenNotProvided_Status401() throws Exception {
         // then
         mockMvc.perform(get("/api/auth/verify"))
             .andExpect(status().isUnauthorized());

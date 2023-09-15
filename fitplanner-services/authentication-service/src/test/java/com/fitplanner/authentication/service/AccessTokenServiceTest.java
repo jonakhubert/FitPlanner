@@ -28,12 +28,12 @@ public class AccessTokenServiceTest {
     @Test
     public void isTokenValid_ValidToken_True() {
         // given
-        String token = "valid-token";
+        var token = "valid-token";
 
         when(accessTokenRepository.findByToken(token)).thenReturn(Optional.of(new AccessToken()));
 
         // when
-        boolean result = underTest.isTokenValid(token);
+        var result = underTest.isTokenValid(token);
 
         // then
         assertTrue(result);
@@ -42,12 +42,12 @@ public class AccessTokenServiceTest {
     @Test
     public void isTokenValid_InvalidToken_False() {
         // given
-        String token = "invalid-token";
+        var token = "invalid-token";
 
         when(accessTokenRepository.findByToken(token)).thenReturn(Optional.empty());
 
         // when
-        boolean result = underTest.isTokenValid(token);
+        var result = underTest.isTokenValid(token);
 
         // then
         assertFalse(result);
@@ -56,7 +56,7 @@ public class AccessTokenServiceTest {
     @Test
     public void saveToken_AccessToken_Saved() {
         // given
-        AccessToken accessToken = new AccessToken();
+        var accessToken = new AccessToken();
 
         // when
         underTest.saveToken(accessToken);
@@ -68,7 +68,7 @@ public class AccessTokenServiceTest {
     @Test
     public void deleteToken_ExistingUser_Removal() {
         // given
-        User user = new User("any", "any", "any@gmail.com", "any", Role.USER);
+        var user = new User("any", "any", "any@gmail.com", "any", Role.USER);
 
         when(accessTokenRepository.findByUserEmail(anyString())).thenReturn(Optional.of(new AccessToken()));
 
@@ -82,7 +82,7 @@ public class AccessTokenServiceTest {
     @Test
     public void deleteToken_NonExistingUser_NoRemoval() {
         // given
-        User user = new User("any", "any", "any@gmail.com", "any", Role.USER);
+        var user = new User("any", "any", "any@gmail.com", "any", Role.USER);
 
         when(accessTokenRepository.findByUserEmail(anyString())).thenReturn(Optional.empty());
 

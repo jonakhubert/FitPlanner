@@ -33,8 +33,8 @@ public class LogoutServiceTest {
     @Test
     public void logout_ValidAuthorizationHeader_DeleteAccessToken() {
         // given
-        String validToken = "validToken";
-        String authHeader = "Bearer " + validToken;
+        var validToken = "validToken";
+        var authHeader = "Bearer " + validToken;
 
         when(request.getHeader("Authorization")).thenReturn(authHeader);
         when(accessTokenRepository.findByToken(validToken)).thenReturn(Optional.of(new AccessToken()));
@@ -61,8 +61,8 @@ public class LogoutServiceTest {
     @Test
     public void logout_InvalidAuthorizationHeader_NoAccessTokenRemoval() {
         // given
-        String invalidToken = "invalidToken";
-        String authHeader = "Invalid " + invalidToken;
+        var invalidToken = "invalidToken";
+        var authHeader = "Invalid " + invalidToken;
         when(request.getHeader("Authorization")).thenReturn(authHeader);
 
         // when

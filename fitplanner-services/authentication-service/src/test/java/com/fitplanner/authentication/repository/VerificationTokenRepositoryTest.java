@@ -1,7 +1,7 @@
 package com.fitplanner.authentication.repository;
 
 import com.fitplanner.authentication.MongoDBContainerConfig;
-import com.fitplanner.authentication.model.confirmationtoken.ConfirmationToken;
+import com.fitplanner.authentication.model.verificationtoken.VerificationToken;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -13,32 +13,32 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataMongoTest
 @Testcontainers
 @ContextConfiguration(classes = MongoDBContainerConfig.class)
-public class ConfirmationTokenRepositoryTest {
+public class VerificationTokenRepositoryTest {
 
     @Autowired
-    private ConfirmationTokenRepository underTest;
+    private VerificationTokenRepository underTest;
 
     @Test
-    public void findByToken_ExistingConfirmationToken_ConfirmationToken() {
+    public void findByToken_ExistingVerificationToken_VerificationToken() {
         //given
         var token = "conf_token";
-        var confirmationToken = new ConfirmationToken(
+        var verificationToken = new VerificationToken(
             token,
             null,
             null,
             "user_email"
         );
-        underTest.save(confirmationToken);
+        underTest.save(verificationToken);
 
         // when
         var result = underTest.findByToken(token).orElse(null);
 
         // then
-        assertEquals(result, confirmationToken);
+        assertEquals(result, verificationToken);
     }
 
     @Test
-    public void findByToken_NonExistingConfirmationToken_Null() {
+    public void findByToken_NonExistingVerificationToken_Null() {
         // given
         var invalidToken = "invalid-token";
 
@@ -50,22 +50,22 @@ public class ConfirmationTokenRepositoryTest {
     }
 
     @Test
-    public void findByUserEmail_ExistingUserEmail_ConfirmationToken() {
+    public void findByUserEmail_ExistingUserEmail_VerificationToken() {
         // given
         var email = "any@gmail.com";
-        var confirmationToken = new ConfirmationToken(
+        var verificationToken = new VerificationToken(
             "any-token",
             null,
             null,
             email
         );
-        underTest.save(confirmationToken);
+        underTest.save(verificationToken);
 
         // when
         var result = underTest.findByUserEmail(email).orElse(null);
 
         // then
-        assertEquals(result, confirmationToken);
+        assertEquals(result, verificationToken);
     }
 
     @Test
