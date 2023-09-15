@@ -4,8 +4,8 @@ import com.fitplanner.authentication.exception.model.*;
 import com.fitplanner.authentication.model.api.LoginRequest;
 import com.fitplanner.authentication.model.api.LoginResponse;
 import com.fitplanner.authentication.model.api.RegisterRequest;
-import com.fitplanner.authentication.model.api.ConfirmationResponse;
-import com.fitplanner.authentication.model.confirmationtoken.ConfirmationToken;
+import com.fitplanner.authentication.model.api.RegisterResponse;
+import com.fitplanner.authentication.model.verificationtoken.VerificationToken;
 import com.fitplanner.authentication.model.accesstoken.AccessToken;
 import com.fitplanner.authentication.model.user.Role;
 import com.fitplanner.authentication.model.user.User;
@@ -27,7 +27,7 @@ public class AuthenticationService {
 
     private final UserRepository userRepository;
     private final AccessTokenService accessTokenService;
-    private final ConfirmationTokenService confirmationTokenService;
+    private final VerificationTokenService verificationTokenService;
     private final EmailService emailService;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
@@ -37,7 +37,7 @@ public class AuthenticationService {
     public AuthenticationService(
         UserRepository userRepository,
         AccessTokenService accessTokenService,
-        ConfirmationTokenService confirmationTokenService,
+        VerificationTokenService verificationTokenService,
         EmailService emailService,
         JwtService jwtService,
         PasswordEncoder passwordEncoder,
@@ -45,7 +45,7 @@ public class AuthenticationService {
     ) {
         this.userRepository = userRepository;
         this.accessTokenService = accessTokenService;
-        this.confirmationTokenService = confirmationTokenService;
+        this.verificationTokenService = verificationTokenService;
         this.emailService = emailService;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
@@ -53,9 +53,9 @@ public class AuthenticationService {
     }
 
     @Transactional
-    public ConfirmationResponse register(RegisterRequest registerRequest) {
+    public RegisterResponse register(RegisterRequest registerRequest) {
         var token = UUID.randomUUID().toString();
-        var link = "http://localhost:8222/api/auth/verify?confirmation_token=" + token;
+        var link = "http://localhost:8222/api/auth/verify?verification_token=" + token;
 
         if(!isEmailValid(registerRequest.email()))
             throw new InvalidEmailFormatException(registerRequest.email() + " format is invalid.");
@@ -64,14 +64,14 @@ public class AuthenticationService {
             throw new UserAlreadyExistException(registerRequest.email() + " already exist.");
 
         var savedUser = saveUser(registerRequest);
-        saveConfirmationToken(token, savedUser.getUsername());
+        saveVerificationToken(token, savedUser.getUsername());
 
         emailService.send(
             registerRequest.email(),
             EmailBuilder.buildEmail(registerRequest.firstName(), link)
         );
 
-        return new ConfirmationResponse("Verification email has been sent.");
+        return new RegisterResponse("Verification email has been sent.");
     }
 
     @Transactional
@@ -84,15 +84,15 @@ public class AuthenticationService {
 
         if(!user.isEnabled()) {
             var token = UUID.randomUUID().toString();
-            var link = "http://localhost:8222/api/auth/verify?confirmation_token=" + token;
+            var link = "http://localhost:8222/api/auth/verify?verification_token=" + token;
 
             emailService.send(
                 user.getUsername(),
                 EmailBuilder.buildEmail(user.getFirstName(), link)
             );
 
-            confirmationTokenService.deleteToken(user.getUsername());
-            saveConfirmationToken(token, user.getUsername());
+            verificationTokenService.deleteToken(user.getUsername());
+            saveVerificationToken(token, user.getUsername());
 
             throw new UserNotVerifiedException("User is not verified. Verification email has been resent.");
         }
@@ -114,21 +114,21 @@ public class AuthenticationService {
     }
 
     @Transactional
-    public ConfirmationResponse verify(String token) {
-        var confirmationToken = confirmationTokenService.getToken(token);
+    public RegisterResponse verify(String token) {
+        var verificationToken = verificationTokenService.getToken(token);
 
-        if(confirmationToken.getConfirmedAt() != null)
+        if(verificationToken.getConfirmedAt() != null)
             throw new UserAlreadyVerifiedException("User has been already verified.");
 
-        var expiredAt = confirmationToken.getExpiredAt();
+        var expiredAt = verificationToken.getExpiredAt();
 
         if(expiredAt.isBefore(LocalDateTime.now()))
             throw new TokenExpiredException("Token is expired.");
 
-        confirmationTokenService.setConfirmedAt(token);
-        verifyUser(confirmationToken.getUserEmail());
+        verificationTokenService.setConfirmedAt(token);
+        verifyUser(verificationToken.getUserEmail());
 
-        return new ConfirmationResponse("User account verified.");
+        return new RegisterResponse("User account verified.");
     }
 
     public boolean isTokenValid(String token) {
@@ -155,15 +155,15 @@ public class AuthenticationService {
         return userRepository.save(user);
     }
 
-    private void saveConfirmationToken(String token, String email) {
-        var confirmationToken = new ConfirmationToken(
+    private void saveVerificationToken(String token, String email) {
+        var verificationToken = new VerificationToken(
             token,
             LocalDateTime.now(),
             LocalDateTime.now().plusMinutes(15),
             email
         );
 
-        confirmationTokenService.saveToken(confirmationToken);
+        verificationTokenService.saveToken(verificationToken);
     }
 
     private boolean isEmailValid(String email) {

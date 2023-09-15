@@ -2,7 +2,7 @@ package com.fitplanner.authentication.controller;
 
 import com.fitplanner.authentication.model.api.LoginRequest;
 import com.fitplanner.authentication.model.api.LoginResponse;
-import com.fitplanner.authentication.model.api.ConfirmationResponse;
+import com.fitplanner.authentication.model.api.RegisterResponse;
 import com.fitplanner.authentication.service.AuthenticationService;
 import com.fitplanner.authentication.model.api.RegisterRequest;
 import jakarta.validation.Valid;
@@ -28,7 +28,7 @@ public class AuthenticationController {
         path = "/register",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<ConfirmationResponse> register(
+    public ResponseEntity<RegisterResponse> register(
         @Valid @RequestBody RegisterRequest registerRequest
     ) {
         return ResponseEntity.ok(authenticationService.register(registerRequest));
@@ -48,10 +48,10 @@ public class AuthenticationController {
         path = "/verify",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ConfirmationResponse verify(
-        @RequestParam("confirmation_token") String confirmationToken
+    public RegisterResponse verify(
+        @RequestParam("verification_token") String verificationToken
     ) {
-        return authenticationService.verify(confirmationToken);
+        return authenticationService.verify(verificationToken);
     }
 
 

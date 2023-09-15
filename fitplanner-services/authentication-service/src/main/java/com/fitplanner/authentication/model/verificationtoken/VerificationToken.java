@@ -1,4 +1,4 @@
-package com.fitplanner.authentication.model.confirmationtoken;
+package com.fitplanner.authentication.model.verificationtoken;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -6,8 +6,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Document(value = "confirmation_tokens")
-public class ConfirmationToken {
+@Document(value = "verification_tokens")
+public class VerificationToken {
 
     @Id
     private String id;
@@ -17,9 +17,9 @@ public class ConfirmationToken {
     private LocalDateTime confirmedAt;
     private String userEmail;
 
-    public ConfirmationToken() {}
+    public VerificationToken() {}
 
-    public ConfirmationToken(
+    public VerificationToken(
         String token,
         LocalDateTime createdAt,
         LocalDateTime expiredAt,
@@ -43,7 +43,7 @@ public class ConfirmationToken {
     public boolean equals(Object o) {
         if(o == this)
             return true;
-        if(!(o instanceof ConfirmationToken other))
+        if(!(o instanceof VerificationToken other))
             return false;
 
         return  Objects.equals(id, other.id) &&
