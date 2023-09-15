@@ -41,6 +41,9 @@ export class AuthenticationService {
   public logout(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/logout`)
     .pipe(
+      catchError((error: HttpErrorResponse) => {
+        throw this.buildApiError(error);
+      }),
       tap(() => {
         localStorage.clear();
       })
