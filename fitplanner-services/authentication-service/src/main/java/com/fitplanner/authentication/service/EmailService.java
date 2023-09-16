@@ -20,13 +20,13 @@ public class EmailService {
     }
 
     @Async
-    public void send(String to, String email) {
+    public void send(String to, String subject, String content) {
         try {
             var mimeMessage = mailSender.createMimeMessage();
             var helper = new MimeMessageHelper(mimeMessage, "utf-8");
-            helper.setText(email, true);
+            helper.setText(content, true);
             helper.setTo(to);
-            helper.setSubject("Confirm your email.");
+            helper.setSubject(subject);
             helper.setFrom("support@fitplanner.com");
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
