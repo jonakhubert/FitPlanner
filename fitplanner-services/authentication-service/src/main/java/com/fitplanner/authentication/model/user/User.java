@@ -63,6 +63,7 @@ public class User implements UserDetails {
 
     // setters
     public void setEnabled(Boolean enabled) { this.enabled = enabled; }
+    public void setPassword(String password) { this.password = password; }
 
     @Override
     public boolean equals(Object o) {
