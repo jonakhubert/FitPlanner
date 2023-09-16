@@ -1,4 +1,4 @@
-package com.fitplanner.authentication.model.verificationtoken;
+package com.fitplanner.authentication.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -35,6 +35,7 @@ public class VerificationToken {
     public LocalDateTime getExpiredAt() { return expiredAt; }
     public LocalDateTime getConfirmedAt() { return confirmedAt; }
     public String getUserEmail() { return userEmail; }
+    public String getToken() { return token; }
 
     // setters
     public void setConfirmedAt(LocalDateTime confirmedAt) { this.confirmedAt = confirmedAt; }
