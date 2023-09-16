@@ -1,10 +1,7 @@
 package com.fitplanner.authentication.controller;
 
-import com.fitplanner.authentication.model.api.LoginRequest;
-import com.fitplanner.authentication.model.api.LoginResponse;
-import com.fitplanner.authentication.model.api.RegisterResponse;
+import com.fitplanner.authentication.model.api.*;
 import com.fitplanner.authentication.service.AuthenticationService;
-import com.fitplanner.authentication.model.api.RegisterRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -28,7 +25,7 @@ public class AuthenticationController {
         path = "/register",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<RegisterResponse> register(
+    public ResponseEntity<ConfirmationResponse> register(
         @Valid @RequestBody RegisterRequest registerRequest
     ) {
         return ResponseEntity.ok(authenticationService.register(registerRequest));
@@ -44,17 +41,6 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.login(loginRequest));
     }
 
-    @GetMapping(
-        path = "/verify",
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public RegisterResponse verify(
-        @RequestParam("verification_token") String verificationToken
-    ) {
-        return authenticationService.verify(verificationToken);
-    }
-
-
     @PostMapping(
         path = "/validate-token"
     )
@@ -69,5 +55,31 @@ public class AuthenticationController {
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @GetMapping(
+        path = "/verify",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<ConfirmationResponse> verify(
+        @RequestParam("verification_token") String verificationToken
+    ) {
+        return ResponseEntity.ok(authenticationService.verify(verificationToken));
+    }
+
+    @PostMapping(
+        path = "/forgot-password/{email}",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<ConfirmationResponse> forgotPassword(@PathVariable String email) {
+        return ResponseEntity.ok(authenticationService.forgotPassword(email));
+    }
+
+    @PostMapping(
+        path = "/reset-password",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<ConfirmationResponse> resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        return ResponseEntity.ok(authenticationService.resetPassword(resetPasswordRequest));
     }
 }
