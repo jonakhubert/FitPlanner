@@ -40,9 +40,8 @@ export class RegisterComponent {
   onSubmit() {
     this.submitted = true;
 
-    if(this.registerForm.invalid) {
+    if(this.registerForm.invalid)
       return;
-    }
 
     this.authenticationService.register(this.registerForm.value).subscribe(
     {
@@ -50,7 +49,7 @@ export class RegisterComponent {
         console.log(response);
         this.router.navigate(['login']);
         this.toastr.success("User has been registered.", "Success");
-        this.toastr.info(response.verification_message, "Info");
+        this.toastr.info(response.confirmation_message, "Info");
       },
       error: (error) => {
         if(error.statusCode === 409) {
