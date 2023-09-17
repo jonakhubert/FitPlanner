@@ -19,11 +19,14 @@ export class UserDashboardComponent {
   ngOnInit() {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.authorize();
+        if (this.authenticationService.isLoggedIn()) {
+          this.authorize();
+        }
       }
     });
 
-    this.authorize();
+    if(this.authenticationService.isLoggedIn())
+      this.authorize();
   }
 
   private authorize() {
