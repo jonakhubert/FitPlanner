@@ -42,7 +42,7 @@ public class AuthenticationController {
     }
 
     @PostMapping(
-        path = "/validate-token"
+        path = "/validate-access-token"
     )
     public ResponseEntity<Void> validateToken(
         @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
@@ -68,10 +68,12 @@ public class AuthenticationController {
     }
 
     @PostMapping(
-        path = "/forgot-password/{email}",
+        path = "/forgot-password",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<ConfirmationResponse> forgotPassword(@PathVariable String email) {
+    public ResponseEntity<ConfirmationResponse> forgotPassword(
+        @RequestParam("email") String email
+    ) {
         return ResponseEntity.ok(authenticationService.forgotPassword(email));
     }
 
@@ -79,7 +81,9 @@ public class AuthenticationController {
         path = "/reset-password",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<ConfirmationResponse> resetPassword(ResetPasswordRequest resetPasswordRequest) {
+    public ResponseEntity<ConfirmationResponse> resetPassword(
+        @RequestBody @Valid ResetPasswordRequest resetPasswordRequest
+    ) {
         return ResponseEntity.ok(authenticationService.resetPassword(resetPasswordRequest));
     }
 }
