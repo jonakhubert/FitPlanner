@@ -20,7 +20,6 @@ export class DietComponent {
       error: (error) => {
         console.log(error);
       }
-    },
-    );
+    });
   }
 }
