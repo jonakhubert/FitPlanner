@@ -69,6 +69,10 @@ export class AuthenticationService {
     );
   }
 
+  public authorize(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/validate-access-token`, {});
+  }
+
   public isLoggedIn() {
     return localStorage.getItem('token') !== null;
   }
