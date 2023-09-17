@@ -11,6 +11,7 @@ import { NotFoundComponent } from './component/not-found/not-found.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { ResetPasswordComponent } from './component/reset-password/reset-password.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { ToastrModule } from 'ngx-toastr';
     AppComponent,
     RegisterComponent,
     LoginComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    ResetPasswordComponent
   ],
   imports: [
     BrowserModule,
