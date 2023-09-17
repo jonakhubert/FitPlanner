@@ -50,7 +50,7 @@ public class AuthenticationController {
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             var token = authorizationHeader.substring(7);
 
-            if(authenticationService.isTokenValid(token))
+            if(authenticationService.isAccessTokenValid(token))
                 return ResponseEntity.ok().build();
         }
 
@@ -85,5 +85,18 @@ public class AuthenticationController {
         @RequestBody @Valid ResetPasswordRequest resetPasswordRequest
     ) {
         return ResponseEntity.ok(authenticationService.resetPassword(resetPasswordRequest));
+    }
+
+    @PostMapping(
+        path = "/validate-reset-password-token",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Void> validateResetPasswordToken(
+        @RequestHeader("X-Reset-Password-Token") String token
+    ) {
+        if(token != null && authenticationService.isResetPasswordTokenValid(token))
+            return ResponseEntity.ok().build();
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }
