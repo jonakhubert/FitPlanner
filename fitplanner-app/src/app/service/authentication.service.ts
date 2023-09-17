@@ -69,6 +69,14 @@ export class AuthenticationService {
     );
   }
 
+  public validateResetPasswordToken(token: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/validate-reset-password-token`, {}, {
+      headers: {
+        'X-Reset-Password-Token': token,
+      },
+    });
+  }
+
   public authorize(): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/validate-access-token`, {});
   }
