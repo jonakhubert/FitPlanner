@@ -31,7 +31,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 
             var authHeader = Objects.requireNonNull(exchange.getRequest().getHeaders()
-                    .get(HttpHeaders.AUTHORIZATION)).get(0);
+                .get(HttpHeaders.AUTHORIZATION)).get(0);
 
             if (authHeader == null || !authHeader.startsWith("Bearer "))
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
@@ -40,7 +40,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
             return webClientBuilder.build()
                 .post()
-                .uri("http://localhost:8090/api/auth/validate-token")
+                .uri("http://localhost:8222/api/auth/validate-access-token")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .exchangeToMono(clientResponse -> {
                     if (clientResponse.statusCode().is2xxSuccessful())
