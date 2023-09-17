@@ -72,10 +72,22 @@ export class LoginComponent {
 
   sendResetPassword() {
     if(this.isEmailValid) {
-      this.resetPasswordEmail = '';
-      this.toastr.info("Link to reset your password has been sent.", "Info");
-      const closeButton = document.getElementById("closeBtn");
-      closeButton?.click();
+      this.authenticationService.forgotPassword(this.resetPasswordEmail).subscribe(
+        {
+          next: (response) => {
+            this.resetPasswordEmail = '';
+            this.toastr.info("Link to reset your password has been sent.", "Info");
+            const closeButton = document.getElementById("closeBtn");
+            closeButton?.click();
+          },
+          error: (error) => {
+            if(error.statusCode === 404)
+              this.toastr.error("Account with provided email doesn't exist.", "Error");
+            else
+              this.toastr.error("Something went wrong. Try again later.", "Error");
+          }
+        }
+      )
     }
   }
 }
