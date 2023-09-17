@@ -121,8 +121,7 @@ public class AuthenticationService {
 
         tokenService.deleteResetPasswordToken(email);
         var resetPasswordToken = tokenService.createResetPasswordToken(email);
-        var link = "http://localhost:8222/api/auth/reset-password?email=" + email
-            + "&token=" + resetPasswordToken.getToken();
+        var link = "http://localhost:4200/reset-password?email=" + email + "&token=" + resetPasswordToken.getToken();
 
         emailService.send(user.getUsername(), "Reset password", EmailBuilder.buildEmailBody(link, "Reset password"));
 
@@ -142,6 +141,8 @@ public class AuthenticationService {
 
         user.setPassword(passwordEncoder.encode(resetPasswordRequest.newPassword()));
         userRepository.save(user);
+        tokenService.deleteResetPasswordToken(user.getUsername());
+        tokenService.deleteAccessToken(user.getUsername());
 
         return new ConfirmationResponse("Password reset successfully.");
     }
