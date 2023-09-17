@@ -59,7 +59,7 @@ export class ResetPasswordComponent {
         this.toastr.success(response.confirmation_message, "Success");
       }, 
       error: () => {
-        this.toastr.error("Something went wrong. Try again later.", "Error");
+        this.toastr.error("This link is expired.", "Error");
       }
     })
   }
