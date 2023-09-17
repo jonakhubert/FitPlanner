@@ -92,6 +92,12 @@ public class TokenService {
             .orElseThrow(() -> new TokenNotFoundException("Token not found."));
     }
 
+    public boolean isResetPasswordTokenValid(String token) {
+        var val = resetPasswordTokenRepository.findByToken(token);
+
+        return val.isPresent() && !val.get().getExpiredAt().isBefore(LocalDateTime.now());
+    }
+
     public void deleteResetPasswordToken(String email) {
         resetPasswordTokenRepository.findByUserEmail(email).ifPresent(resetPasswordTokenRepository::delete);
     }

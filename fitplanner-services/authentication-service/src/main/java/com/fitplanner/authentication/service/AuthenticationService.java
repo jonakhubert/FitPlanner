@@ -92,7 +92,7 @@ public class AuthenticationService {
         return new LoginResponse(jwt);
     }
 
-    public boolean isTokenValid(String token) {
+    public boolean isAccessTokenValid(String token) {
         return tokenService.isAccessTokenValid(token);
     }
 
@@ -145,6 +145,10 @@ public class AuthenticationService {
         tokenService.deleteAccessToken(user.getUsername());
 
         return new ConfirmationResponse("Password reset successfully.");
+    }
+
+    public boolean isResetPasswordTokenValid(String token) {
+        return tokenService.isResetPasswordTokenValid(token);
     }
 
     private void verifyUser(String email) {
