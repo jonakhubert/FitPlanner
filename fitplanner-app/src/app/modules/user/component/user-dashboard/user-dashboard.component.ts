@@ -32,7 +32,8 @@ export class UserDashboardComponent {
   private authorize() {
     this.authenticationService.authorize().subscribe({
       next: () => {},
-      error: () => {
+      error: (error) => {
+        console.log(error);
         this.toastr.info("Your session has expired.", "Info");
       }
     });
