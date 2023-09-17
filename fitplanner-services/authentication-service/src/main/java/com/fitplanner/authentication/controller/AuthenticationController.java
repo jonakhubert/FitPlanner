@@ -44,7 +44,7 @@ public class AuthenticationController {
     @PostMapping(
         path = "/validate-access-token"
     )
-    public ResponseEntity<Void> validateToken(
+    public ResponseEntity<Void> validateAccessToken(
         @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
     ) {
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
