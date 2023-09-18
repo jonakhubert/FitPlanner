@@ -120,7 +120,7 @@ public class AuthenticationServiceTest {
         verify(authenticationManager, times(1)).authenticate(any());
         verify(jwtService, times(1)).generateToken(eq(user));
         verify(tokenService, times(1)).deleteAccessToken(eq(email));
-        verify(tokenService, times(1)).createAccessToken(eq(loginRequest.email()), eq(token));
+        verify(tokenService, times(1)).createAccessToken(eq(token), eq(loginRequest.email()));
     }
 
     @Test
