@@ -33,17 +33,18 @@ public class TokenService {
 
     // Access token
 
-    public void deleteAccessToken(String email) {
-        accessTokenRepository.findByUserEmail(email).ifPresent(accessTokenRepository::delete);
-    }
+    public void createAccessToken(String email, String jwt) {
+        var token = new AccessToken(email, jwt);
 
-    public void saveAccessToken(String email, String jwt) {
-        var accessToken = new AccessToken(jwt, email);
-        accessTokenRepository.save(accessToken);
+        accessTokenRepository.save(token);
     }
 
     public boolean isAccessTokenValid(String token) {
         return accessTokenRepository.findByToken(token).isPresent();
+    }
+
+    public void deleteAccessToken(String email) {
+        accessTokenRepository.findByUserEmail(email).ifPresent(accessTokenRepository::delete);
     }
 
     // Verification token
