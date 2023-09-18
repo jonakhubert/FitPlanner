@@ -87,7 +87,7 @@ public class AuthenticationService {
 
         var jwt = jwtService.generateToken(user);
         tokenService.deleteAccessToken(user.getUsername());
-        tokenService.saveAccessToken(user.getUsername(), jwt);
+        tokenService.createAccessToken(user.getUsername(), jwt);
 
         return new LoginResponse(jwt);
     }
