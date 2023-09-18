@@ -12,7 +12,8 @@ export const resetPasswordGuard: CanActivateFn = (route, state) => {
   const email = route.queryParams['email'];
   const token = route.queryParams['token'];
 
-  if(email && token) {
+  if(email && token && !authService.isLoggedIn()) {
+    console.log("inside");
     return new Observable<boolean>((observer) => {
       authService.validateResetPasswordToken(token).subscribe(
       {
@@ -29,7 +30,8 @@ export const resetPasswordGuard: CanActivateFn = (route, state) => {
       });
     });
   } else {
-    router.navigate(['login']);
+    console.log("logged in");
+    router.navigate(['/']);
     return false;
   }
 };
