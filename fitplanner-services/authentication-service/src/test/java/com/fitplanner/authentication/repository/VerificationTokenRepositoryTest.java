@@ -1,7 +1,7 @@
 package com.fitplanner.authentication.repository;
 
 import com.fitplanner.authentication.MongoDBContainerConfig;
-import com.fitplanner.authentication.model.verificationtoken.VerificationToken;
+import com.fitplanner.authentication.model.VerificationToken;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -19,7 +19,7 @@ public class VerificationTokenRepositoryTest {
     private VerificationTokenRepository underTest;
 
     @Test
-    public void findByToken_ExistingVerificationToken_VerificationToken() {
+    public void findByToken_ExistingToken_VerificationToken() {
         //given
         var token = "conf_token";
         var verificationToken = new VerificationToken(
@@ -28,6 +28,7 @@ public class VerificationTokenRepositoryTest {
             null,
             "user_email"
         );
+
         underTest.save(verificationToken);
 
         // when
@@ -38,7 +39,7 @@ public class VerificationTokenRepositoryTest {
     }
 
     @Test
-    public void findByToken_NonExistingVerificationToken_Null() {
+    public void findByToken_NonExistingToken_Null() {
         // given
         var invalidToken = "invalid-token";
 
@@ -59,6 +60,7 @@ public class VerificationTokenRepositoryTest {
             null,
             email
         );
+
         underTest.save(verificationToken);
 
         // when

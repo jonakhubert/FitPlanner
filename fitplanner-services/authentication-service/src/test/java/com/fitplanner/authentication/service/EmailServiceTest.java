@@ -26,12 +26,13 @@ public class EmailServiceTest {
         // given
         var to = "recipient@example.com";
         var emailContent = "This is a test email.";
+        var subject = "subject";
         MimeMessage mimeMessage = mock(MimeMessage.class);
 
         when(javaMailSender.createMimeMessage()).thenReturn(mimeMessage);
 
         // when
-        underTest.send(to, emailContent);
+        underTest.send(to, subject, emailContent);
 
         // then
         verify(javaMailSender, times(1)).createMimeMessage();
@@ -43,10 +44,11 @@ public class EmailServiceTest {
         // given
         var to = "recipient@example.com";
         var emailContent = "This is a test email.";
+        var subject = "subject";
 
         when(javaMailSender.createMimeMessage()).thenThrow(new MailSendException("Failed to send an email."));
 
         // then
-        assertThrows(MailSendException.class, () -> underTest.send(to, emailContent));
+        assertThrows(MailSendException.class, () -> underTest.send(to, subject, emailContent));
     }
 }

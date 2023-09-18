@@ -19,7 +19,7 @@ public class AccessTokenRepositoryTest {
     private AccessTokenRepository underTest;
 
     @Test
-    public void findByToken_ExistingAccessToken_AccessToken() {
+    public void findByToken_ExistingToken_AccessToken() {
         // given
         var validToken = "john-token";
         var token = new AccessToken(
@@ -36,7 +36,7 @@ public class AccessTokenRepositoryTest {
     }
 
     @Test
-    public void findByToken_NonExistingAccessToken_Null() {
+    public void findByToken_NonExistingToken_Null() {
         // given
         var invalidToken = "invalid-token";
 
