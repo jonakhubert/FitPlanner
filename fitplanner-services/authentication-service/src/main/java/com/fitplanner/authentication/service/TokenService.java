@@ -33,8 +33,8 @@ public class TokenService {
 
     // Access token
 
-    public void createAccessToken(String email, String jwt) {
-        var token = new AccessToken(email, jwt);
+    public void createAccessToken(String jwt, String email) {
+        var token = new AccessToken(jwt, email);
 
         accessTokenRepository.save(token);
     }
