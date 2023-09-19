@@ -116,6 +116,9 @@ public class AuthenticationService {
 
     @Transactional
     public ConfirmationResponse forgotPassword(String email) {
+        if(!isEmailValid(email))
+            throw new InvalidEmailFormatException(email + " format is invalid.");
+
         var user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UserNotFoundException("User not found."));
 
@@ -130,6 +133,9 @@ public class AuthenticationService {
 
     @Transactional
     public ConfirmationResponse resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        if(!isEmailValid(resetPasswordRequest.email()))
+            throw new InvalidEmailFormatException(resetPasswordRequest.email() + " format is invalid.");
+
         var user = userRepository.findByEmail(resetPasswordRequest.email())
             .orElseThrow(() -> new UserNotFoundException("User not found."));
 
