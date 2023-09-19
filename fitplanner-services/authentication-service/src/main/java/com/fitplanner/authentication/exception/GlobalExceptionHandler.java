@@ -13,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,21 +23,6 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ApiError> handleMethodNotSupportedException(
-        HttpRequestMethodNotSupportedException ex,
-        HttpServletRequest request
-    ) {
-        var apiError = new ApiError(
-            request.getRequestURI(),
-            ex.getMessage(),
-            HttpStatus.METHOD_NOT_ALLOWED.value(),
-            LocalDateTime.now().toString()
-        );
-
-        return new ResponseEntity<>(apiError, HttpStatus.METHOD_NOT_ALLOWED);
-    }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ApiError> handleUserNotFoundException(
@@ -66,6 +52,81 @@ public class GlobalExceptionHandler {
         );
 
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(UserAlreadyVerifiedException.class)
+    public ResponseEntity<ApiError> handleUserAlreadyVerifiedException(
+        UserAlreadyVerifiedException ex,
+        HttpServletRequest request
+    ) {
+        var apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.OK.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.OK);
+    }
+
+    @ExceptionHandler(UserNotVerifiedException.class)
+    public ResponseEntity<ApiError> handleUserNotVerifiedException(
+        UserNotVerifiedException ex,
+        HttpServletRequest request
+    ) {
+        var apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.FORBIDDEN.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<ApiError> handleTokenExpiredException(
+        TokenExpiredException ex,
+        HttpServletRequest request
+    ) {
+        var apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.UNAUTHORIZED.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(TokenNotFoundException.class)
+    public ResponseEntity<ApiError> handleTokenNotFoundException(
+        TokenNotFoundException ex,
+        HttpServletRequest request
+    ) {
+        var apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.NOT_FOUND.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ApiError> handleMethodNotSupportedException(
+        HttpRequestMethodNotSupportedException ex,
+        HttpServletRequest request
+    ) {
+        var apiError = new ApiError(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.METHOD_NOT_ALLOWED.value(),
+            LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -158,51 +219,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.SERVICE_UNAVAILABLE);
     }
 
-    @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<ApiError> handleTokenExpiredException(
-        TokenExpiredException ex,
-        HttpServletRequest request
-    ) {
-        var apiError = new ApiError(
-            request.getRequestURI(),
-            ex.getMessage(),
-            HttpStatus.UNAUTHORIZED.value(),
-            LocalDateTime.now().toString()
-        );
-
-        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(UserAlreadyVerifiedException.class)
-    public ResponseEntity<ApiError> handleUserAlreadyVerifiedException(
-        UserAlreadyVerifiedException ex,
-        HttpServletRequest request
-    ) {
-        var apiError = new ApiError(
-            request.getRequestURI(),
-            ex.getMessage(),
-            HttpStatus.OK.value(),
-            LocalDateTime.now().toString()
-        );
-
-        return new ResponseEntity<>(apiError, HttpStatus.OK);
-    }
-
-    @ExceptionHandler(UserNotVerifiedException.class)
-    public ResponseEntity<ApiError> handleUserNotVerifiedException(
-        UserNotVerifiedException ex,
-        HttpServletRequest request
-    ) {
-        var apiError = new ApiError(
-            request.getRequestURI(),
-            ex.getMessage(),
-            HttpStatus.FORBIDDEN.value(),
-            LocalDateTime.now().toString()
-        );
-
-        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
-    }
-
     @ExceptionHandler(MailSendException.class)
     public ResponseEntity<ApiError> handleMessagingException(
         MessagingException ex,
@@ -218,24 +234,24 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(TokenNotFoundException.class)
-    public ResponseEntity<ApiError> handleTokenNotFoundException(
-        TokenNotFoundException ex,
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiError> handleMissingParameterException(
+        MissingServletRequestParameterException ex,
         HttpServletRequest request
     ) {
         var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
-            HttpStatus.NOT_FOUND.value(),
+            HttpStatus.UNAUTHORIZED.value(),
             LocalDateTime.now().toString()
         );
 
-        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<ApiError> handleMissingParameterException(
-        MissingServletRequestParameterException ex,
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    public ResponseEntity<ApiError> handleMissingRequestHeaderException(
+        MissingRequestHeaderException ex,
         HttpServletRequest request
     ) {
         var apiError = new ApiError(

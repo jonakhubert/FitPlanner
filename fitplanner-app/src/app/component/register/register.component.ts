@@ -14,7 +14,7 @@ export class RegisterComponent {
   registerForm!: FormGroup;
   submitted = false;
   alertMessage = '';
-  confirmationMessage = '';
+  verificationMessage = '';
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -40,9 +40,8 @@ export class RegisterComponent {
   onSubmit() {
     this.submitted = true;
 
-    if(this.registerForm.invalid) {
+    if(this.registerForm.invalid)
       return;
-    }
 
     this.authenticationService.register(this.registerForm.value).subscribe(
     {
@@ -54,11 +53,11 @@ export class RegisterComponent {
       },
       error: (error) => {
         if(error.statusCode === 409) {
-          this.confirmationMessage = '';
+          this.verificationMessage = '';
           this.alertMessage = this.registerForm.get('email')?.value + " already exists in database.";
         }
         else {
-          this.confirmationMessage = '';
+          this.verificationMessage = '';
           this.toastr.error("Something went wrong. Try again later.", "Error");
         }
       }
