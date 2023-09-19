@@ -303,6 +303,19 @@ public class AuthenticationServiceTest {
     }
 
     @Test
+    public void forgotPassword_InvalidUserEmail_InvalidEmailFormatException() {
+        // given
+        var email = "invalid";
+
+        // then
+        assertThrows(InvalidEmailFormatException.class, () -> underTest.forgotPassword(email));
+        verify(userRepository, never()).findByEmail(eq(email));
+        verify(tokenService, never()).deleteResetPasswordToken(anyString());
+        verify(tokenService, never()).createResetPasswordToken(anyString());
+        verify(emailService, never()).send(anyString(), anyString(),anyString());
+    }
+
+    @Test
     public void resetPassword_ExistingUserAndNotExpiredToken_ConfirmationMessage() {
         // given
         var email = "any@gmail.com";
@@ -367,6 +380,21 @@ public class AuthenticationServiceTest {
         verify(userRepository, never()).save(eq(user));
         verify(tokenService, never()).deleteResetPasswordToken(eq(email));
         verify(tokenService, never()).deleteAccessToken(eq(email));
+    }
+
+    @Test
+    public void resetPassword_InvalidUserEmail_InvalidEmailFormatException() {
+        // given
+        var email = "invalid";
+        var token = "token";
+        var request = new ResetPasswordRequest(email, token, "password");
+
+        // then
+        assertThrows(InvalidEmailFormatException.class, () -> underTest.resetPassword(request));
+        verify(userRepository, never()).findByEmail(eq(email));
+        verify(tokenService, never()).deleteResetPasswordToken(anyString());
+        verify(tokenService, never()).createResetPasswordToken(anyString());
+        verify(emailService, never()).send(anyString(), anyString(),anyString());
     }
 
     @Test
