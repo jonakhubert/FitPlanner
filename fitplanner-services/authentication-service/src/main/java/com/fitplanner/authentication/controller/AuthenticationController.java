@@ -26,9 +26,9 @@ public class AuthenticationController {
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<ConfirmationResponse> register(
-        @Valid @RequestBody RegisterRequest registerRequest
+        @Valid @RequestBody RegisterRequest request
     ) {
-        return ResponseEntity.ok(authenticationService.register(registerRequest));
+        return ResponseEntity.ok(authenticationService.register(request));
     }
 
     @PostMapping(
@@ -36,9 +36,9 @@ public class AuthenticationController {
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<LoginResponse> login(
-        @Valid @RequestBody LoginRequest loginRequest
+        @Valid @RequestBody LoginRequest request
     ) {
-        return ResponseEntity.ok(authenticationService.login(loginRequest));
+        return ResponseEntity.ok(authenticationService.login(request));
     }
 
     @PostMapping(
@@ -82,9 +82,9 @@ public class AuthenticationController {
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<ConfirmationResponse> resetPassword(
-        @RequestBody @Valid ResetPasswordRequest resetPasswordRequest
+        @RequestBody @Valid ResetPasswordRequest request
     ) {
-        return ResponseEntity.ok(authenticationService.resetPassword(resetPasswordRequest));
+        return ResponseEntity.ok(authenticationService.resetPassword(request));
     }
 
     @PostMapping(

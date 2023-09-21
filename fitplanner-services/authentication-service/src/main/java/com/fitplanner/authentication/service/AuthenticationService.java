@@ -44,14 +44,14 @@ public class AuthenticationService {
     }
 
     @Transactional
-    public ConfirmationResponse register(RegisterRequest registerRequest) {
-        if(!isEmailValid(registerRequest.email()))
-            throw new InvalidEmailFormatException(registerRequest.email() + " format is invalid.");
+    public ConfirmationResponse register(RegisterRequest request) {
+        if(!isEmailValid(request.email()))
+            throw new InvalidEmailFormatException(request.email() + " format is invalid.");
 
-        if(userRepository.findByEmail(registerRequest.email()).isPresent())
-            throw new UserAlreadyExistException(registerRequest.email() + " already exist.");
+        if(userRepository.findByEmail(request.email()).isPresent())
+            throw new UserAlreadyExistException(request.email() + " already exist.");
 
-        var user = createUser(registerRequest);
+        var user = createUser(request);
         var verificationToken = tokenService.createVerificationToken(user.getUsername());
         var link = "http://localhost:8222/api/auth/verify?verification_token=" + verificationToken.getToken();
 
@@ -61,15 +61,15 @@ public class AuthenticationService {
     }
 
     @Transactional
-    public LoginResponse login(LoginRequest loginRequest) {
-        if(!isEmailValid(loginRequest.email()))
-            throw new InvalidEmailFormatException(loginRequest.email() + " format is invalid.");
+    public LoginResponse login(LoginRequest request) {
+        if(!isEmailValid(request.email()))
+            throw new InvalidEmailFormatException(request.email() + " format is invalid.");
 
-        var user = userRepository.findByEmail(loginRequest.email())
+        var user = userRepository.findByEmail(request.email())
             .orElseThrow(() -> new UserNotFoundException("User not found."));
 
         if(!user.isEnabled()) {
-            tokenService.deleteVerificationToken(loginRequest.email());
+            tokenService.deleteVerificationToken(request.email());
             var verificationToken = tokenService.createVerificationToken(user.getUsername());
             var link = "http://localhost:8222/api/auth/verify?verification_token=" + verificationToken.getToken();
 
@@ -80,8 +80,8 @@ public class AuthenticationService {
 
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
-                loginRequest.email(),
-                loginRequest.password()
+                request.email(),
+                request.password()
             )
         );
 
@@ -132,20 +132,20 @@ public class AuthenticationService {
     }
 
     @Transactional
-    public ConfirmationResponse resetPassword(ResetPasswordRequest resetPasswordRequest) {
-        if(!isEmailValid(resetPasswordRequest.email()))
-            throw new InvalidEmailFormatException(resetPasswordRequest.email() + " format is invalid.");
+    public ConfirmationResponse resetPassword(ResetPasswordRequest request) {
+        if(!isEmailValid(request.email()))
+            throw new InvalidEmailFormatException(request.email() + " format is invalid.");
 
-        var user = userRepository.findByEmail(resetPasswordRequest.email())
+        var user = userRepository.findByEmail(request.email())
             .orElseThrow(() -> new UserNotFoundException("User not found."));
 
-        var resetPasswordToken = tokenService.findResetPasswordToken(resetPasswordRequest.resetPasswordToken());
+        var resetPasswordToken = tokenService.findResetPasswordToken(request.resetPasswordToken());
         var expiredAt = resetPasswordToken.getExpiredAt();
 
         if(expiredAt.isBefore(LocalDateTime.now()))
             throw new TokenExpiredException("Token is expired.");
 
-        user.setPassword(passwordEncoder.encode(resetPasswordRequest.newPassword()));
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
         userRepository.save(user);
         tokenService.deleteResetPasswordToken(user.getUsername());
         tokenService.deleteAccessToken(user.getUsername());
@@ -165,12 +165,12 @@ public class AuthenticationService {
         userRepository.save(user);
     }
 
-    private User createUser(RegisterRequest registerRequest) {
+    private User createUser(RegisterRequest request) {
         var user = new User(
-            registerRequest.firstName(),
-            registerRequest.lastName(),
-            registerRequest.email(),
-            passwordEncoder.encode(registerRequest.password()),
+            request.firstName(),
+            request.lastName(),
+            request.email(),
+            passwordEncoder.encode(request.password()),
             Role.USER
         );
 
