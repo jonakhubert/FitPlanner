@@ -22,6 +22,11 @@ export class UserDashboardComponent {
         if (this.authenticationService.isLoggedIn()) {
           this.authorize();
         }
+
+        if(localStorage.getItem('token') === null) {
+          localStorage.clear();
+          this.router.navigate(['login']);
+        }
       }
     });
 
