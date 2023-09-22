@@ -13,11 +13,17 @@
             <a class="nav-link" routerLink="./workout">Workout</a>
           </li>
         </ul>
-        <form class="d-flex">
-          <a class="btn btn-primary me-lg-3" (click)="logout()">
-            Logout
-          </a>
-        </form>
+
+        <div class="dropdown-center">
+          <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Account
+          </button>
+          <ul class="dropdown-menu dropdown-menu-dark">
+            <li><a class="dropdown-item" routerLink="./account-settings">Settings</a></li>
+            <li><a class="dropdown-item" (click)="logout()" routerLink="/">Logout</a></li>
+          </ul>
+        </div>
+
       </div>
     </div>
   </nav>
