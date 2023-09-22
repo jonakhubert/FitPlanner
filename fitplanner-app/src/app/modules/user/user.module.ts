@@ -8,6 +8,9 @@ import { WorkoutComponent } from './component/workout/workout.component';
 import { DietComponent } from './component/diet/diet.component';
 import { AboutComponent } from './component/about/about.component';
 import { HttpClientModule } from '@angular/common/http';
+import { AccountSettingsComponent } from './component/account-settings/account-settings.component';
+import { PasswordChangeComponent } from './component/password-change/password-change.component';
+import { AccountDeleteComponent } from './component/account-delete/account-delete.component';
 
 
 @NgModule({
@@ -16,7 +19,10 @@ import { HttpClientModule } from '@angular/common/http';
     UserNavComponent,
     WorkoutComponent,
     DietComponent,
-    AboutComponent
+    AboutComponent,
+    AccountSettingsComponent,
+    PasswordChangeComponent,
+    AccountDeleteComponent
   ],
   imports: [
     CommonModule,
