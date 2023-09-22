@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, catchError, map, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AuthenticationService } from 'src/app/service/authentication.service';
 
 export const resetPasswordGuard: CanActivateFn = (route, state) => {
@@ -13,7 +13,6 @@ export const resetPasswordGuard: CanActivateFn = (route, state) => {
   const token = route.queryParams['token'];
 
   if(email && token && !authService.isLoggedIn()) {
-    console.log("inside");
     return new Observable<boolean>((observer) => {
       authService.validateResetPasswordToken(token).subscribe(
       {
@@ -30,7 +29,6 @@ export const resetPasswordGuard: CanActivateFn = (route, state) => {
       });
     });
   } else {
-    console.log("logged in");
     router.navigate(['/']);
     return false;
   }
