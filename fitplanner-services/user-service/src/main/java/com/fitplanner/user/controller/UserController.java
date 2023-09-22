@@ -2,7 +2,6 @@ package com.fitplanner.user.controller;
 
 import com.fitplanner.user.model.api.ChangePasswordRequest;
 import com.fitplanner.user.model.api.ConfirmationResponse;
-import com.fitplanner.user.model.user.User;
 import com.fitplanner.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping(
+    @PostMapping(
         path = "/change-password",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
