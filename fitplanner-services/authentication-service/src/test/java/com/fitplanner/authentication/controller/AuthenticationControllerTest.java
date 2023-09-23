@@ -1,6 +1,5 @@
 package com.fitplanner.authentication.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitplanner.authentication.config.JwtAuthenticationFilter;
 import com.fitplanner.authentication.exception.model.*;
