@@ -2,14 +2,10 @@ package com.fitplanner.authentication.service;
 
 import com.fitplanner.authentication.exception.model.*;
 import com.fitplanner.authentication.model.api.*;
-import com.fitplanner.authentication.model.user.Role;
-import com.fitplanner.authentication.model.user.User;
-import com.fitplanner.authentication.repository.UserRepository;
 import com.fitplanner.authentication.util.EmailBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,27 +15,21 @@ import java.util.regex.Pattern;
 @Service
 public class AuthenticationService {
 
-    private final UserRepository userRepository;
-    private final TokenService tokenService;
+    private final UserService userService;
     private final EmailService emailService;
     private final JwtService jwtService;
-    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
     @Autowired
     public AuthenticationService(
-        UserRepository userRepository,
-        TokenService tokenService,
+        UserService userService,
         EmailService emailService,
         JwtService jwtService,
-        PasswordEncoder passwordEncoder,
         AuthenticationManager authenticationManager
     ) {
-        this.userRepository = userRepository;
-        this.tokenService = tokenService;
+        this.userService = userService;
         this.emailService = emailService;
         this.jwtService = jwtService;
-        this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
     }
 
@@ -48,13 +38,13 @@ public class AuthenticationService {
         if(!isEmailValid(request.email()))
             throw new InvalidEmailFormatException(request.email() + " format is invalid.");
 
-        if(userRepository.findByEmail(request.email()).isPresent())
+        if(userService.isUserExist(request.email()))
             throw new UserAlreadyExistException(request.email() + " already exist.");
 
-        var user = createUser(request);
-        var verificationToken = tokenService.createVerificationToken(user.getUsername());
-        var link = "http://localhost:8222/api/auth/verify?verification_token=" + verificationToken.getToken();
+        var user = userService.createUser(request);
+        var verificationToken = userService.createVerificationToken(user);
 
+        var link = "http://localhost:8222/api/auth/verify?verification_token=" + verificationToken.getToken();
         emailService.send(user.getUsername(), "Confirm your account", EmailBuilder.buildEmailBody(link, "Confirm"));
 
         return new ConfirmationResponse("Verification email has been sent.");
@@ -65,14 +55,12 @@ public class AuthenticationService {
         if(!isEmailValid(request.email()))
             throw new InvalidEmailFormatException(request.email() + " format is invalid.");
 
-        var user = userRepository.findByEmail(request.email())
-            .orElseThrow(() -> new UserNotFoundException("User not found."));
+        var user = userService.getUserByEmail(request.email());
 
         if(!user.isEnabled()) {
-            tokenService.deleteVerificationToken(request.email());
-            var verificationToken = tokenService.createVerificationToken(user.getUsername());
-            var link = "http://localhost:8222/api/auth/verify?verification_token=" + verificationToken.getToken();
+            var verificationToken = userService.createVerificationToken(user);
 
+            var link = "http://localhost:8222/api/auth/verify?verification_token=" + verificationToken.getToken();
             emailService.send(user.getUsername(), "Confirm your account", EmailBuilder.buildEmailBody(link, "Confirm"));
 
             throw new UserNotVerifiedException("User is not verified. Verification email has been resent.");
@@ -86,19 +74,21 @@ public class AuthenticationService {
         );
 
         var jwt = jwtService.generateToken(user);
-        tokenService.deleteAccessToken(user.getUsername());
-        tokenService.createAccessToken(jwt, user.getUsername());
+        var accessToken = userService.createAccessToken(user, jwt);
 
-        return new LoginResponse(jwt);
+        return new LoginResponse(accessToken.getToken());
     }
 
     public boolean isAccessTokenValid(String token) {
-        return tokenService.isAccessTokenValid(token);
+        return userService.isAccessTokenValid(token);
     }
 
     @Transactional
     public ConfirmationResponse verify(String token) {
-        var verificationToken = tokenService.findVerificationToken(token);
+        var verificationToken = userService.getVerificationToken(token);
+
+        if(verificationToken == null)
+            throw new TokenNotFoundException("Token not found.");
 
         if(verificationToken.getConfirmedAt() != null)
             throw new UserAlreadyVerifiedException("User has been already verified.");
@@ -106,10 +96,8 @@ public class AuthenticationService {
         if(verificationToken.getExpiredAt().isBefore(LocalDateTime.now()))
             throw new TokenExpiredException("Token is expired.");
 
-        verificationToken.setConfirmedAt(LocalDateTime.now());
-        tokenService.saveVerificationToken(verificationToken);
-
-        verifyUser(verificationToken.getUserEmail());
+        var user = userService.getUserByVerificationToken(token);
+        userService.verifyUser(user);
 
         return new ConfirmationResponse("User account verified.");
     }
@@ -119,11 +107,9 @@ public class AuthenticationService {
         if(!isEmailValid(email))
             throw new InvalidEmailFormatException(email + " format is invalid.");
 
-        var user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new UserNotFoundException("User not found."));
+        var user = userService.getUserByEmail(email);
 
-        tokenService.deleteResetPasswordToken(email);
-        var resetPasswordToken = tokenService.createResetPasswordToken(email);
+        var resetPasswordToken = userService.createResetPasswordToken(user);
         var link = "http://localhost:4200/reset-password?email=" + email + "&token=" + resetPasswordToken.getToken();
 
         emailService.send(user.getUsername(), "Reset password", EmailBuilder.buildEmailBody(link, "Reset password"));
@@ -136,45 +122,18 @@ public class AuthenticationService {
         if(!isEmailValid(request.email()))
             throw new InvalidEmailFormatException(request.email() + " format is invalid.");
 
-        var user = userRepository.findByEmail(request.email())
-            .orElseThrow(() -> new UserNotFoundException("User not found."));
+        var user = userService.getUserByEmail(request.email());
 
-        var resetPasswordToken = tokenService.findResetPasswordToken(request.resetPasswordToken());
-        var expiredAt = resetPasswordToken.getExpiredAt();
-
-        if(expiredAt.isBefore(LocalDateTime.now()))
+        if(user.getResetPasswordToken().getExpiredAt().isBefore(LocalDateTime.now()))
             throw new TokenExpiredException("Token is expired.");
 
-        user.setPassword(passwordEncoder.encode(request.newPassword()));
-        userRepository.save(user);
-        tokenService.deleteResetPasswordToken(user.getUsername());
-        tokenService.deleteAccessToken(user.getUsername());
+        userService.resetPassword(user, request.newPassword());
 
         return new ConfirmationResponse("Password reset successfully.");
     }
 
     public boolean isResetPasswordTokenValid(String token) {
-        return tokenService.isResetPasswordTokenValid(token);
-    }
-
-    private void verifyUser(String email) {
-        var user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new UserNotFoundException("User not found."));
-
-        user.setEnabled(true);
-        userRepository.save(user);
-    }
-
-    private User createUser(RegisterRequest request) {
-        var user = new User(
-            request.firstName(),
-            request.lastName(),
-            request.email(),
-            passwordEncoder.encode(request.password()),
-            Role.USER
-        );
-
-        return userRepository.save(user);
+        return userService.isResetPasswordTokenValid(token);
     }
 
     private boolean isEmailValid(String email) {
