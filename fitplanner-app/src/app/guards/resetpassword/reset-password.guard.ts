@@ -22,7 +22,7 @@ export const resetPasswordGuard: CanActivateFn = (route, state) => {
         },
         error: () => {
           router.navigate(['/login']);
-          toastr.error("This link is expired.", "Error");
+          toastr.error("This link has expired.", "Error");
           observer.next(false);
           observer.complete();
         }
