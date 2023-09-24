@@ -27,4 +27,12 @@ public class UserController {
     public ResponseEntity<ConfirmationResponse> changePassword(@RequestBody @Valid ChangePasswordRequest request) {
         return ResponseEntity.ok(userService.changePassword(request));
     }
+
+    @PostMapping(
+        path = "/delete-account",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<ConfirmationResponse> deleteAccount(@RequestParam("email") String email) {
+        return ResponseEntity.ok(userService.deleteAccount(email));
+    }
 }
