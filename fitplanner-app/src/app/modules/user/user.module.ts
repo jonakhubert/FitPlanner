@@ -11,6 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AccountSettingsComponent } from './component/account-settings/account-settings.component';
 import { PasswordChangeComponent } from './component/password-change/password-change.component';
 import { AccountDeleteComponent } from './component/account-delete/account-delete.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -28,7 +29,9 @@ import { AccountDeleteComponent } from './component/account-delete/account-delet
     CommonModule,
     UserRoutingModule,
     HttpClientModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class UserModule { }
