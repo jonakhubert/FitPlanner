@@ -1,5 +1,8 @@
 package com.fitplanner.authentication.model.user;
 
+import com.fitplanner.authentication.model.tokens.ResetPasswordToken;
+import com.fitplanner.authentication.model.tokens.VerificationToken;
+import com.fitplanner.authentication.model.tokens.accesstoken.AccessToken;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import org.springframework.data.annotation.Id;
@@ -24,6 +27,10 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
     private Boolean enabled = false;
+    // tokens
+    private AccessToken accessToken;
+    private VerificationToken verificationToken;
+    private ResetPasswordToken resetPasswordToken;
 
     public User(String firstName, String lastName, String email, String password, Role role) {
         this.firstName = firstName;
@@ -31,6 +38,9 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.accessToken = null;
+        this.verificationToken = null;
+        this.resetPasswordToken = null;
     }
 
     public User() {}
@@ -59,11 +69,16 @@ public class User implements UserDetails {
     @Override public String getUsername() { return email; }
     @Override public String getPassword() { return password; }
     @Override  public boolean isEnabled() { return enabled; }
-    public String getFirstName() { return firstName; }
+    public AccessToken getAccessToken() { return accessToken; }
+    public VerificationToken getVerificationToken() { return verificationToken; }
+    public ResetPasswordToken getResetPasswordToken() { return resetPasswordToken; }
 
     // setters
     public void setEnabled(Boolean enabled) { this.enabled = enabled; }
     public void setPassword(String password) { this.password = password; }
+    public void setAccessToken(AccessToken accessToken) { this.accessToken = accessToken; }
+    public void setVerificationToken(VerificationToken verificationToken) { this.verificationToken = verificationToken; }
+    public void setResetPasswordToken(ResetPasswordToken resetPasswordToken) { this.resetPasswordToken = resetPasswordToken; }
 
     @Override
     public boolean equals(Object o) {
@@ -77,11 +92,15 @@ public class User implements UserDetails {
                 Objects.equals(lastName, other.lastName) &&
                 Objects.equals(email, other.email) &&
                 Objects.equals(password, other.password) &&
-                Objects.equals(role, other.role);
+                Objects.equals(role, other.role) &&
+                Objects.equals(accessToken, other.accessToken) &&
+                Objects.equals(verificationToken, other.verificationToken) &&
+                Objects.equals(resetPasswordToken, other.resetPasswordToken);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, password, role);
+        return Objects.hash(id, firstName, lastName, email, password, role,
+            accessToken, verificationToken, resetPasswordToken);
     }
 }

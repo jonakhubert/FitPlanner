@@ -21,7 +21,7 @@ export class UserNavComponent {
     {
       next: () => {
         this.router.navigate(['login']);
-        this.toastr.success("You have been successfully logged out.", "Logout Successful");
+        this.toastr.success("You have been logged out.", "Logout");
       },
       error: () => {
         this.toastr.error("Something went wrong. Try again later.", "Error");
