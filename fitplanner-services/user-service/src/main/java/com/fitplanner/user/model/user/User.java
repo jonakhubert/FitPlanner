@@ -1,5 +1,8 @@
 package com.fitplanner.user.model.user;
 
+import com.fitplanner.user.model.tokens.ResetPasswordToken;
+import com.fitplanner.user.model.tokens.VerificationToken;
+import com.fitplanner.user.model.tokens.accesstoken.AccessToken;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import org.springframework.data.annotation.Id;
@@ -17,6 +20,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
     private Boolean enabled;
+    // tokens
+    private AccessToken accessToken;
+    private VerificationToken verificationToken;
+    private ResetPasswordToken resetPasswordToken;
 
     public User(String firstName, String lastName, String email, String password, Role role, Boolean enabled) {
         this.firstName = firstName;
