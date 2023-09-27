@@ -16,21 +16,21 @@ import java.time.LocalDateTime;
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
-    public void commence(
+    public void commence( // if auth request is invalid (/api/auth/**) custom response is returned
         HttpServletRequest request,
         HttpServletResponse response,
         AuthenticationException authException
     ) throws IOException {
-        ApiError apiError = new ApiError(
-                request.getRequestURI(),
-                authException.getMessage(),
-                HttpStatus.UNAUTHORIZED.value(),
-                LocalDateTime.now().toString()
+        var apiError = new ApiError(
+            request.getRequestURI(),
+            authException.getMessage(),
+            HttpStatus.UNAUTHORIZED.value(),
+            LocalDateTime.now().toString()
         );
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json");
-        ObjectMapper objectMapper = new ObjectMapper();
+        var objectMapper = new ObjectMapper();
         response.getWriter().write(objectMapper.writeValueAsString(apiError));
     }
 }

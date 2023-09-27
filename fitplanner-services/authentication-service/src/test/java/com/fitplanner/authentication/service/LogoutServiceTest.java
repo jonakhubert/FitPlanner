@@ -1,17 +1,23 @@
 package com.fitplanner.authentication.service;
 
-import com.fitplanner.authentication.model.token.Token;
-import com.fitplanner.authentication.repository.TokenRepository;
+import com.fitplanner.authentication.exception.model.UserNotFoundException;
+import com.fitplanner.authentication.model.api.ApiError;
+import com.fitplanner.authentication.model.tokens.accesstoken.AccessToken;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.Optional;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import static org.mockito.Mockito.*;
 
@@ -19,38 +25,36 @@ import static org.mockito.Mockito.*;
 public class LogoutServiceTest {
 
     @Mock
-    private TokenRepository tokenRepository;
-
+    private UserService userService;
     @Mock
     private HttpServletRequest request;
-
     @Mock
     private HttpServletResponse response;
-
     @Mock
     private Authentication authentication;
+    @Mock
+    private ObjectMapper objectMapper;
 
     @InjectMocks
     private LogoutService underTest;
 
     @Test
-    public void logout_ValidAuthorizationHeader_DeleteAccessToken() {
+    public void logout_ValidAuthorizationHeader_RevokeAccessToken() {
         // given
-        String validToken = "validToken";
-        String authHeader = "Bearer " + validToken;
+        var validToken = "validToken";
+        var authHeader = "Bearer " + validToken;
 
         when(request.getHeader("Authorization")).thenReturn(authHeader);
-        when(tokenRepository.findByToken(validToken)).thenReturn(Optional.of(new Token()));
 
         // when
         underTest.logout(request, response, authentication);
 
         // then
-        verify(tokenRepository, times(1)).delete(any());
+        verify(userService, times(1)).revokeAccessToken(eq(validToken));
     }
 
     @Test
-    public void logout_NoAuthorizationHeader_NoAccessTokenRemoval() {
+    public void logout_NoAuthorizationHeader_NoRevoking() {
         // given
         when(request.getHeader("Authorization")).thenReturn(null);
 
@@ -58,20 +62,37 @@ public class LogoutServiceTest {
         underTest.logout(request, response, authentication);
 
         // then
-        verify(tokenRepository, never()).delete(any());
+        verify(userService, never()).revokeAccessToken(any());
     }
 
     @Test
-    public void logout_InvalidAuthorizationHeader_NoAccessTokenRemoval() {
+    public void logout_InvalidAuthorizationHeader_NoRevoking() {
         // given
-        String invalidToken = "invalidToken";
-        String authHeader = "Invalid " + invalidToken;
+        var invalidToken = "invalidToken";
+        var authHeader = "Invalid " + invalidToken;
         when(request.getHeader("Authorization")).thenReturn(authHeader);
 
         // when
         underTest.logout(request, response, authentication);
 
         // then
-        verify(tokenRepository, never()).delete(any());
+        verify(userService, never()).revokeAccessToken(any());
+    }
+
+    @Test
+    public void logout_InvalidAccessToken_UserNotFoundException() throws IOException {
+        // given
+        var invalidToken = "invalidToken";
+        var authHeader = "Bearer " + invalidToken;
+
+        when(request.getHeader("Authorization")).thenReturn(authHeader);
+        when(response.getWriter()).thenReturn(mock(PrintWriter.class));
+        doThrow(new UserNotFoundException("User not found.")).when(userService).revokeAccessToken(invalidToken);
+
+        // when
+        underTest.logout(request, response, authentication);
+
+        // then
+        verify(userService, times(1)).revokeAccessToken(any());
     }
 }

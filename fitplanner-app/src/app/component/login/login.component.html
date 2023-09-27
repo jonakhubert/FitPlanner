@@ -1,0 +1,76 @@
+<div class="mask d-flex align-items-center">
+    <div class="container h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+          <div class="card" style="border-radius: 15px;">
+            <div class="card-body p-5">
+              <h2 class="text-uppercase text-center mb-5">Login into account</h2>
+              
+              <div *ngIf="message">
+                <div class="alert alert-danger" role="alert">
+                  {{ message }}
+                </div>
+              </div>
+
+              <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+                <div class="form-outline mb-4">
+                  <input type="email" placeholder="Email Address" class="form-control form-control-lg" formControlName="email" [ngClass]="{'is-invalid': submitted && loginForm.controls['email'].errors}"/>
+                  <div *ngIf="submitted && loginForm.controls['email'].errors" class="text-danger">
+                    <div *ngIf="loginForm.controls['email'].errors['pattern']">Email is not valid</div>
+                  </div>
+                </div>
+
+                <div class="form-outline mb-4">
+                  <input type="password" placeholder="Password" class="form-control form-control-lg" formControlName="password" [ngClass]="{'is-invalid': submitted && loginForm.controls['password'].errors}"/>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                  <button type="submit" class="btn btn-primary btn-lg">
+                    Login
+                  </button>
+                </div>
+
+                <p class="text-center text-muted mt-4 mb-0">
+                  Not a member?
+                  <a class="fw-bold text-body" routerLink="/register">Register here</a>
+                </p>
+
+                <p class="text-center mt-3 mb-0">
+                  <a class="fw-bold text-body forgot" data-bs-toggle="modal" data-bs-target="#exampleModal">Forgot password?</a>
+                </p>
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <p class="modal-title" id="exampleModalLabel"> <span style="font-size: 25px; font-weight: 700">Forgot your password?</span><br>
+                  <small>Please provide the email address you used during registration. You will receive a temporary link to reset your password.</small>
+              </p>
+          </div>
+
+          <div class="modal-body">
+              <div class="form-group">
+                <div class="input-field">
+                  <input type="text" placeholder="Email" [(ngModel)]="resetPasswordEmail" (ngModelChange)="checkEmailValidation($event)">
+                </div>
+                <small *ngIf="!resetPasswordEmail" class="text-danger">Email is required</small>
+                <small *ngIf="!isEmailValid && resetPasswordEmail" class="text-danger">Email is invalid</small>
+              </div>
+          </div>
+
+          <div class="modal-footer">
+              <button id="closeBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" (click)="sendResetPassword()">Send</button>
+          </div>
+      </div>
+  </div>
+</div>

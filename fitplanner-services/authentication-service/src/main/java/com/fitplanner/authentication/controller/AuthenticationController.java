@@ -1,9 +1,7 @@
 package com.fitplanner.authentication.controller;
 
-import com.fitplanner.authentication.model.api.AuthenticationRequest;
-import com.fitplanner.authentication.model.api.AuthenticationResponse;
+import com.fitplanner.authentication.model.api.*;
 import com.fitplanner.authentication.service.AuthenticationService;
-import com.fitplanner.authentication.model.api.RegisterRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -27,34 +25,77 @@ public class AuthenticationController {
         path = "/register",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<AuthenticationResponse> register(
-        @Valid @RequestBody RegisterRequest registerRequest
+    public ResponseEntity<ConfirmationResponse> register(
+        @Valid @RequestBody RegisterRequest request
     ) {
-        return ResponseEntity.ok(authenticationService.register(registerRequest));
+        return ResponseEntity.ok(authenticationService.register(request));
     }
 
     @PostMapping(
-        path = "/authenticate",
+        path = "/login",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<AuthenticationResponse> authenticate(
-        @Valid @RequestBody AuthenticationRequest authenticationRequest
+    public ResponseEntity<LoginResponse> login(
+        @Valid @RequestBody LoginRequest request
     ) {
-        return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
+        return ResponseEntity.ok(authenticationService.login(request));
     }
 
     @PostMapping(
-        path = "/validate-token"
+        path = "/validate-access-token"
     )
-    public ResponseEntity<Void> validateToken(
+    public ResponseEntity<Void> validateAccessToken(
         @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
     ) {
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring(7);
+            var token = authorizationHeader.substring(7);
 
-            if(authenticationService.isTokenValid(token))
+            if(authenticationService.isAccessTokenValid(token))
                 return ResponseEntity.ok().build();
         }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @GetMapping(
+        path = "/verify",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<ConfirmationResponse> verify(
+        @RequestParam("verification_token") String verificationToken
+    ) {
+        return ResponseEntity.ok(authenticationService.verify(verificationToken));
+    }
+
+    @PostMapping(
+        path = "/forgot-password",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<ConfirmationResponse> forgotPassword(
+        @RequestParam("email") String email
+    ) {
+        return ResponseEntity.ok(authenticationService.forgotPassword(email));
+    }
+
+    @PostMapping(
+        path = "/reset-password",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<ConfirmationResponse> resetPassword(
+        @RequestBody @Valid ResetPasswordRequest request
+    ) {
+        return ResponseEntity.ok(authenticationService.resetPassword(request));
+    }
+
+    @PostMapping(
+        path = "/validate-reset-password-token",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Void> validateResetPasswordToken(
+        @RequestHeader("X-Reset-Password-Token") String token
+    ) {
+        if(token != null && authenticationService.isResetPasswordTokenValid(token))
+            return ResponseEntity.ok().build();
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }

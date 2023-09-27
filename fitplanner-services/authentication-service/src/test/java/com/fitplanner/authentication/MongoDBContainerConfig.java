@@ -15,7 +15,7 @@ public class MongoDBContainerConfig {
 
     static {
         mongoDBContainer.start();
-        Integer mappedPort = mongoDBContainer.getMappedPort(27017);
+        var mappedPort = mongoDBContainer.getMappedPort(27017);
         System.setProperty("mongodb.container.port", String.valueOf(mappedPort));
     }
 }

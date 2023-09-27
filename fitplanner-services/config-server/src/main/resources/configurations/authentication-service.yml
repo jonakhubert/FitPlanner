@@ -12,6 +12,22 @@ spring:
   data:
     mongodb:
       uri: mongodb://admin:1234@localhost:27017/fitplanner?authSource=admin
+  mail:
+    host: localhost
+    port: 1025
+    username: hello
+    password: hello
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: "*"
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
 
 application:
   security:
