@@ -12,6 +12,7 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { ResetPasswordComponent } from './component/reset-password/reset-password.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { ResetPasswordComponent } from './component/reset-password/reset-passwor
     ToastrModule.forRoot({
       timeOut: 5000,
       preventDuplicates: true
-  })
+    }),
+    FontAwesomeModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

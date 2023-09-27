@@ -12,6 +12,10 @@ import { AccountSettingsComponent } from './component/account-settings/account-s
 import { PasswordChangeComponent } from './component/password-change/password-change.component';
 import { AccountDeleteComponent } from './component/account-delete/account-delete.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatCardModule } from '@angular/material/card';
 
 
 @NgModule({
@@ -31,7 +35,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     HttpClientModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatNativeDateModule,
+    MatCardModule
   ]
 })
 export class UserModule { }
