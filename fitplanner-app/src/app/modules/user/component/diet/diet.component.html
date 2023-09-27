@@ -1,1 +1,51 @@
-<p>{{ helloMessage }}</p>
+<div class="mask d-flex align-items-center">
+  <div class="container h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="diary">
+        <h2>Your food diary for:</h2>
+        <span class="date">
+          <a class="prev">
+            <i class="fa-solid fa-caret-left fa-2xl"></i>
+          </a>
+
+          <time>Tuesday, September 26, 2023</time>
+
+          <a class="next">
+            <i class="fa-solid fa-caret-right fa-2xl"></i>
+          </a>
+
+          <a class="calendar" (click)="picker.open()">
+            <i class="fa-solid fa-calendar-days fa-lg"></i>
+          </a>
+
+          <mat-form-field style="width:1px;visibility:hidden;">
+            <input matInput [matDatepicker]="picker" >
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </span>
+
+        <div class="food-container">
+          <table>
+            <tr class="meal-header">
+              <td class="meal-name">Breakfast <button>Add food</button> </td>
+              <td class="nutrient-column">Calories <div class="subtitle">kcal</div></td>
+              <td class="nutrient-column">Protein <div class="subtitle">g</div></td>
+              <td class="nutrient-column">Fat <div class="subtitle">g</div></td>
+              <td class="nutrient-column">Carbs <div class="subtitle">g</div></td>
+            </tr>
+            <tr class="meal">
+              <td class="name">chicken</td>
+              <td class="nutrient-column"> <span>10</span></td>
+              <td class="nutrient-column"> <span>10</span></td>
+              <td class="nutrient-column"> <span>10</span></td>
+              <td class="nutrient-column"> <span>10</span></td>
+            </tr>
+
+            <tr class="meal-header">
+              <td class="meal-name">Lunch <button>Add food</button> </td>
+            </tr>
+          </table>
+        </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+.mask {
+    margin-top: 40px;
+}
+
+.diary {
+    text-align: left; 
+}
+
+.prev {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.next {
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.date {
+    font-size: 28px;
+}
+
+.calendar {
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.nutrient-column {
+    text-align: center;
+    width: 100px;
+    border: 1px solid #dddddd;
+}
+
+.meal-name {
+    font-size: 20px;
+}
+
+.meal {
+    background-color: rgb(70, 70, 70);
+    border: 1px solid #dddddd;
+}
+
+h2 {
+    display: inline;
+    margin-right: 20px;
+}
+
+table {
+    width: 80%;
+}
