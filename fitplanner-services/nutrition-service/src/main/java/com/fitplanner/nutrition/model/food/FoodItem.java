@@ -1,4 +1,4 @@
-package com.fitplanner.nutrition.model;
+package com.fitplanner.nutrition.model.food;
 
 public record FoodItem(
         String name,
