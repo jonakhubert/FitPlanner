@@ -3,29 +3,18 @@ package com.fitplanner.nutrition.service;
 import com.fitplanner.nutrition.model.api.MealRequest;
 import com.fitplanner.nutrition.model.food.DailyMealPlan;
 import com.fitplanner.nutrition.model.food.Meal;
-import com.fitplanner.nutrition.model.user.User;
-import com.fitplanner.nutrition.repository.DailyMealPlanRepository;
 import com.fitplanner.nutrition.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class NutritionService {
 
     private final UserRepository userRepository;
-    private final DailyMealPlanRepository dailyMealPlanRepository;
 
     @Autowired
-    public NutritionService(UserRepository userRepository, DailyMealPlanRepository dailyMealPlanRepository) {
+    public NutritionService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.dailyMealPlanRepository = dailyMealPlanRepository;
     }
 
     public void addMeal(MealRequest request) {
@@ -36,30 +25,29 @@ public class NutritionService {
             .findFirst()
             .orElse(null);
 
+        // if the daily meal plan for the specific date doesn't exist, create a new one
         if(dailyMealPlan == null) {
-            dailyMealPlan = new DailyMealPlan(user, request.date());
-            dailyMealPlanRepository.save(dailyMealPlan);
+            dailyMealPlan = new DailyMealPlan(request.date());
             user.getDailyMealPlans().add(dailyMealPlan);
             userRepository.save(user);
         }
 
-        // Find the meal in the dailyMealPlan with the specified name
+        // find the meal in the dailyMealPlan with the specified name
         var existingMealOptional = dailyMealPlan.getMeals().stream()
             .filter(meal -> meal.getName().equals(request.mealName()))
             .findFirst();
 
-        // If the meal already exists, add the new food item to it
+        // if the meal already exists, add the new food item to it
         if(existingMealOptional.isPresent()) {
-            Meal existingMeal = existingMealOptional.get();
+            var existingMeal = existingMealOptional.get();
             existingMeal.getFoodItems().add(request.foodItem());
         } else {
-            // If the meal doesn't exist, create a new meal with the specified name and the new food item
-            Meal newMeal = new Meal(request.mealName());
+            // if the meal doesn't exist, create a new meal with the specified name and the new food item
+            var newMeal = new Meal(request.mealName());
             newMeal.getFoodItems().add(request.foodItem());
             dailyMealPlan.getMeals().add(newMeal);
         }
 
-        dailyMealPlanRepository.save(dailyMealPlan);
         userRepository.save(user);
     }
 
