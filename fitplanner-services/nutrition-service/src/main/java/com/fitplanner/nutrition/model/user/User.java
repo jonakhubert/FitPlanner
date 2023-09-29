@@ -1,6 +1,6 @@
 package com.fitplanner.nutrition.model.user;
 
-import com.fitplanner.nutrition.model.DailyMealPlan;
+import com.fitplanner.nutrition.model.food.DailyMealPlan;
 import com.fitplanner.nutrition.model.tokens.ResetPasswordToken;
 import com.fitplanner.nutrition.model.tokens.VerificationToken;
 import com.fitplanner.nutrition.model.tokens.accesstoken.AccessToken;
@@ -56,4 +56,5 @@ public class User {
 
     // setters
     public void setCalories(double calories) { this.calories = calories; }
+    public void setDailyMealPlans(List<DailyMealPlan> dailyMealPlans) { this.dailyMealPlans = dailyMealPlans; }
 }
