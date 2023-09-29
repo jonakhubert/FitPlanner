@@ -8,7 +8,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.List;
 
@@ -32,24 +31,7 @@ public class User {
 
     // preferences TODO: add other parameters (height, weight, etc.)
     private double calories;
-
-    @DocumentReference
     private List<DailyMealPlan> dailyMealPlans;
-
-    public User(
-        String firstName, String lastName, String email, String password, Role role, Boolean enabled,
-        List<DailyMealPlan> dailyMealPlans
-    ) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.enabled = enabled;
-        this.dailyMealPlans = dailyMealPlans;
-    }
-
-    public User() {}
 
     // getters
     public List<DailyMealPlan> getDailyMealPlans() { return dailyMealPlans; }
