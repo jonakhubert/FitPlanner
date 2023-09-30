@@ -33,6 +33,12 @@ public class User {
     private double calories;
     private List<DailyMealPlan> dailyMealPlans;
 
+    // getters
+    public String getEmail() { return email; }
+    public double getCalories() { return calories; }
+    public List<DailyMealPlan> getDailyMealPlans() { return dailyMealPlans; }
+
     // setters
     public void setPassword(String password) { this.password = password; }
+    public void setDailyMealPlans(List<DailyMealPlan> dailyMealPlans) { this.dailyMealPlans = dailyMealPlans; }
 }
