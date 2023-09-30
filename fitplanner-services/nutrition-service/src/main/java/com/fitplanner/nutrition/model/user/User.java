@@ -35,6 +35,7 @@ public class User {
 
     // getters
     public List<DailyMealPlan> getDailyMealPlans() { return dailyMealPlans; }
+    public String getEmail() { return email; }
 
     // setters
     public void setCalories(double calories) { this.calories = calories; }
