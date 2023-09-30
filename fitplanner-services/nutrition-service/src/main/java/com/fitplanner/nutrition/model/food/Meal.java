@@ -12,6 +12,8 @@ public class Meal {
         this.foodItems = new ArrayList<>();
     }
 
+    public Meal() {}
+
     // getters
     public String getName() { return name; }
     public List<FoodItem> getFoodItems() { return foodItems; }

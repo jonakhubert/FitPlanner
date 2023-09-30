@@ -9,6 +9,8 @@ public class FoodItem {
     private double carbs;
     private double quantity;
 
+    public FoodItem() {}
+
     // getters
     public String getName() { return name; }
     public double getCalories() { return calories; }

@@ -1,20 +1,23 @@
 package com.fitplanner.nutrition.model.food;
 
-import org.springframework.data.annotation.Id;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class DailyMealPlan {
 
-    @Id
-    private String id;
     private String date;
     private List<Meal> meals;
 
     public DailyMealPlan(String date) {
         this.date = date;
         this.meals = new ArrayList<>();
+    }
+
+    public DailyMealPlan() {}
+
+    public DailyMealPlan(String date, List<Meal> meals) {
+        this.date = date;
+        this.meals = meals;
     }
 
     // getters
