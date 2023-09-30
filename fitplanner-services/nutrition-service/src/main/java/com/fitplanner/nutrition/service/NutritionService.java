@@ -1,81 +1,55 @@
 package com.fitplanner.nutrition.service;
 
+import com.fitplanner.nutrition.client.UserServiceClient;
 import com.fitplanner.nutrition.model.api.MealRequest;
 import com.fitplanner.nutrition.model.food.DailyMealPlan;
 import com.fitplanner.nutrition.model.food.Meal;
-import com.fitplanner.nutrition.repository.UserRepository;
+//import com.fitplanner.nutrition.model.user.UserNutrition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class NutritionService {
 
-    private final UserRepository userRepository;
+    private final UserServiceClient userServiceClient;
 
     @Autowired
-    public NutritionService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public NutritionService(UserServiceClient userServiceClient) {
+        this.userServiceClient = userServiceClient;
     }
 
-    public void addMeal(MealRequest request) {
-        var user = userRepository.findByEmail(request.email()).orElseThrow(() -> new RuntimeException("Not found"));
+    public void addMeal(MealRequest request, String header) {
+        var user = userServiceClient.getUser(request.email(), header);
 
+        // if the daily meal plan with the specific date doesn't exist, create a new one
         var dailyMealPlan = user.getDailyMealPlans().stream()
             .filter(plan -> plan.getDate().equals(request.date()))
             .findFirst()
-            .orElse(null);
-
-        // if the daily meal plan for the specific date doesn't exist, create a new one
-        if(dailyMealPlan == null) {
-            dailyMealPlan = new DailyMealPlan(request.date());
-            user.getDailyMealPlans().add(dailyMealPlan);
-            userRepository.save(user);
-        }
+            .orElseGet(() -> {
+                DailyMealPlan newPlan = new DailyMealPlan(request.date());
+                user.getDailyMealPlans().add(newPlan);
+                return newPlan;
+            });
 
         // find the meal in the dailyMealPlan with the specified name
-        var existingMealOptional = dailyMealPlan.getMeals().stream()
+        var existingMeal = dailyMealPlan.getMeals().stream()
             .filter(meal -> meal.getName().equals(request.mealName()))
             .findFirst();
 
         // if the meal already exists, add the new food item to it
-        if(existingMealOptional.isPresent()) {
-            var existingMeal = existingMealOptional.get();
-            existingMeal.getFoodItems().add(request.foodItem());
-        } else {
-            // if the meal doesn't exist, create a new meal with the specified name and the new food item
-            var newMeal = new Meal(request.mealName());
-            newMeal.getFoodItems().add(request.foodItem());
-            dailyMealPlan.getMeals().add(newMeal);
-        }
+        // otherwise create a new meal with the specified name and the new food item
+        existingMeal.ifPresentOrElse(
+            meal -> meal.getFoodItems().add(request.foodItem()),
+            () -> {
+                Meal newMeal = new Meal(request.mealName());
+                newMeal.getFoodItems().add(request.foodItem());
+                dailyMealPlan.getMeals().add(newMeal);
+            }
+        );
 
-        userRepository.save(user);
+
+
+//        userServiceClient.saveUserNutrition(new UserNutrition(user.getEmail(), user.getCalories(), user.getDailyMealPlans()), header);
+        userServiceClient.saveUserNutrition(user, header);
     }
-
-//    public void addMeal(MealRequest request) {
-//        var user = userRepository.findByEmail(request.email()).orElseThrow(() -> new RuntimeException("Not found"));
-//
-//        var userMealPlan = user.getDailyMealPlans().stream()
-//            .filter(dailyMealPlan -> dailyMealPlan.getDate().equals(request.date()))
-//            .findFirst()
-//            .orElseGet(() -> {
-//                var newPlan = new DailyMealPlan(user, request.date());
-//                dailyMealPlanRepository.save(newPlan);
-//                user.getDailyMealPlans().add(newPlan);
-//                userRepository.save(user);
-//                return newPlan;
-//            });
-//
-//        var existingMeal = userMealPlan.getMeals().stream()
-//            .filter(meal -> meal.name().equals(request.mealName()))
-//            .findFirst()
-//            .orElse(null);
-//
-//        if (existingMeal == null) {
-//            existingMeal = new Meal(request.mealName(), new ArrayList<>());
-//            userMealPlan.getMeals().add(existingMeal);
-//        }
-//
-//        existingMeal.foodItems().add(request.foodItem());
-//        dailyMealPlanRepository.save(userMealPlan);
-//    }
 }
