@@ -7,8 +7,3 @@ eureka:
 
 server:
   port: 8080
-
-spring:
-  data:
-    mongodb:
-      uri: mongodb://admin:1234@localhost:27017/fitplanner?authSource=admin
