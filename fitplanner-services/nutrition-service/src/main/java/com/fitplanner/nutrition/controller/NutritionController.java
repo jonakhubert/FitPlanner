@@ -32,8 +32,8 @@ public class NutritionController {
         path = "/add-meal",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<String> addMeal(@RequestBody MealRequest request) {
-        nutritionService.addMeal(request);
+    public ResponseEntity<String> addMeal(@RequestBody MealRequest request, @RequestHeader("Authorization") String header) {
+        nutritionService.addMeal(request, header);
         return ResponseEntity.ok("super");
     }
 }
