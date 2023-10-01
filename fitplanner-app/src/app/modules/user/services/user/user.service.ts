@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, tap } from 'rxjs';
 import { ApiError } from 'src/app/interface/api-error';
-import { ChangePasswordRequest } from 'src/app/interface/change-password-request';
+import { ChangePasswordRequest } from 'src/app/modules/user/interface/change-password-request';
 import { ConfirmationResponse } from 'src/app/interface/confirmation-response';
 
 @Injectable({
