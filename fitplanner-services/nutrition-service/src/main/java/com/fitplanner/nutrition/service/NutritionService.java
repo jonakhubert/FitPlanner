@@ -4,9 +4,10 @@ import com.fitplanner.nutrition.client.UserServiceClient;
 import com.fitplanner.nutrition.model.api.MealRequest;
 import com.fitplanner.nutrition.model.food.DailyMealPlan;
 import com.fitplanner.nutrition.model.food.Meal;
-//import com.fitplanner.nutrition.model.user.UserNutrition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 public class NutritionService {
@@ -18,7 +19,7 @@ public class NutritionService {
         this.userServiceClient = userServiceClient;
     }
 
-    public void addMeal(MealRequest request, String header) {
+    public void addFoodItem(MealRequest request, String header) {
         var user = userServiceClient.getUser(request.email(), header);
 
         // if the daily meal plan with the specific date doesn't exist, create a new one
@@ -47,9 +48,15 @@ public class NutritionService {
             }
         );
 
-
-
-//        userServiceClient.saveUserNutrition(new UserNutrition(user.getEmail(), user.getCalories(), user.getDailyMealPlans()), header);
         userServiceClient.saveUserNutrition(user, header);
+    }
+
+    public DailyMealPlan getDailyMealPlan(String email, String date, String header) {
+        var user = userServiceClient.getUser(email, header);
+
+        return user.getDailyMealPlans().stream()
+                .filter(plan -> plan.getDate().equals(date))
+                .findFirst()
+                .orElse(new DailyMealPlan(date, new ArrayList<>()));
     }
 }
