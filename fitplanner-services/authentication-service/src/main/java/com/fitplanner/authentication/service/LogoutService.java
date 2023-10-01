@@ -1,7 +1,6 @@
 package com.fitplanner.authentication.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fitplanner.authentication.exception.model.UserNotFoundException;
 import com.fitplanner.authentication.model.api.ApiError;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,7 +12,6 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.time.LocalDateTime;
 
 @Service

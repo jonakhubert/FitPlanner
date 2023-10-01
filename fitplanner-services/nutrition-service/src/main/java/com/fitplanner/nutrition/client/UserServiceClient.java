@@ -1,7 +1,6 @@
 package com.fitplanner.nutrition.client;
 
 import com.fitplanner.nutrition.model.user.User;
-//import com.fitplanner.nutrition.model.user.UserNutrition;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
