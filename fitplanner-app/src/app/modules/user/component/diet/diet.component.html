@@ -4,13 +4,13 @@
       <div class="diary">
         <h2>Your food diary for:</h2>
         <span class="date">
-          <a class="prev">
+          <a class="prev" (click)="goToDate('previous')">
             <i class="fa-solid fa-caret-left fa-2xl"></i>
           </a>
 
-          <time>Tuesday, September 26, 2023</time>
+          <time class="fixed-size-time">{{ formattedDate }}</time>
 
-          <a class="next">
+          <a class="next" (click)="goToDate('next')">
             <i class="fa-solid fa-caret-right fa-2xl"></i>
           </a>
 
@@ -18,158 +18,94 @@
             <i class="fa-solid fa-calendar-days fa-lg"></i>
           </a>
 
-          <mat-form-field style="width:1px;visibility:hidden;">
-            <input matInput [matDatepicker]="picker" >
+          <mat-form-field style="width:1px; visibility:hidden;">
+            <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" (dateChange)="onDateSelected($event)">
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
         </span>
 
         <div class="food-container">
           <table>
-            <tr class="nutrients">
-              <td></td>
-              <td class="nutrient-column">Calories <div class="subtitle">kcal</div></td>
-              <td class="nutrient-column">Protein <div class="subtitle">g</div></td>
-              <td class="nutrient-column">Fat <div class="subtitle">g</div></td>
-              <td class="nutrient-column">Carbs <div class="subtitle">g</div></td>
-            </tr>
+            <ng-container *ngIf="dailyMealPlan">
+              <!-- Display nutrients header -->
+              <tr class="nutrients">
+                <td></td>
+                <td class="nutrient-column">Calories <div class="subtitle">kcal</div></td>
+                <td class="nutrient-column">Protein <div class="subtitle">g</div></td>
+                <td class="nutrient-column">Fat <div class="subtitle">g</div></td>
+                <td class="nutrient-column">Carbs <div class="subtitle">g</div></td>
+              </tr>
+              <tr class="spacer">
+                <td>&nbsp;</td>
+              </tr>
 
-            <tr class="meal-header">
-              <td class="meal-name">Breakfast <i class="fa-solid fa-square-plus fa-xl"></i> </td>
-            </tr>
-            <tr class="food">
-              <td class="food-name">chicken</td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="delete"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
-            </tr>
-            <tr class="meal">
-              <td class="name">chicken</td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="delete"> <i class="fa-solid fa-square-minus fa-xl"></i> </td>
-            </tr>
-            <tr class="meal-summary">
-              <td></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-            </tr>
+              <ng-container *ngFor="let meal of dailyMealPlan.meals">
+                <!-- Display header row for the meal -->
+                <tr class="meal-header">
+                  <td class="meal-name">{{ meal.name }} <i class="fa-solid fa-square-plus fa-xl"></i> </td>
+                </tr>
+          
+                <!-- Loop through food items of the meal -->
+                <ng-container *ngFor="let foodItem of meal.foodItems">
+                  <tr class="food">
+                    <!-- Display food item details -->
+                    <td class="food-name">{{ foodItem.name }}</td>
+                    <td class="nutrient-column"> <span>{{ foodItem.calories }}</span></td>
+                    <td class="nutrient-column"> <span>{{ foodItem.protein }}</span></td>
+                    <td class="nutrient-column"> <span>{{ foodItem.fat }}</span></td>
+                    <td class="nutrient-column"> <span>{{ foodItem.carbs }}</span></td>
+                    <td class="delete"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
+                  </tr>
+                </ng-container>
 
-            <tr class="meal-header">
-              <td class="meal-name">Lunch <i class="fa-solid fa-square-plus fa-xl"></i> </td>
-            </tr>
-            <tr class="meal">
-              <td class="name">chicken</td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="delete"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
-            </tr>
-            <tr class="meal">
-              <td class="name">chicken</td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="delete"> <i class="fa-solid fa-square-minus fa-xl"></i> </td>
-            </tr>
-            <tr class="meal-summary">
-              <td></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-            </tr>
+                <!-- Display summary row for the meal -->
+                <tr class="meal-summary">
+                  <td></td>
+                  <td class="nutrient-column"> <span>{{ meal.mealTotals.calories }}</span></td>
+                  <td class="nutrient-column"> <span>{{ meal.mealTotals.protein }}</span></td>
+                  <td class="nutrient-column"> <span>{{ meal.mealTotals.fat }}</span></td>
+                  <td class="nutrient-column"> <span>{{ meal.mealTotals.carbs }}</span></td>
+                </tr>
 
-            <tr class="meal-header">
-              <td class="meal-name">Dinner <i class="fa-solid fa-square-plus fa-xl"></i> </td>
-            </tr>
-            <tr class="meal">
-              <td class="name">chicken</td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="delete"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
-            </tr>
-            <tr class="meal">
-              <td class="name">chicken</td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="delete"> <i class="fa-solid fa-square-minus fa-xl"></i> </td>
-            </tr>
-            <tr class="meal-summary">
-              <td></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-            </tr>
+                <!-- Display summary row for the meal -->
+                <!-- <tr class="meal-summary">
+                  <td></td>
+                  <td class="nutrient-column"> <span>{{ meal.totalCalories }}</span></td>
+                  <td class="nutrient-column"> <span>{{ meal.totalProtein }}</span></td>
+                  <td class="nutrient-column"> <span>{{ meal.totalFat }}</span></td>
+                  <td class="nutrient-column"> <span>{{ meal.totalCarbs }}</span></td>
+                </tr> -->
 
-            <tr class="meal-header">
-              <td class="meal-name">Snacks <i class="fa-solid fa-square-plus fa-xl"></i> </td>
-            </tr>
-            <tr class="meal">
-              <td class="name">chicken</td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="delete"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
-            </tr>
-            <tr class="meal">
-              <td class="name">chicken</td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="delete"> <i class="fa-solid fa-square-minus fa-xl"></i> </td>
-            </tr>
-            <tr class="meal-summary">
-              <td></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-              <td class="nutrient-column"> <span>10</span></td>
-            </tr>
-
-            <tr class="spacer">
-              <td>&nbsp;</td>
-            </tr>
-
-            <tr class="day-summary">
-              <td class="first">Totals</td>
-              <td class="macro"><span class="macro-value">10</span></td>
-              <td class="macro"><span class="macro-value">10</span></td>
-              <td class="macro"><span class="macro-value">10</span></td>
-              <td class="macro"><span class="macro-value">10</span></td>
-            </tr>
-
-            <tr class="day-summary">
-              <td class="first">Daily Goal</td>
-              <td class="macro"><span class="macro-value">10</span></td>
-              <td class="macro"><span class="macro-value">10</span></td>
-              <td class="macro"><span class="macro-value">10</span></td>
-              <td class="macro"><span class="macro-value">10</span></td>
-            </tr>
-
-            <tr class="day-summary">
-              <td class="first">Remaining</td>
-              <td class="macro"><span class="macro-value">10</span></td>
-              <td class="macro"><span class="macro-value">10</span></td>
-              <td class="macro"><span class="macro-value">10</span></td>
-              <td class="macro"><span class="macro-value">10</span></td>
-            </tr>
-            
+                <tr class="spacer">
+                  <td>&nbsp;</td>
+                </tr>
+              </ng-container>
+  
+              <!-- Display summary row for the day -->
+              <tr class="day-summary">
+                <td class="first">Totals</td>
+                <td class="nutrient-column"> <span>{{ totalCalories }}</span></td>
+                <td class="nutrient-column"> <span>{{ totalProtein }}</span></td>
+                <td class="nutrient-column"> <span>{{ totalFat }}</span></td>
+                <td class="nutrient-column"> <span>{{ totalCarbs }}</span></td>
+              </tr>
+  
+              <tr class="day-summary">
+                <td class="first">Daily Goal</td>
+                <td class="macro"><span class="macro-value">10</span></td>
+                <td class="macro"><span class="macro-value">10</span></td>
+                <td class="macro"><span class="macro-value">10</span></td>
+                <td class="macro"><span class="macro-value">10</span></td>
+              </tr>
+  
+              <tr class="day-summary">
+                <td class="first">Remaining</td>
+                <td class="macro"><span class="macro-value">10</span></td>
+                <td class="macro"><span class="macro-value">10</span></td>
+                <td class="macro"><span class="macro-value">10</span></td>
+                <td class="macro"><span class="macro-value">10</span></td>
+              </tr>
+            </ng-container>
           </table>
         </div>
     </div>

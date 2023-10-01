@@ -1,9 +1,10 @@
 .mask {
   margin-top: 40px;
+  position: relative;
 }
 
 .diary {
-  text-align: left; 
+  text-align: left;
 }
 
 .prev {
@@ -49,6 +50,18 @@
 
 .first {
   text-align: right;
+}
+
+.prev,
+.next {
+  user-select: none;
+}
+
+.fixed-size-time {
+  width: 450px;
+  height: 50px;
+  display: inline-block;
+  text-align: center;
 }
 
 td.macro {
