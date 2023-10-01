@@ -18,6 +18,10 @@ public class DailyMealPlan {
     public DailyMealPlan(String date, List<Meal> meals) {
         this.date = date;
         this.meals = meals;
+        this.meals.add(new Meal("Breakfast"));
+        this.meals.add(new Meal("Lunch"));
+        this.meals.add(new Meal("Dinner"));
+        this.meals.add(new Meal("Snacks"));
     }
 
     // getters
