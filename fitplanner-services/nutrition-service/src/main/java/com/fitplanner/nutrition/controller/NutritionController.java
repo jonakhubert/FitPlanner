@@ -1,6 +1,7 @@
 package com.fitplanner.nutrition.controller;
 
 import com.fitplanner.nutrition.model.api.MealRequest;
+import com.fitplanner.nutrition.model.food.DailyMealPlan;
 import com.fitplanner.nutrition.service.NutritionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -29,11 +30,26 @@ public class NutritionController {
     }
 
     @PostMapping(
-        path = "/add-meal",
+        path = "/add-food-item",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<String> addMeal(@RequestBody MealRequest request, @RequestHeader("Authorization") String header) {
-        nutritionService.addMeal(request, header);
-        return ResponseEntity.ok("super");
+    public ResponseEntity<String> addFoodItem(
+        @RequestBody MealRequest request,
+        @RequestHeader("Authorization") String header
+    ) {
+        nutritionService.addFoodItem(request, header);
+        return ResponseEntity.ok("Success");
+    }
+
+    @GetMapping(
+        path = "/daily-meal-plan",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<DailyMealPlan> getDailyMealPlan(
+        @RequestParam("email") String email,
+        @RequestParam("date") String date,
+        @RequestHeader("Authorization") String header
+    ) {
+        return ResponseEntity.ok(nutritionService.getDailyMealPlan(email, date, header));
     }
 }
