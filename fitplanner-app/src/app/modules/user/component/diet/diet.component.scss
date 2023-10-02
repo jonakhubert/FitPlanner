@@ -5,6 +5,7 @@
 
 .diary {
   text-align: left;
+  margin-bottom: 40px;
 }
 
 .prev {
@@ -42,6 +43,7 @@
 .delete {
   text-align: center;
   width: 50px;
+  cursor: pointer;
 }
 
 .meal-summary {

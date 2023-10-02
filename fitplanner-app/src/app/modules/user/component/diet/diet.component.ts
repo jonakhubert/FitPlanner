@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { NutritionService } from '../../services/nutrition/nutrition.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { DailyMealPlan } from '../../interface/daily-meal-plan';
+import { FoodItem } from '../../interface/food-item';
+import { MealRequest } from '../../interface/meal-request';
 
 @Component({
   selector: 'app-diet',
@@ -41,6 +43,27 @@ export class DietComponent {
     this.fetchDailyMealPlan();
   }
 
+  removeFoodItem(foodItem: FoodItem, mealName: string): void {
+    const email = localStorage.getItem("userEmail");
+
+    if(email) {
+      const request: MealRequest = {
+        email: email,
+        date: this.formatDate(),
+        mealName: mealName,
+        foodItem: foodItem
+      };
+      
+      this.nutritionService.removeFoodItem(request).subscribe(
+      {
+        next: (response) => {
+          this.ngOnInit();
+        },
+        error: (error) => console.log(error)
+      });
+    }
+  }
+
   private fetchDailyMealPlan(): void {
     const email = localStorage.getItem("userEmail");
   
@@ -54,8 +77,7 @@ export class DietComponent {
           this.calculateTotals();
         },
         error: (error) => console.log(error)
-      }
-    );
+      });
     }
   }
 
@@ -117,7 +139,6 @@ export class DietComponent {
   
     if(this.dailyMealPlan) {
       this.dailyMealPlan.meals.forEach(meal => {
-        // Add meal totals to the overall totals
         this.totalCalories += meal.mealTotals.calories;
         this.totalProtein += meal.mealTotals.protein;
         this.totalFat += meal.mealTotals.fat;
