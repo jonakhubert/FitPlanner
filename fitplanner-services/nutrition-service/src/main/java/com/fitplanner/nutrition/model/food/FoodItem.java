@@ -1,5 +1,7 @@
 package com.fitplanner.nutrition.model.food;
 
+import java.util.Objects;
+
 public class FoodItem {
 
     private String name;
@@ -25,4 +27,24 @@ public class FoodItem {
     public void setFat(double fat) { this.fat = fat; }
     public void setCarbs(double carbs) { this.carbs = carbs; }
     public void setQuantity(double quantity) { this.quantity = quantity; }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == this)
+            return true;
+        if(!(o instanceof FoodItem other))
+            return false;
+
+        return  Objects.equals(name, other.name) &&
+                Objects.equals(calories, other.calories) &&
+                Objects.equals(protein, other.protein) &&
+                Objects.equals(fat, other.fat) &&
+                Objects.equals(carbs, other.carbs) &&
+                Objects.equals(quantity, other.quantity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, calories, protein, fat, carbs, quantity);
+    }
 }
