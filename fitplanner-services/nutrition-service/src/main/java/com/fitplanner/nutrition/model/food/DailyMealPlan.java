@@ -8,23 +8,26 @@ public class DailyMealPlan {
     private String date;
     private List<Meal> meals;
 
-    public DailyMealPlan(String date) {
+    public DailyMealPlan(String date, List<Meal> meals) {
         this.date = date;
-        this.meals = new ArrayList<>();
+        this.meals = meals;
+        initializeMeals();
+    }
+
+    public DailyMealPlan(String date) {
+        this(date, new ArrayList<>());
     }
 
     public DailyMealPlan() {}
 
-    public DailyMealPlan(String date, List<Meal> meals) {
-        this.date = date;
-        this.meals = meals;
-        this.meals.add(new Meal("Breakfast"));
-        this.meals.add(new Meal("Lunch"));
-        this.meals.add(new Meal("Dinner"));
-        this.meals.add(new Meal("Snacks"));
-    }
-
     // getters
     public List<Meal> getMeals() { return meals; }
     public String getDate() { return date; }
+
+    private void initializeMeals() {
+        meals.add(new Meal("Breakfast"));
+        meals.add(new Meal("Lunch"));
+        meals.add(new Meal("Dinner"));
+        meals.add(new Meal("Snacks"));
+    }
 }
