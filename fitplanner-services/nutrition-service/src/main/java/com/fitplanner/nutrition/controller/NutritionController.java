@@ -1,5 +1,6 @@
 package com.fitplanner.nutrition.controller;
 
+import com.fitplanner.nutrition.model.api.ConfirmationResponse;
 import com.fitplanner.nutrition.model.api.MealRequest;
 import com.fitplanner.nutrition.model.food.DailyMealPlan;
 import com.fitplanner.nutrition.service.NutritionService;
@@ -33,12 +34,22 @@ public class NutritionController {
         path = "/add-food-item",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<String> addFoodItem(
+    public ResponseEntity<ConfirmationResponse> addFoodItem(
         @RequestBody MealRequest request,
         @RequestHeader("Authorization") String header
     ) {
-        nutritionService.addFoodItem(request, header);
-        return ResponseEntity.ok("Success");
+        return ResponseEntity.ok(nutritionService.addFoodItem(request, header));
+    }
+
+    @PostMapping(
+        path = "/remove-food-item",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<ConfirmationResponse> removeFoodItem(
+        @RequestBody MealRequest request,
+        @RequestHeader("Authorization") String header
+    ) {
+        return ResponseEntity.ok(nutritionService.removeFoodItem(request, header));
     }
 
     @GetMapping(
