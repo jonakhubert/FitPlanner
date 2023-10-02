@@ -1,13 +1,16 @@
 package com.fitplanner.nutrition.service;
 
 import com.fitplanner.nutrition.client.UserServiceClient;
+import com.fitplanner.nutrition.model.api.ConfirmationResponse;
 import com.fitplanner.nutrition.model.api.MealRequest;
 import com.fitplanner.nutrition.model.food.DailyMealPlan;
+import com.fitplanner.nutrition.model.food.FoodItem;
 import com.fitplanner.nutrition.model.food.Meal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 @Service
 public class NutritionService {
@@ -19,7 +22,7 @@ public class NutritionService {
         this.userServiceClient = userServiceClient;
     }
 
-    public void addFoodItem(MealRequest request, String header) {
+    public ConfirmationResponse addFoodItem(MealRequest request, String header) {
         var user = userServiceClient.getUser(request.email(), header);
 
         // if the daily meal plan with the specific date doesn't exist, create a new one
@@ -49,6 +52,33 @@ public class NutritionService {
         );
 
         userServiceClient.saveUserNutrition(user, header);
+
+        return new ConfirmationResponse("Food item has been added.");
+    }
+
+    public ConfirmationResponse removeFoodItem(MealRequest request, String header) {
+        var user = userServiceClient.getUser(request.email(), header);
+
+        var userMeal = user.getDailyMealPlans().stream()
+            .filter(plan -> plan.getDate().equals(request.date()))
+            .flatMap(plan -> plan.getMeals().stream())
+            .filter(meal -> meal.getName().equals(request.mealName()))
+            .findFirst();
+
+        userMeal.ifPresent(meal -> {
+            Iterator<FoodItem> iterator = meal.getFoodItems().iterator();
+            while(iterator.hasNext()) {
+                FoodItem foodItem = iterator.next();
+                if(foodItem.equals(request.foodItem())) {
+                    iterator.remove();
+                    break; // Break the loop after removing the first occurrence
+                }
+            }
+        });
+
+        userServiceClient.saveUserNutrition(user, header);
+
+        return new ConfirmationResponse("Food item has been removed.");
     }
 
     public DailyMealPlan getDailyMealPlan(String email, String date, String header) {
