@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
 import { ApiError } from 'src/app/interface/api-error';
 import { DailyMealPlan } from '../../interface/daily-meal-plan';
+import { MealRequest } from '../../interface/meal-request';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,15 @@ export class NutritionService {
 
   public getDailyMealPlan(email: string, date: string): Observable<DailyMealPlan> {
     return this.http.get<DailyMealPlan>(`${this.apiUrl}/daily-meal-plan?email=${email}&date=${date}`)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        throw this.buildApiError(error);
+      })
+    )
+  }
+
+  public removeFoodItem(request: MealRequest): Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}/remove-food-item`, request)
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw this.buildApiError(error);
