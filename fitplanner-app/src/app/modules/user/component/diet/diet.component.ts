@@ -4,6 +4,7 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { DailyMealPlan } from '../../interface/daily-meal-plan';
 import { FoodItem } from '../../interface/food-item';
 import { MealRequest } from '../../interface/meal-request';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-diet',
@@ -19,7 +20,7 @@ export class DietComponent {
   totalFat: number = 0;
   totalCarbs: number = 0;
 
-  constructor(private nutritionService: NutritionService) {}
+  constructor(private nutritionService: NutritionService, private toastr: ToastrService) {}
 
   ngOnInit(): void {
     const storedDate = localStorage.getItem('selectedDate');
@@ -59,7 +60,9 @@ export class DietComponent {
         next: (response) => {
           this.ngOnInit();
         },
-        error: (error) => console.log(error)
+        error: (error) => {
+          console.log(error)
+        }
       });
     }
   }
@@ -76,7 +79,11 @@ export class DietComponent {
           this.calculateMealTotals();
           this.calculateTotals();
         },
-        error: (error) => console.log(error)
+        error: (error) => {
+          console.log(error)
+          if(error.status === 503)
+            this.toastr.error("The Nutrition Service cannot be reached. Try again later.", "Error");
+        }
       });
     }
   }
