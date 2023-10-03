@@ -1,5 +1,6 @@
 package com.fitplanner.apigateway.config;
 
+import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -20,5 +21,10 @@ public class SecurityConfig {
     @Bean
     public WebClient.Builder webClientBuilder() {
         return WebClient.builder();
+    }
+
+    @Bean
+    public WebProperties.Resources resources() {
+        return new WebProperties.Resources();
     }
 }
