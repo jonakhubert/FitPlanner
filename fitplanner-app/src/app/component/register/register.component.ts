@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from 'src/app/service/authentication.service';
@@ -31,10 +31,13 @@ export class RegisterComponent {
     this.registerForm = this.formBuilder.group({
       firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
       lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
+      height: [null, [Validators.required, Validators.min(0)]],
+      weight: [null, [Validators.required, Validators.min(0)]],
+      goal: [null, Validators.required],
       email: ['', [Validators.required, Validators.pattern("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
       + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-    })
+    }, { validators: this.bmiValidator })
   }
 
   onSubmit() {
@@ -57,10 +60,30 @@ export class RegisterComponent {
           this.alertMessage = this.registerForm.get('email')?.value + " already exists in database.";
         }
         else {
+          console.log(error);
           this.verificationMessage = '';
           this.toastr.error("Something went wrong. Try again later.", "Error");
         }
       }
     });
+  }
+
+  bmiValidator: Validators = (control: AbstractControl): ValidationErrors | null => {
+    const weight = control.get('weight')?.value;
+    const height = control.get('height')?.value;
+  
+    if(weight && height) {
+      const bmi = this.calculateBMI(weight, height);
+      console.log(bmi);
+      if(bmi < 10 || bmi > 40)
+        return { invalidBMI: true };  
+    }
+  
+    return null;
+  };
+
+  calculateBMI(weight: number, height: number): number {
+    const heightInMeters = height / 100;
+    return weight / (heightInMeters * heightInMeters);
   }
 }
