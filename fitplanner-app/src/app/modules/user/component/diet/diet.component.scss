@@ -1,0 +1,81 @@
+.mask {
+  margin-top: 40px;
+  position: relative;
+}
+
+.diary {
+  text-align: left;
+  margin-bottom: 40px;
+}
+
+.prev {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.next {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.date {
+  font-size: 28px;
+}
+
+.calendar {
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+.nutrient-column {
+  text-align: center;
+  width: 80px;
+}
+
+.food-name {
+  font-size: 20px;
+}
+
+.nutrients {
+  margin-top: 20px;
+}
+
+.delete {
+  text-align: center;
+  width: 50px;
+  cursor: pointer;
+}
+
+.meal-summary {
+  background-color: rgb(59, 55, 55);
+}
+
+.first {
+  text-align: right;
+}
+
+.prev,
+.next {
+  user-select: none;
+}
+
+.fixed-size-time {
+  width: 450px;
+  height: 50px;
+  display: inline-block;
+  text-align: center;
+}
+
+td.macro {
+  text-align: center;
+}
+
+h2 {
+  display: inline;
+  margin-right: 20px;
+}
+
+table {
+  width: 100%;
+  font-size: 20px;
+}

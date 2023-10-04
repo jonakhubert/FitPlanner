@@ -1,5 +1,6 @@
 package com.fitplanner.user.model.user;
 
+import com.fitplanner.user.model.food.DailyMealPlan;
 import com.fitplanner.user.model.tokens.ResetPasswordToken;
 import com.fitplanner.user.model.tokens.VerificationToken;
 import com.fitplanner.user.model.tokens.accesstoken.AccessToken;
@@ -7,6 +8,8 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 @Document(value = "users")
 public class User {
@@ -20,30 +23,22 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
     private Boolean enabled;
+
     // tokens
     private AccessToken accessToken;
     private VerificationToken verificationToken;
     private ResetPasswordToken resetPasswordToken;
 
-    public User(String firstName, String lastName, String email, String password, Role role, Boolean enabled) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.enabled = enabled;
-    }
+    // preferences TODO: add other parameters (height, weight, etc.)
+    private double calories;
+    private List<DailyMealPlan> dailyMealPlans;
 
     // getters
-    public String getFirstName() { return firstName; }
-    public String getLastName() { return lastName; }
     public String getEmail() { return email; }
-    public String getPassword() { return password; }
-    public Role getRole() { return role; }
-    public Boolean getEnabled() { return enabled; }
+    public double getCalories() { return calories; }
+    public List<DailyMealPlan> getDailyMealPlans() { return dailyMealPlans; }
 
     // setters
-    public void setFirstName(String firstName) { this.firstName = firstName; }
-    public void setEmail(String email) { this.email = email; }
     public void setPassword(String password) { this.password = password; }
+    public void setDailyMealPlans(List<DailyMealPlan> dailyMealPlans) { this.dailyMealPlans = dailyMealPlans; }
 }

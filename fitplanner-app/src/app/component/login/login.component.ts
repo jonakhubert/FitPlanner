@@ -51,11 +51,11 @@ export class LoginComponent {
         this.toastr.success('Login successfully!');
       },
       error: (error) => {
-        if(error.statusCode === 404)
+        if(error.status === 404)
           this.message = this.loginForm.get('email')?.value + " doesn't exist.";
-        else if(error.statusCode === 400)
+        else if(error.status === 400)
           this.message = "Invalid password.";
-        else if(error.statusCode === 403)
+        else if(error.status === 403)
           this.message = error.message;
         else
           this.toastr.error("Something went wrong. Try again later.", "Error");
@@ -81,7 +81,7 @@ export class LoginComponent {
             closeButton?.click();
           },
           error: (error) => {
-            if(error.statusCode === 404)
+            if(error.status === 404)
               this.toastr.error("Account with provided email doesn't exist.", "Error");
             else
               this.toastr.error("Something went wrong. Try again later.", "Error");

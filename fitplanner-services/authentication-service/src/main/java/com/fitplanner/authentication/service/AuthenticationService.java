@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.regex.Pattern;
@@ -33,7 +32,6 @@ public class AuthenticationService {
         this.authenticationManager = authenticationManager;
     }
 
-    @Transactional
     public ConfirmationResponse register(RegisterRequest request) {
         if(!isEmailValid(request.email()))
             throw new InvalidEmailFormatException(request.email() + " format is invalid.");
@@ -50,7 +48,6 @@ public class AuthenticationService {
         return new ConfirmationResponse("Verification email has been sent.");
     }
 
-    @Transactional
     public LoginResponse login(LoginRequest request) {
         if(!isEmailValid(request.email()))
             throw new InvalidEmailFormatException(request.email() + " format is invalid.");
@@ -83,7 +80,6 @@ public class AuthenticationService {
         return userService.isAccessTokenValid(token);
     }
 
-    @Transactional
     public ConfirmationResponse verify(String token) {
         var verificationToken = userService.getVerificationToken(token);
 
@@ -102,7 +98,6 @@ public class AuthenticationService {
         return new ConfirmationResponse("User account verified.");
     }
 
-    @Transactional
     public ConfirmationResponse forgotPassword(String email) {
         if(!isEmailValid(email))
             throw new InvalidEmailFormatException(email + " format is invalid.");
@@ -117,7 +112,6 @@ public class AuthenticationService {
         return new ConfirmationResponse("Reset password has been sent.");
     }
 
-    @Transactional
     public ConfirmationResponse resetPassword(ResetPasswordRequest request) {
         if(!isEmailValid(request.email()))
             throw new InvalidEmailFormatException(request.email() + " format is invalid.");

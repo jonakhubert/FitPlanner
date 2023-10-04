@@ -1,7 +1,8 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
-import { ApiError } from 'src/app/interface/api-error';
+import { DailyMealPlan } from '../../interface/daily-meal-plan';
+import { MealRequest } from '../../interface/meal-request';
 
 @Injectable({
   providedIn: 'root'
@@ -16,19 +17,26 @@ export class NutritionService {
     return this.http.get<any>(`${this.apiUrl}/hello`)
     .pipe(
       catchError((error: HttpErrorResponse) => {
-        throw this.buildApiError(error);
+        throw error;
       })
     )
   }
 
-  private buildApiError(error: HttpErrorResponse) {
-    const apiError: ApiError = {
-      path: error.error.path,
-      message: error.error.message,
-      statusCode: error.error.statusCode,
-      time: error.error.timestamp
-    };
+  public getDailyMealPlan(email: string, date: string): Observable<DailyMealPlan> {
+    return this.http.get<DailyMealPlan>(`${this.apiUrl}/daily-meal-plan?email=${email}&date=${date}`)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        throw error;
+      })
+    )
+  }
 
-    return apiError;
+  public removeFoodItem(request: MealRequest): Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}/remove-food-item`, request)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        throw error;
+      })
+    )
   }
 }

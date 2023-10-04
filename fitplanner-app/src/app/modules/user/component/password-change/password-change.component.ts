@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../services/user/user.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { ChangePasswordRequest } from 'src/app/interface/change-password-request';
+import { ChangePasswordRequest } from 'src/app/modules/user/interface/change-password-request';
 
 @Component({
   selector: 'app-password-change',

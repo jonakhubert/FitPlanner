@@ -5,7 +5,6 @@ import { RegisterRequest } from '../interface/register-request';
 import { LoginResponse } from '../interface/login-response';
 import { LoginRequest } from '../interface/login-request';
 import { ConfirmationResponse } from '../interface/confirmation-response';
-import { ApiError } from '../interface/api-error';
 import { ResetPasswordRequest } from '../interface/reset-password-request';
 
 @Injectable({
@@ -21,7 +20,7 @@ export class AuthenticationService {
     return this.http.post<ConfirmationResponse>(`${this.apiUrl}/register`, request)
     .pipe(
       catchError((error: HttpErrorResponse) => {
-        throw this.buildApiError(error);
+        throw error;
       })
     );
   }
@@ -30,7 +29,7 @@ export class AuthenticationService {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, request)
     .pipe(
       catchError((error: HttpErrorResponse) => {
-        throw this.buildApiError(error);
+        throw error;
       }),
       tap((response: LoginResponse) => {
         localStorage.setItem('userEmail', request.email);
@@ -43,7 +42,7 @@ export class AuthenticationService {
     return this.http.get<any>(`${this.apiUrl}/logout`)
     .pipe(
       catchError((error: HttpErrorResponse) => {
-        throw this.buildApiError(error);
+        throw error;
       }),
       tap(() => {
         localStorage.clear();
@@ -55,7 +54,7 @@ export class AuthenticationService {
     return this.http.post<ConfirmationResponse>(`${this.apiUrl}/forgot-password?email=${email}`, {})
     .pipe(
       catchError((error: HttpErrorResponse) => {
-        throw this.buildApiError(error);
+        throw error;
       })
     );
   }
@@ -64,7 +63,7 @@ export class AuthenticationService {
     return this.http.post<ConfirmationResponse>(`${this.apiUrl}/reset-password`, request)
     .pipe(
       catchError((error: HttpErrorResponse) => {
-        throw this.buildApiError(error);
+        throw error;
       })
     );
   }
@@ -83,16 +82,5 @@ export class AuthenticationService {
 
   public isLoggedIn() {
     return localStorage.getItem('token') !== null;
-  }
-
-  private buildApiError(error: HttpErrorResponse) {
-    const apiError: ApiError = {
-      path: error.error.path,
-      message: error.error.message,
-      statusCode: error.error.statusCode,
-      time: error.error.timestamp
-    };
-
-    return apiError;
   }
 }

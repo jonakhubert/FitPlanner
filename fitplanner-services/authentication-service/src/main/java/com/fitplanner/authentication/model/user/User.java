@@ -1,5 +1,6 @@
 package com.fitplanner.authentication.model.user;
 
+import com.fitplanner.authentication.model.food.DailyMealPlan;
 import com.fitplanner.authentication.model.tokens.ResetPasswordToken;
 import com.fitplanner.authentication.model.tokens.VerificationToken;
 import com.fitplanner.authentication.model.tokens.accesstoken.AccessToken;
@@ -11,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -27,10 +29,15 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
     private Boolean enabled = false;
+
     // tokens
     private AccessToken accessToken;
     private VerificationToken verificationToken;
     private ResetPasswordToken resetPasswordToken;
+
+    // preferences TODO: add other parameters (height, weight, etc.)
+    private double calories;
+    private List<DailyMealPlan> dailyMealPlans;
 
     public User(String firstName, String lastName, String email, String password, Role role) {
         this.firstName = firstName;
@@ -41,6 +48,7 @@ public class User implements UserDetails {
         this.accessToken = null;
         this.verificationToken = null;
         this.resetPasswordToken = null;
+        this.dailyMealPlans = new ArrayList<>();
     }
 
     public User() {}

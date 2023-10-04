@@ -52,7 +52,7 @@ export class RegisterComponent {
         this.toastr.info(response.confirmation_message, "Info");
       },
       error: (error) => {
-        if(error.statusCode === 409) {
+        if(error.status === 409) {
           this.verificationMessage = '';
           this.alertMessage = this.registerForm.get('email')?.value + " already exists in database.";
         }
