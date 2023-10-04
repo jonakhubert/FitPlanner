@@ -43,7 +43,10 @@ public class UserService {
             request.lastName(),
             request.email(),
             passwordEncoder.encode(request.password()),
-            Role.USER
+            Role.USER,
+            request.height(),
+            request.weight(),
+            request.goal()
         );
 
         return userRepository.save(user);

@@ -35,16 +35,30 @@ public class User implements UserDetails {
     private VerificationToken verificationToken;
     private ResetPasswordToken resetPasswordToken;
 
-    // preferences TODO: add other parameters (height, weight, etc.)
     private double calories;
+    private double height;
+    private double weight;
+    private int goal;
     private List<DailyMealPlan> dailyMealPlans;
 
-    public User(String firstName, String lastName, String email, String password, Role role) {
+    public User(
+        String firstName,
+        String lastName,
+        String email,
+        String password,
+        Role role,
+        double height,
+        double weight,
+        int goal
+    ) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.height = height;
+        this.weight = weight;
+        this.goal = goal;
         this.accessToken = null;
         this.verificationToken = null;
         this.resetPasswordToken = null;
@@ -80,6 +94,7 @@ public class User implements UserDetails {
     public AccessToken getAccessToken() { return accessToken; }
     public VerificationToken getVerificationToken() { return verificationToken; }
     public ResetPasswordToken getResetPasswordToken() { return resetPasswordToken; }
+    public void setCalories(double calories) { this.calories = calories; }
 
     // setters
     public void setEnabled(Boolean enabled) { this.enabled = enabled; }
@@ -101,14 +116,19 @@ public class User implements UserDetails {
                 Objects.equals(email, other.email) &&
                 Objects.equals(password, other.password) &&
                 Objects.equals(role, other.role) &&
+                Objects.equals(calories, other.calories) &&
+                Objects.equals(height, other.height) &&
+                Objects.equals(weight, other.weight) &&
+                Objects.equals(goal, other.goal) &&
                 Objects.equals(accessToken, other.accessToken) &&
                 Objects.equals(verificationToken, other.verificationToken) &&
-                Objects.equals(resetPasswordToken, other.resetPasswordToken);
+                Objects.equals(resetPasswordToken, other.resetPasswordToken) &&
+                Objects.equals(dailyMealPlans, other.dailyMealPlans);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, password, role,
-            accessToken, verificationToken, resetPasswordToken);
+        return Objects.hash(id, firstName, lastName, email, password, role, calories, height, weight, goal,
+            accessToken, verificationToken, resetPasswordToken, dailyMealPlans);
     }
 }
