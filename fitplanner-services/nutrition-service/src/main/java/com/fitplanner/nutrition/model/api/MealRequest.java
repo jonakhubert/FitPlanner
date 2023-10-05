@@ -8,5 +8,5 @@ public record MealRequest(
         @NotNull @NotEmpty String email,
         @NotNull @NotEmpty String date,
         @NotNull @NotEmpty String mealName,
-        @NotNull @NotEmpty FoodItem foodItem
+        @NotNull FoodItem foodItem
 ) {}
