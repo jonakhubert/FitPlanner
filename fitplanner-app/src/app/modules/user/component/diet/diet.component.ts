@@ -5,6 +5,7 @@ import { DailyMealPlan } from '../../interface/daily-meal-plan';
 import { FoodItem } from '../../interface/food-item';
 import { MealRequest } from '../../interface/meal-request';
 import { ToastrService } from 'ngx-toastr';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-diet',
@@ -14,15 +15,23 @@ import { ToastrService } from 'ngx-toastr';
 export class DietComponent {
   selectedDate: Date = new Date();
   formattedDate: string = '';
+  foodItemForm!: FormGroup;
   dailyMealPlan: DailyMealPlan | undefined;
+  selectedMeal!: string | null;
   totalCalories: number = 0;
   totalProtein: number = 0;
   totalFat: number = 0;
   totalCarbs: number = 0;
+  submitted = false;
 
-  constructor(private nutritionService: NutritionService, private toastr: ToastrService) {}
+  constructor(
+    private nutritionService: NutritionService,
+    private formBuilder: FormBuilder,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
+    this.submitted = false;
     const storedDate = localStorage.getItem('selectedDate');
     this.selectedDate = storedDate ? new Date(storedDate) : new Date();
     this.displayDate();
@@ -67,6 +76,49 @@ export class DietComponent {
     }
   }
 
+  addFoodItem() { 
+    this.submitted = true;
+    
+    if(this.foodItemForm.invalid)
+      return;
+
+    const email = localStorage.getItem('userEmail');
+    if(email && this.selectedMeal) {
+      const request: MealRequest = {
+        email: email,
+        date: this.formatDate(),
+        mealName: this.selectedMeal,
+        foodItem: this.foodItemForm.value
+      }
+      
+      this.nutritionService.addFoodItem(request).subscribe(
+      {
+        next: (response) => {
+          const closeButton = document.getElementById("closeBtn");
+          closeButton?.click();
+          this.ngOnInit();
+          this.toastr.success(response.confirmation_message, "Success");
+        },
+        error: (error) => {
+          console.log(error)
+        }
+      });
+    }
+  }
+
+  openModal(meal: string) {
+    this.selectedMeal = meal;
+
+    this.foodItemForm = this.formBuilder.group({
+      name: ['', [Validators.required]],
+      quantity: [1, Validators.required],
+      calories: [0, Validators.required],
+      protein: [0, Validators.required],
+      fat: [0, Validators.required],
+      carbs: [0, Validators.required]
+    })
+  }
+
   private fetchDailyMealPlan(): void {
     const email = localStorage.getItem("userEmail");
   
@@ -101,7 +153,7 @@ export class DietComponent {
 
   private formatDate(): string {
     const year = this.selectedDate.getFullYear();
-    const month = ('0' + (this.selectedDate.getMonth() + 1)).slice(-2); // Adding 1 because months are zero-based
+    const month = ('0' + (this.selectedDate.getMonth() + 1)).slice(-2);
     const day = ('0' + this.selectedDate.getDate()).slice(-2);
   
     return `${year}-${month}-${day}`;
@@ -114,7 +166,6 @@ export class DietComponent {
   private calculateMealTotals(): void {
     if(this.dailyMealPlan) {
       this.dailyMealPlan.meals.forEach(meal => {
-        // Calculate meal totals
         let totalCalories = 0;
         let totalProtein = 0;
         let totalFat = 0;
@@ -127,7 +178,11 @@ export class DietComponent {
           totalCarbs += foodItem.carbs;
         });
 
-        // Store meal totals in the meal object
+        totalCalories = parseFloat(totalCalories.toFixed(1));
+        totalProtein = parseFloat(totalProtein.toFixed(1));
+        totalFat = parseFloat(totalFat.toFixed(1));
+        totalCarbs = parseFloat(totalCarbs.toFixed(1));
+
         meal.mealTotals = {
           calories: totalCalories,
           protein: totalProtein,
@@ -152,5 +207,10 @@ export class DietComponent {
         this.totalCarbs += meal.mealTotals.carbs;
       });
     }
+
+    this.totalCalories = parseFloat(this.totalCalories.toFixed(1));
+    this.totalProtein = parseFloat(this.totalProtein.toFixed(1));
+    this.totalFat = parseFloat(this.totalFat.toFixed(1));
+    this.totalCarbs = parseFloat(this.totalCarbs.toFixed(1));
   }
 }
