@@ -29,8 +29,10 @@ public class User {
     private VerificationToken verificationToken;
     private ResetPasswordToken resetPasswordToken;
 
-    // preferences TODO: add other parameters (height, weight, etc.)
     private double calories;
+    private double height;
+    private double weight;
+    private int goal;
     private List<DailyMealPlan> dailyMealPlans;
 
     // getters
@@ -40,5 +42,6 @@ public class User {
 
     // setters
     public void setPassword(String password) { this.password = password; }
+    public void setAccessToken(AccessToken accessToken) { this.accessToken = accessToken; }
     public void setDailyMealPlans(List<DailyMealPlan> dailyMealPlans) { this.dailyMealPlans = dailyMealPlans; }
 }
