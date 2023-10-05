@@ -27,6 +27,7 @@ public class UserService {
             .orElseThrow(() -> new UserNotFoundException("User not found."));
 
         user.setPassword(passwordEncoder.encode(request.password()));
+        user.setAccessToken(null);
         userRepository.save(user);
 
         return new ConfirmationResponse("Password has been changed.");
