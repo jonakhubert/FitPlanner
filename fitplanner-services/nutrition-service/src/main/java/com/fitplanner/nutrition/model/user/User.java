@@ -7,8 +7,10 @@ import java.util.List;
 public class User {
 
     private String email;
-    // preferences TODO: add other parameters (height, weight, etc.)
     private double calories;
+    private double height;
+    private double weight;
+    private int goal;
     private List<DailyMealPlan> dailyMealPlans;
 
     // getters
