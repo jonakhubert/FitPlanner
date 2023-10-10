@@ -30,7 +30,7 @@ public class NutritionService {
             .filter(plan -> plan.getDate().equals(request.date()))
             .findFirst()
             .orElseGet(() -> {
-                DailyMealPlan newPlan = new DailyMealPlan(request.date());
+                var newPlan = new DailyMealPlan(request.date(), user.getCalories(), user.getProtein(), user.getFat(), user.getCarbs());
                 user.getDailyMealPlans().add(newPlan);
                 return newPlan;
             });
@@ -45,7 +45,7 @@ public class NutritionService {
         existingMeal.ifPresentOrElse(
             meal -> meal.getFoodItems().add(request.foodItem()),
             () -> {
-                Meal newMeal = new Meal(request.mealName());
+                var newMeal = new Meal(request.mealName());
                 newMeal.getFoodItems().add(request.foodItem());
                 dailyMealPlan.getMeals().add(newMeal);
             }
@@ -66,9 +66,9 @@ public class NutritionService {
             .findFirst();
 
         userMeal.ifPresent(meal -> {
-            Iterator<FoodItem> iterator = meal.getFoodItems().iterator();
+            var iterator = meal.getFoodItems().iterator();
             while(iterator.hasNext()) {
-                FoodItem foodItem = iterator.next();
+                var foodItem = iterator.next();
                 if(foodItem.equals(request.foodItem())) {
                     iterator.remove();
                     break; // Break the loop after removing the first occurrence
@@ -85,8 +85,8 @@ public class NutritionService {
         var user = userServiceClient.getUser(email, header);
 
         return user.getDailyMealPlans().stream()
-                .filter(plan -> plan.getDate().equals(date))
-                .findFirst()
-                .orElse(new DailyMealPlan(date, new ArrayList<>()));
+            .filter(plan -> plan.getDate().equals(date))
+            .findFirst()
+            .orElse(new DailyMealPlan(date, new ArrayList<>(), user.getCalories(), user.getProtein(), user.getFat(), user.getCarbs()));
     }
 }
