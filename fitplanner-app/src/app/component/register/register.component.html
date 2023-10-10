@@ -42,9 +42,18 @@
               <div class="form-outline mb-4">
                 <select class="form-select form-select-lg mb-3" aria-label="Default select example" formControlName="goal" [ngClass]="{'is-invalid': submitted && registerForm.controls['goal'].errors}">
                   <option [ngValue]="null" disabled selected>Select your goal</option>
-                  <option value="1">Loose weight</option>
-                  <option value="2">Maintain weight</option>
-                  <option value="3">Gain weight</option>
+                  <option [ngValue]=1>Lose weight</option>
+                  <option [ngValue]=2>Maintain weight</option>
+                  <option [ngValue]=3>Gain weight</option>
+                </select>
+              </div>
+
+              <div class="form-outline mb-4">
+                <select class="form-select form-select-lg mb-3" aria-label="Default select example" formControlName="activity_level" [ngClass]="{'is-invalid': submitted && registerForm.controls['activity_level'].errors}">
+                  <option [ngValue]="null" disabled selected>Select your activity level</option>
+                  <option [ngValue]=1>Low</option>
+                  <option [ngValue]=2>Active</option>
+                  <option [ngValue]=3>Very active</option>
                 </select>
               </div>
 

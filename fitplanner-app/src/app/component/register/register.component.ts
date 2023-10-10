@@ -34,6 +34,7 @@ export class RegisterComponent {
       height: [null, [Validators.required, Validators.min(0)]],
       weight: [null, [Validators.required, Validators.min(0)]],
       goal: [null, Validators.required],
+      activity_level: [null, Validators.required],
       email: ['', [Validators.required, Validators.pattern("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
       + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -61,6 +62,7 @@ export class RegisterComponent {
         }
         else {
           console.log(error);
+          console.log(this.registerForm)
           this.verificationMessage = '';
           this.toastr.error("Something went wrong. Try again later.", "Error");
         }
