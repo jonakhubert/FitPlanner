@@ -4,5 +4,9 @@ import java.util.List;
 
 public record DailyMealPlan(
         String date,
-        List<Meal> meals
+        List<Meal> meals,
+        int dailyCalories,
+        double dailyProtein,
+        double dailyFat,
+        double dailyCarbs
 ) {}
