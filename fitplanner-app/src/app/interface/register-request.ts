@@ -4,6 +4,7 @@ export interface RegisterRequest {
     height: number,
     weight: number,
     goal: number,
+    activity_level: number,
     email: string,
     password: string
 }
