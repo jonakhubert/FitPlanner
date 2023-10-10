@@ -10,6 +10,7 @@ public record RegisterRequest(
         @NotNull Double height,
         @NotNull Double weight,
         @NotNull Integer goal,
+        @NotNull Integer activity_level,
         @NotNull @NotEmpty String email,
         @NotNull @NotEmpty @Size(min = 6) String password
 ) {}
