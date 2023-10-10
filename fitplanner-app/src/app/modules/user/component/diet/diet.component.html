@@ -83,18 +83,18 @@
   
               <tr class="day-summary">
                 <td class="first">Daily Goal</td>
-                <td class="macro"><span class="macro-value">10</span></td>
-                <td class="macro"><span class="macro-value">10</span></td>
-                <td class="macro"><span class="macro-value">10</span></td>
-                <td class="macro"><span class="macro-value">10</span></td>
+                <td class="macro"><span class="macro-value">{{ dailyMealPlan.dailyCalories }}</span></td>
+                <td class="macro"><span class="macro-value">{{ dailyMealPlan.dailyProtein }}</span></td>
+                <td class="macro"><span class="macro-value">{{ dailyMealPlan.dailyFat }}</span></td>
+                <td class="macro"><span class="macro-value">{{ dailyMealPlan.dailyCarbs }}</span></td>
               </tr>
   
               <tr class="day-summary">
                 <td class="first">Remaining</td>
-                <td class="macro"><span class="macro-value">10</span></td>
-                <td class="macro"><span class="macro-value">10</span></td>
-                <td class="macro"><span class="macro-value">10</span></td>
-                <td class="macro"><span class="macro-value">10</span></td>
+                <td class="macro"><span class="macro-value">{{ remainingCalories }}</span></td>
+                <td class="macro"><span class="macro-value">{{ remainingProtein }}</span></td>
+                <td class="macro"><span class="macro-value">{{ remainingFat }}</span></td>
+                <td class="macro"><span class="macro-value">{{ remainingCarbs }}</span></td>
               </tr>
             </ng-container>
           </table>

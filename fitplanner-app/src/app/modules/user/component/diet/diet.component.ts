@@ -23,6 +23,10 @@ export class DietComponent {
   totalFat: number = 0;
   totalCarbs: number = 0;
   submitted = false;
+  remainingCalories: number = 0;
+  remainingProtein: number = 0;
+  remainingFat: number = 0;
+  remainingCarbs: number = 0;
 
   constructor(
     private nutritionService: NutritionService,
@@ -130,6 +134,7 @@ export class DietComponent {
           this.dailyMealPlan = response;
           this.calculateMealTotals();
           this.calculateTotals();
+          this.calculateRemaining();
         },
         error: (error) => {
           console.log(error)
@@ -212,5 +217,14 @@ export class DietComponent {
     this.totalProtein = parseFloat(this.totalProtein.toFixed(1));
     this.totalFat = parseFloat(this.totalFat.toFixed(1));
     this.totalCarbs = parseFloat(this.totalCarbs.toFixed(1));
+  }
+
+  private calculateRemaining(): void {
+    if(this.dailyMealPlan) {
+      this.remainingCalories = this.dailyMealPlan.dailyCalories - this.totalCalories;
+      this.remainingProtein = this.dailyMealPlan.dailyProtein - this.totalProtein;
+      this.remainingFat = this.dailyMealPlan.dailyFat - this.totalFat;
+      this.remainingCarbs = this.dailyMealPlan.dailyCarbs - this.totalCarbs;
+    }
   }
 }
