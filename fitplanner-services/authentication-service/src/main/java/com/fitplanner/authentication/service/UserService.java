@@ -5,6 +5,7 @@ import com.fitplanner.authentication.model.tokens.ResetPasswordToken;
 import com.fitplanner.authentication.model.tokens.VerificationToken;
 import com.fitplanner.authentication.model.tokens.accesstoken.AccessToken;
 import com.fitplanner.authentication.model.api.RegisterRequest;
+import com.fitplanner.authentication.model.user.NutritionInfo;
 import com.fitplanner.authentication.model.user.Role;
 import com.fitplanner.authentication.model.user.User;
 import com.fitplanner.authentication.repository.UserRepository;
@@ -42,11 +43,7 @@ public class UserService {
             request.lastName(),
             request.email(),
             passwordEncoder.encode(request.password()),
-            Role.USER,
-            request.height(),
-            request.weight(),
-            request.goal(),
-            request.activity_level()
+            Role.USER
         );
 
         setUserNutrients(user, request);
@@ -149,9 +146,9 @@ public class UserService {
         double fat = request.weight();
         double carbs = (totalCalories - (protein * 4) - (fat * 9)) / 4;
 
-        user.setCalories(totalCalories);
-        user.setProtein(protein);
-        user.setFat(fat);
-        user.setCarbs(carbs);
+        var nutritionInfo = new NutritionInfo(totalCalories, protein, fat, carbs, request.height(), request.weight(),
+            request.goal(), request.activity_level());
+
+        user.setNutritionInfo(nutritionInfo);
     }
 }

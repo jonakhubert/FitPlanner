@@ -35,29 +35,17 @@ public class User implements UserDetails {
     private VerificationToken verificationToken;
     private ResetPasswordToken resetPasswordToken;
 
-    private int calories;
-    private double protein;
-    private double fat;
-    private double carbs;
-    private double height;
-    private double weight;
-    private int goal;
-    private int activity_level;
+    // nutrition
+    private NutritionInfo nutritionInfo;
     private List<DailyMealPlan> dailyMealPlans;
 
     public User(
-        String firstName, String lastName, String email, String password, Role role,
-        double height, double weight, int goal, int activity_level
-    ) {
+        String firstName, String lastName, String email, String password, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.role = role;
-        this.height = height;
-        this.weight = weight;
-        this.goal = goal;
-        this.activity_level = activity_level;
         this.accessToken = null;
         this.verificationToken = null;
         this.resetPasswordToken = null;
@@ -100,10 +88,7 @@ public class User implements UserDetails {
     public void setAccessToken(AccessToken accessToken) { this.accessToken = accessToken; }
     public void setVerificationToken(VerificationToken verificationToken) { this.verificationToken = verificationToken; }
     public void setResetPasswordToken(ResetPasswordToken resetPasswordToken) { this.resetPasswordToken = resetPasswordToken; }
-    public void setCalories(int calories) { this.calories = calories; }
-    public void setProtein(double protein) { this.protein = protein; }
-    public void setFat(double fat) { this.fat = fat; }
-    public void setCarbs(double carbs) { this.carbs = carbs; }
+    public void setNutritionInfo(NutritionInfo nutritionInfo) { this.nutritionInfo = nutritionInfo; }
 
     @Override
     public boolean equals(Object o) {
@@ -118,11 +103,7 @@ public class User implements UserDetails {
                 Objects.equals(email, other.email) &&
                 Objects.equals(password, other.password) &&
                 Objects.equals(role, other.role) &&
-                Objects.equals(calories, other.calories) &&
-                Objects.equals(height, other.height) &&
-                Objects.equals(weight, other.weight) &&
-                Objects.equals(goal, other.goal) &&
-                Objects.equals(activity_level, other.activity_level) &&
+                Objects.equals(nutritionInfo, other.nutritionInfo) &&
                 Objects.equals(accessToken, other.accessToken) &&
                 Objects.equals(verificationToken, other.verificationToken) &&
                 Objects.equals(resetPasswordToken, other.resetPasswordToken) &&
@@ -131,7 +112,7 @@ public class User implements UserDetails {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, password, role, calories, height, weight, goal,
-            activity_level, accessToken, verificationToken, resetPasswordToken, dailyMealPlans);
+        return Objects.hash(id, firstName, lastName, email, password, role, accessToken, verificationToken,
+            resetPasswordToken, nutritionInfo, dailyMealPlans);
     }
 }

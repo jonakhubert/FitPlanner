@@ -30,7 +30,10 @@ public class NutritionService {
             .filter(plan -> plan.getDate().equals(request.date()))
             .findFirst()
             .orElseGet(() -> {
-                var newPlan = new DailyMealPlan(request.date(), user.getCalories(), user.getProtein(), user.getFat(), user.getCarbs());
+                var newPlan = new DailyMealPlan(
+                    request.date(), user.getNutritionInfo().getCalories(), user.getNutritionInfo().getProtein(),
+                    user.getNutritionInfo().getFat(), user.getNutritionInfo().getCarbs()
+                );
                 user.getDailyMealPlans().add(newPlan);
                 return newPlan;
             });
@@ -71,9 +74,19 @@ public class NutritionService {
                 var foodItem = iterator.next();
                 if(foodItem.equals(request.foodItem())) {
                     iterator.remove();
-                    break; // Break the loop after removing the first occurrence
+                    break;
                 }
             }
+
+            // check if any other meals contain food items
+            boolean hasFoodItems = user.getDailyMealPlans().stream()
+                    .filter(plan -> plan.getDate().equals(request.date()))
+                    .flatMap(plan -> plan.getMeals().stream())
+                    .anyMatch(otherMeal -> !otherMeal.getFoodItems().isEmpty());
+
+            // if no other meals contain food items, remove the whole daily meal plan
+            if(!hasFoodItems)
+                user.getDailyMealPlans().removeIf(plan -> plan.getDate().equals(request.date()));
         });
 
         userServiceClient.saveUserNutrition(user, header);
@@ -87,6 +100,9 @@ public class NutritionService {
         return user.getDailyMealPlans().stream()
             .filter(plan -> plan.getDate().equals(date))
             .findFirst()
-            .orElse(new DailyMealPlan(date, new ArrayList<>(), user.getCalories(), user.getProtein(), user.getFat(), user.getCarbs()));
+            .orElse(new DailyMealPlan(
+                date, new ArrayList<>(), user.getNutritionInfo().getCalories(), user.getNutritionInfo().getProtein(),
+                user.getNutritionInfo().getFat(), user.getNutritionInfo().getCarbs())
+            );
     }
 }

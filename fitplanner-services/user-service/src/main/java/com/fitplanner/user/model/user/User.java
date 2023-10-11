@@ -29,22 +29,12 @@ public class User {
     private VerificationToken verificationToken;
     private ResetPasswordToken resetPasswordToken;
 
-    private int calories;
-    private double protein;
-    private double fat;
-    private double carbs;
-    private double height;
-    private double weight;
-    private int goal;
-    private int activity_level;
+    private NutritionInfo nutritionInfo;
     private List<DailyMealPlan> dailyMealPlans;
 
     // getters
     public String getEmail() { return email; }
-    public int getCalories() { return calories; }
-    public double getProtein() { return protein; }
-    public double getFat() { return fat; }
-    public double getCarbs() { return carbs; }
+    public NutritionInfo getNutritionInfo() { return nutritionInfo; }
     public List<DailyMealPlan> getDailyMealPlans() { return dailyMealPlans; }
 
     // setters
