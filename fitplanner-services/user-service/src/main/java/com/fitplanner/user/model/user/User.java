@@ -33,7 +33,10 @@ public class User {
     private List<DailyMealPlan> dailyMealPlans;
 
     // getters
+    public String getFirstName() { return firstName; }
+    public String getLastName() { return lastName; }
     public String getEmail() { return email; }
+    public Role getRole() { return role; }
     public NutritionInfo getNutritionInfo() { return nutritionInfo; }
     public List<DailyMealPlan> getDailyMealPlans() { return dailyMealPlans; }
 
