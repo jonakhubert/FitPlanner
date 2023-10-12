@@ -3,7 +3,8 @@ package com.fitplanner.user.service;
 import com.fitplanner.user.exception.model.UserNotFoundException;
 import com.fitplanner.user.model.api.ChangePasswordRequest;
 import com.fitplanner.user.model.api.ConfirmationResponse;
-import com.fitplanner.user.model.user.User;
+import com.fitplanner.user.model.user.NutritionInfo;
+import com.fitplanner.user.model.user.UserDTO;
 import com.fitplanner.user.model.user.UserNutrition;
 import com.fitplanner.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,13 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserDTOMapper userDTOMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, UserDTOMapper userDTOMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.userDTOMapper = userDTOMapper;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -42,8 +45,15 @@ public class UserService {
         return new ConfirmationResponse("Account has been deleted.");
     }
 
-    public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found."));
+    public UserDTO findUserByEmail(String email) {
+        return userRepository.findByEmail(email).map(userDTOMapper)
+            .orElseThrow(() -> new UserNotFoundException("User not found."));
+    }
+
+    public NutritionInfo findUserNutrition(String email) {
+        var user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found."));
+
+        return user.getNutritionInfo();
     }
 
     public void saveUserNutrition(UserNutrition userNutrition) {
