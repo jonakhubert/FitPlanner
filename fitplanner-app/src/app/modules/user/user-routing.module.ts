@@ -8,6 +8,7 @@ import { AccountSettingsComponent } from './component/account-settings/account-s
 import { PasswordChangeComponent } from './component/password-change/password-change.component';
 import { AccountDeleteComponent } from './component/account-delete/account-delete.component';
 import { userGuard } from './guards/user/user.guard';
+import { NutritionInfoComponent } from './component/nutrition-info/nutrition-info.component';
 
 const routes: Routes = [
   {
@@ -20,6 +21,7 @@ const routes: Routes = [
       { path: 'account-settings', component: AccountSettingsComponent, canActivate: [userGuard] },
       { path: 'change-password', component: PasswordChangeComponent, canActivate: [userGuard] },
       { path: 'delete-account', component: AccountDeleteComponent, canActivate: [userGuard] },
+      { path: 'nutrition-info', component: NutritionInfoComponent, canActivate: [userGuard] },
       { path: '', redirectTo: '/user/about', pathMatch: 'full' }
     ]
   }
