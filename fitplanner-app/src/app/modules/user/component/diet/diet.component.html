@@ -49,12 +49,12 @@
                 <ng-container *ngFor="let foodItem of meal.foodItems">
                   <tr class="food">
                     <!-- Display food item details -->
-                    <td class="food-name">{{ foodItem.name }}</td>
+                    <td class="food-name">{{ foodItem.name }}, {{ foodItem.quantity }}g</td>
                     <td class="nutrient-column"> <span>{{ foodItem.calories }}</span></td>
                     <td class="nutrient-column"> <span>{{ foodItem.protein }}</span></td>
                     <td class="nutrient-column"> <span>{{ foodItem.fat }}</span></td>
                     <td class="nutrient-column"> <span>{{ foodItem.carbs }}</span></td>
-                    <td class="delete" (click)="removeFoodItem(foodItem, meal.name)"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
+                    <td class="delete" (click)="removeFoodItem(foodItem.id, meal.name)"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
                   </tr>
                 </ng-container>
 
