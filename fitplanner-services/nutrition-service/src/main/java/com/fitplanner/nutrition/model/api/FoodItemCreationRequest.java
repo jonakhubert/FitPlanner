@@ -4,7 +4,7 @@ import com.fitplanner.nutrition.model.food.FoodItem;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-public record MealRequest(
+public record FoodItemCreationRequest(
         @NotNull @NotEmpty String email,
         @NotNull @NotEmpty String date,
         @NotNull @NotEmpty String mealName,
