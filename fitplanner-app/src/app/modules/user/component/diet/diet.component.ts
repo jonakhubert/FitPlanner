@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { NutritionService } from '../../services/nutrition/nutrition.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { DailyMealPlan } from '../../interface/daily-meal-plan';
-import { FoodItem } from '../../interface/food-item';
-import { MealRequest } from '../../interface/meal-request';
+import { FoodItemCreationRequest } from '../../interface/food-item-creation-request';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FoodItemRemovalRequest } from '../../interface/food-item-removal-request';
 
 @Component({
   selector: 'app-diet',
@@ -57,15 +57,15 @@ export class DietComponent {
     this.fetchDailyMealPlan();
   }
 
-  removeFoodItem(foodItem: FoodItem, mealName: string): void {
+  removeFoodItem(foodId: string, mealName: string): void {
     const email = localStorage.getItem("userEmail");
 
     if(email) {
-      const request: MealRequest = {
+      const request: FoodItemRemovalRequest = {
         email: email,
         date: this.formatDate(),
         mealName: mealName,
-        foodItem: foodItem
+        foodId: foodId
       };
       
       this.nutritionService.removeFoodItem(request).subscribe(
@@ -88,7 +88,7 @@ export class DietComponent {
 
     const email = localStorage.getItem('userEmail');
     if(email && this.selectedMeal) {
-      const request: MealRequest = {
+      const request: FoodItemCreationRequest = {
         email: email,
         date: this.formatDate(),
         mealName: this.selectedMeal,
