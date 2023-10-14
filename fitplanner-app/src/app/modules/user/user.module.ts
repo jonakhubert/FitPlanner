@@ -16,7 +16,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCardModule } from '@angular/material/card';
-import { NutritionInfoComponent } from './component/nutrition-info/nutrition-info.component';
+import { AccountDetailsComponent } from './component/account-details/account-details.component';
 
 
 @NgModule({
@@ -29,7 +29,7 @@ import { NutritionInfoComponent } from './component/nutrition-info/nutrition-inf
     AccountSettingsComponent,
     PasswordChangeComponent,
     AccountDeleteComponent,
-    NutritionInfoComponent
+    AccountDetailsComponent
   ],
   imports: [
     CommonModule,
