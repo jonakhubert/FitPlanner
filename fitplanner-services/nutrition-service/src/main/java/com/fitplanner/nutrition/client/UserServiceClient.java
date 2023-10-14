@@ -10,6 +10,6 @@ public interface UserServiceClient {
     @GetMapping(path = "/{email}")
     User getUser(@PathVariable("email") String email, @RequestHeader("Authorization") String header);
 
-    @PostMapping(path = "/nutrition")
-    void saveUserNutrition(@RequestBody User user, @RequestHeader("Authorization") String header);
+    @PostMapping(path = "/daily-meal-plans")
+    void saveDailyMealPlans(@RequestBody User user, @RequestHeader("Authorization") String header);
 }
