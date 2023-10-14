@@ -3,7 +3,9 @@ package com.fitplanner.user.service;
 import com.fitplanner.user.exception.model.UserNotFoundException;
 import com.fitplanner.user.model.api.ChangePasswordRequest;
 import com.fitplanner.user.model.api.ConfirmationResponse;
+import com.fitplanner.user.model.api.UserDetailsRequest;
 import com.fitplanner.user.model.user.NutritionInfo;
+import com.fitplanner.user.model.user.User;
 import com.fitplanner.user.model.user.UserDTO;
 import com.fitplanner.user.model.user.UserNutrition;
 import com.fitplanner.user.repository.UserRepository;
@@ -45,6 +47,16 @@ public class UserService {
         return new ConfirmationResponse("Account has been deleted.");
     }
 
+    public ConfirmationResponse updateUserDetails(UserDetailsRequest request) {
+        var user = userRepository.findByEmail(request.email())
+            .orElseThrow(() -> new UserNotFoundException("User not found."));
+
+        setUserNutrients(user, request);
+        userRepository.save(user);
+
+        return new ConfirmationResponse("User updated successfully.");
+    }
+
     public UserDTO findUserByEmail(String email) {
         return userRepository.findByEmail(email).map(userDTOMapper)
             .orElseThrow(() -> new UserNotFoundException("User not found."));
@@ -62,5 +74,24 @@ public class UserService {
 
         user.setDailyMealPlans(userNutrition.dailyMealPlans());
         userRepository.save(user);
+    }
+
+    private void setUserNutrients(User user, UserDetailsRequest request) {
+        int baseCalories = request.activity_level() == 1 ? (int)(request.weight() * 31)
+            : request.activity_level() == 2 ? (int)(request.weight() * 32)
+            : (int)(request.weight() * 33);
+
+        int totalCalories = request.goal() == 1 ? baseCalories - 300
+            : request.goal() == 3 ? baseCalories + 300
+            : baseCalories;
+
+        double protein = request.weight() * 2;
+        double fat = request.weight();
+        double carbs = (totalCalories - (protein * 4) - (fat * 9)) / 4;
+
+        var nutritionInfo = new NutritionInfo(totalCalories, protein, fat, carbs,request.height(),
+            request.weight(), request.goal(), request.activity_level());
+
+        user.setNutritionInfo(nutritionInfo);
     }
 }
