@@ -2,6 +2,7 @@ package com.fitplanner.user.controller;
 
 import com.fitplanner.user.model.api.ChangePasswordRequest;
 import com.fitplanner.user.model.api.ConfirmationResponse;
+import com.fitplanner.user.model.api.UserDetailsRequest;
 import com.fitplanner.user.model.user.NutritionInfo;
 import com.fitplanner.user.model.user.User;
 import com.fitplanner.user.model.user.UserDTO;
@@ -58,7 +59,15 @@ public class UserController {
     }
 
     @PostMapping(
-        path = "/nutrition",
+        path = "/details",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<ConfirmationResponse> updateUserDetails(@RequestBody @Valid UserDetailsRequest request) {
+        return ResponseEntity.ok(userService.updateUserDetails(request));
+    }
+
+    @PostMapping(
+        path = "/daily-meal-plans",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<Void> saveUserNutrition(@RequestBody UserNutrition user) {
