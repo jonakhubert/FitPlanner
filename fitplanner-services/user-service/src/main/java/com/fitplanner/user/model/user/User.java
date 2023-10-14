@@ -44,4 +44,5 @@ public class User {
     public void setPassword(String password) { this.password = password; }
     public void setAccessToken(AccessToken accessToken) { this.accessToken = accessToken; }
     public void setDailyMealPlans(List<DailyMealPlan> dailyMealPlans) { this.dailyMealPlans = dailyMealPlans; }
+    public void setNutritionInfo(NutritionInfo nutritionInfo) { this.nutritionInfo = nutritionInfo; }
 }
