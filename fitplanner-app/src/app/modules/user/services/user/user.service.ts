@@ -4,6 +4,7 @@ import { Observable, catchError, tap } from 'rxjs';
 import { ChangePasswordRequest } from 'src/app/modules/user/interface/change-password-request';
 import { ConfirmationResponse } from 'src/app/interface/confirmation-response';
 import { User } from '../../interface/user';
+import { UserDetailsRequest } from '../../interface/user-details-request';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,12 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   public getUser(email: string): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/get?email=${email}`)
+    return this.http.get<User>(`${this.apiUrl}/${email}`)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        throw error;
+      })
+    )
   }
 
   public changePassword(request: ChangePasswordRequest): Observable<ConfirmationResponse> {
@@ -38,6 +44,15 @@ export class UserService {
       }),
       tap(() => {
         localStorage.clear();
+      })
+    )
+  }
+
+  public updateUserDetails(request: UserDetailsRequest): Observable<ConfirmationResponse> {
+    return this.http.post<ConfirmationResponse>(`${this.apiUrl}/details`, request)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        throw error;
       })
     )
   }
