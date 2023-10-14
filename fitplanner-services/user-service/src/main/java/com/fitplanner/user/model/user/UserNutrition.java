@@ -6,6 +6,5 @@ import java.util.List;
 
 public record UserNutrition(
         String email,
-        double calories,
         List<DailyMealPlan> dailyMealPlans
 ) {}
