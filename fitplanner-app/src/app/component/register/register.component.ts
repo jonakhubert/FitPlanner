@@ -70,7 +70,7 @@ export class RegisterComponent {
     });
   }
 
-  bmiValidator: Validators = (control: AbstractControl): ValidationErrors | null => {
+  private bmiValidator: Validators = (control: AbstractControl): ValidationErrors | null => {
     const weight = control.get('weight')?.value;
     const height = control.get('height')?.value;
   
@@ -82,9 +82,9 @@ export class RegisterComponent {
     }
   
     return null;
-  };
+  }
 
-  calculateBMI(weight: number, height: number): number {
+  private calculateBMI(weight: number, height: number): number {
     const heightInMeters = height / 100;
     return weight / (heightInMeters * heightInMeters);
   }

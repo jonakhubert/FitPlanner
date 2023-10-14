@@ -30,9 +30,9 @@
 
               <div class="form-outline mb-4">
                 <input type="number" min="0" placeholder="Height in cm" class="form-control form-control-lg" formControlName="height" [ngClass]="{'is-invalid': submitted && registerForm.controls['height'].errors}"/>
-                  <div *ngIf="registerForm.hasError('invalidBMI')" class="text-danger">
-                    Invalid BMI. Please enter valid weight and height values.
-                  </div>
+                <div *ngIf="registerForm.hasError('invalidBMI')" class="text-danger">
+                  Invalid BMI. Please enter valid weight and height values.
+                </div>
               </div>
 
               <div class="form-outline mb-4">
