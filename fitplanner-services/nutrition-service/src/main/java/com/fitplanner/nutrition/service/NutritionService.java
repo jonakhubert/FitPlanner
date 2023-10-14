@@ -53,7 +53,7 @@ public class NutritionService {
             }
         );
 
-        userServiceClient.saveUserNutrition(user, header);
+        userServiceClient.saveDailyMealPlans(user, header);
 
         return new ConfirmationResponse("Food item has been added.");
     }
@@ -81,7 +81,7 @@ public class NutritionService {
                 user.getDailyMealPlans().removeIf(plan -> plan.getDate().equals(request.date()));
         });
 
-        userServiceClient.saveUserNutrition(user, header);
+        userServiceClient.saveDailyMealPlans(user, header);
 
         return new ConfirmationResponse("Food item has been removed.");
     }
