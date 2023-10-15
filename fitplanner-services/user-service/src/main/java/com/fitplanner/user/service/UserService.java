@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @Service
 public class UserService {
 
@@ -51,6 +54,10 @@ public class UserService {
         var user = userRepository.findByEmail(request.email())
             .orElseThrow(() -> new UserNotFoundException("User not found."));
 
+        var currentNutritionInfo = user.getNutritionInfo();
+        currentNutritionInfo.setFinishDate(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        user.getHistoricalNutritionInfos().add(currentNutritionInfo);
+
         setUserNutrients(user, request);
         userRepository.save(user);
 
@@ -60,12 +67,6 @@ public class UserService {
     public UserDTO findUserByEmail(String email) {
         return userRepository.findByEmail(email).map(userDTOMapper)
             .orElseThrow(() -> new UserNotFoundException("User not found."));
-    }
-
-    public NutritionInfo findUserNutrition(String email) {
-        var user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found."));
-
-        return user.getNutritionInfo();
     }
 
     public void saveUserNutrition(UserNutrition userNutrition) {
