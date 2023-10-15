@@ -50,14 +50,6 @@ public class UserController {
         return ResponseEntity.ok(userService.findUserByEmail(email));
     }
 
-    @GetMapping(
-        path = "/nutrition/{email}",
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<NutritionInfo> getUserNutrition(@PathVariable("email") String email) {
-        return ResponseEntity.ok(userService.findUserNutrition(email));
-    }
-
     @PostMapping(
         path = "/details",
         produces = MediaType.APPLICATION_JSON_VALUE
