@@ -30,8 +30,8 @@ public class NutritionService {
             .findFirst()
             .orElseGet(() -> {
                 var newPlan = new DailyMealPlan(
-                    request.date(), user.getNutritionInfo().getCalories(), user.getNutritionInfo().getProtein(),
-                    user.getNutritionInfo().getFat(), user.getNutritionInfo().getCarbs()
+                    request.date(), request.calories(), request.protein(), request.fat(),
+                    request.carbs()
                 );
                 user.getDailyMealPlans().add(newPlan);
                 return newPlan;
@@ -72,12 +72,12 @@ public class NutritionService {
 
             // check if any other meals contain food items
             boolean hasFoodItems = user.getDailyMealPlans().stream()
-                    .filter(plan -> plan.getDate().equals(request.date()))
-                    .flatMap(plan -> plan.getMeals().stream())
-                    .anyMatch(otherMeal -> !otherMeal.getFoodItems().isEmpty());
+                .filter(plan -> plan.getDate().equals(request.date()))
+                .flatMap(plan -> plan.getMeals().stream())
+                .anyMatch(otherMeal -> !otherMeal.getFoodItems().isEmpty());
 
             // if no other meals contain food items, remove the whole daily meal plan
-            if (!hasFoodItems)
+            if(!hasFoodItems)
                 user.getDailyMealPlans().removeIf(plan -> plan.getDate().equals(request.date()));
         });
 
@@ -89,12 +89,19 @@ public class NutritionService {
     public DailyMealPlan getDailyMealPlan(String email, String date, String header) {
         var user = userServiceClient.getUser(email, header);
 
+        var suitableNutritionInfo = user.getHistoricalNutritionInfos().stream()
+            .filter(info -> info.isDateInRange(date))
+            .findFirst()
+            .orElse(null);
+
+        var nutritionInfo = (suitableNutritionInfo != null) ? suitableNutritionInfo : user.getNutritionInfo();
+
         return user.getDailyMealPlans().stream()
             .filter(plan -> plan.getDate().equals(date))
             .findFirst()
             .orElse(new DailyMealPlan(
-                date, new ArrayList<>(), user.getNutritionInfo().getCalories(), user.getNutritionInfo().getProtein(),
-                user.getNutritionInfo().getFat(), user.getNutritionInfo().getCarbs())
+                date, new ArrayList<>(), nutritionInfo.getCalories(), nutritionInfo.getProtein(),
+                nutritionInfo.getFat(), nutritionInfo.getCarbs())
             );
     }
 }
