@@ -66,6 +66,24 @@
   text-align: center;
 }
 
+.modal-content {
+  color: black;
+}
+
+.add {
+  cursor: pointer;
+}
+
+.input-group {
+  input {
+    border-width: 1px;
+  }
+}
+
+.input-group-text {
+  width: 90px;
+}
+
 td.macro {
   text-align: center;
 }

@@ -1,9 +1,11 @@
 package com.fitplanner.nutrition.model.food;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class FoodItem {
 
+    private String id;
     private String name;
     private double calories;
     private double protein;
@@ -11,9 +13,12 @@ public class FoodItem {
     private double carbs;
     private double quantity;
 
-    public FoodItem() {}
+    public FoodItem() {
+        this.id = UUID.randomUUID().toString();
+    }
 
     // getters
+    public String getId() { return id; }
     public String getName() { return name; }
     public double getCalories() { return calories; }
     public double getProtein() { return protein; }
@@ -22,6 +27,7 @@ public class FoodItem {
     public double getQuantity() { return quantity; }
 
     // setters
+    public void setName(String name) { this.name = name; }
     public void setCalories(double calories) { this.calories = calories; }
     public void setProtein(double protein) { this.protein = protein; }
     public void setFat(double fat) { this.fat = fat; }
@@ -35,7 +41,8 @@ public class FoodItem {
         if(!(o instanceof FoodItem other))
             return false;
 
-        return  Objects.equals(name, other.name) &&
+        return  Objects.equals(id, other.id) &&
+                Objects.equals(name, other.name) &&
                 Objects.equals(calories, other.calories) &&
                 Objects.equals(protein, other.protein) &&
                 Objects.equals(fat, other.fat) &&
@@ -45,6 +52,6 @@ public class FoodItem {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, calories, protein, fat, carbs, quantity);
+        return Objects.hash(id, name, calories, protein, fat, carbs, quantity);
     }
 }

@@ -35,11 +35,12 @@ public class User implements UserDetails {
     private VerificationToken verificationToken;
     private ResetPasswordToken resetPasswordToken;
 
-    // preferences TODO: add other parameters (height, weight, etc.)
-    private double calories;
+    // nutrition
+    private NutritionInfo nutritionInfo;
     private List<DailyMealPlan> dailyMealPlans;
 
-    public User(String firstName, String lastName, String email, String password, Role role) {
+    public User(
+        String firstName, String lastName, String email, String password, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -87,6 +88,7 @@ public class User implements UserDetails {
     public void setAccessToken(AccessToken accessToken) { this.accessToken = accessToken; }
     public void setVerificationToken(VerificationToken verificationToken) { this.verificationToken = verificationToken; }
     public void setResetPasswordToken(ResetPasswordToken resetPasswordToken) { this.resetPasswordToken = resetPasswordToken; }
+    public void setNutritionInfo(NutritionInfo nutritionInfo) { this.nutritionInfo = nutritionInfo; }
 
     @Override
     public boolean equals(Object o) {
@@ -101,14 +103,16 @@ public class User implements UserDetails {
                 Objects.equals(email, other.email) &&
                 Objects.equals(password, other.password) &&
                 Objects.equals(role, other.role) &&
+                Objects.equals(nutritionInfo, other.nutritionInfo) &&
                 Objects.equals(accessToken, other.accessToken) &&
                 Objects.equals(verificationToken, other.verificationToken) &&
-                Objects.equals(resetPasswordToken, other.resetPasswordToken);
+                Objects.equals(resetPasswordToken, other.resetPasswordToken) &&
+                Objects.equals(dailyMealPlans, other.dailyMealPlans);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, password, role,
-            accessToken, verificationToken, resetPasswordToken);
+        return Objects.hash(id, firstName, lastName, email, password, role, accessToken, verificationToken,
+            resetPasswordToken, nutritionInfo, dailyMealPlans);
     }
 }

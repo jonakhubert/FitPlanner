@@ -29,16 +29,20 @@ public class User {
     private VerificationToken verificationToken;
     private ResetPasswordToken resetPasswordToken;
 
-    // preferences TODO: add other parameters (height, weight, etc.)
-    private double calories;
+    private NutritionInfo nutritionInfo;
     private List<DailyMealPlan> dailyMealPlans;
 
     // getters
+    public String getFirstName() { return firstName; }
+    public String getLastName() { return lastName; }
     public String getEmail() { return email; }
-    public double getCalories() { return calories; }
+    public Role getRole() { return role; }
+    public NutritionInfo getNutritionInfo() { return nutritionInfo; }
     public List<DailyMealPlan> getDailyMealPlans() { return dailyMealPlans; }
 
     // setters
     public void setPassword(String password) { this.password = password; }
+    public void setAccessToken(AccessToken accessToken) { this.accessToken = accessToken; }
     public void setDailyMealPlans(List<DailyMealPlan> dailyMealPlans) { this.dailyMealPlans = dailyMealPlans; }
+    public void setNutritionInfo(NutritionInfo nutritionInfo) { this.nutritionInfo = nutritionInfo; }
 }

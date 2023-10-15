@@ -1,6 +1,6 @@
 import { FoodItem } from "./food-item";
 
-export interface MealRequest {
+export interface FoodItemCreationRequest {
     email: string,
     date: string,
     mealName: string,
