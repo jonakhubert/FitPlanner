@@ -87,12 +87,16 @@ export class DietComponent {
       return;
 
     const email = localStorage.getItem('userEmail');
-    if(email && this.selectedMeal) {
+    if(email && this.selectedMeal && this.dailyMealPlan) {
       const request: FoodItemCreationRequest = {
         email: email,
         date: this.formatDate(),
         mealName: this.selectedMeal,
-        foodItem: this.foodItemForm.value
+        foodItem: this.foodItemForm.value,
+        calories: this.dailyMealPlan.dailyCalories,
+        protein: this.dailyMealPlan.dailyProtein,
+        fat: this.dailyMealPlan.dailyFat,
+        carbs: this.dailyMealPlan.dailyCarbs
       }
       
       this.nutritionService.addFoodItem(request).subscribe(
