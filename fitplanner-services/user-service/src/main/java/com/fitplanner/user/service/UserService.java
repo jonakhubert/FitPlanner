@@ -54,9 +54,15 @@ public class UserService {
         var user = userRepository.findByEmail(request.email())
             .orElseThrow(() -> new UserNotFoundException("User not found."));
 
+        var newDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         var currentNutritionInfo = user.getNutritionInfo();
-        currentNutritionInfo.setFinishDate(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        user.getHistoricalNutritionInfos().add(currentNutritionInfo);
+
+        if(!newDate.equals(currentNutritionInfo.getBeginDate())) {
+            currentNutritionInfo.setFinishDate(newDate);
+            user.getHistoricalNutritionInfos().add(currentNutritionInfo);
+
+            setUserNutrients(user, request);
+        }
 
         setUserNutrients(user, request);
         userRepository.save(user);
