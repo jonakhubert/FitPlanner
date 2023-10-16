@@ -72,6 +72,7 @@ export class AccountDetailsComponent {
           })
         },
         error: (error) => {
+          this.toastr.error("The User Service cannot be reached. Try again later.", "Error")
           console.log(error);
         }
       });  
