@@ -6,6 +6,7 @@ import { FoodItemCreationRequest } from '../../interface/food-item-creation-requ
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FoodItemRemovalRequest } from '../../interface/food-item-removal-request';
+import { ChartOptions } from 'chart.js';
 
 @Component({
   selector: 'app-diet',
@@ -27,6 +28,32 @@ export class DietComponent {
   remainingProtein: number = 0;
   remainingFat: number = 0;
   remainingCarbs: number = 0;
+
+  // pie chart
+  pieChartOptions: ChartOptions<'pie'> = {
+    responsive: false,
+    plugins: {
+      legend: {
+        labels: {
+          font: {
+            size: 16
+          },
+          color: 'white'
+        }
+      }
+    },
+    datasets: {
+      pie: {
+        backgroundColor: ['#FF5733', '#FFC300', '#7145ff']
+      }
+    }
+  };
+  pieChartLabels = ['Protein', 'Fat', 'Carbs'];
+  pieChartDatasets = [{
+    data: [this.totalProtein, this.totalFat, this.totalCarbs]
+  }];
+  pieChartLegend = true;
+  pieChartPlugins = [];
 
   constructor(
     private nutritionService: NutritionService,
@@ -221,6 +248,8 @@ export class DietComponent {
     this.totalProtein = parseFloat(this.totalProtein.toFixed(1));
     this.totalFat = parseFloat(this.totalFat.toFixed(1));
     this.totalCarbs = parseFloat(this.totalCarbs.toFixed(1));
+
+    this.updatePieChartData();
   }
 
   private calculateRemaining(): void {
@@ -230,5 +259,11 @@ export class DietComponent {
       this.remainingFat = this.dailyMealPlan.dailyFat - this.totalFat;
       this.remainingCarbs = this.dailyMealPlan.dailyCarbs - this.totalCarbs;
     }
+  }
+
+  private updatePieChartData(): void {
+    this.pieChartDatasets = [{
+      data: [this.totalProtein, this.totalFat, this.totalCarbs]
+    }];
   }
 }
