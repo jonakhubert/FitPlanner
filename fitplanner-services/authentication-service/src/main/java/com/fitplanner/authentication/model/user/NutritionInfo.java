@@ -5,19 +5,19 @@ import java.time.format.DateTimeFormatter;
 
 public class NutritionInfo {
 
-    private int calories;
-    private double protein;
-    private double fat;
-    private double carbs;
-    private double height;
-    private double weight;
-    private int goal;
-    private int activity_level;
+    private Integer calories;
+    private Integer protein;
+    private Integer fat;
+    private Integer carbs;
+    private Double height;
+    private Double weight;
+    private Integer goal;
+    private Integer activity_level;
     private String beginDate;
     private String finishDate;
 
-    public NutritionInfo(int calories, double protein, double fat, double carbs,
-        double height, double weight, int goal, int activity_level
+    public NutritionInfo(Integer calories, Integer protein, Integer fat, Integer carbs, Double height, Double weight,
+         Integer goal, Integer activity_level
     ) {
         this.calories = calories;
         this.protein = protein;
@@ -31,8 +31,8 @@ public class NutritionInfo {
     }
 
     // setters
-    public void setCalories(int calories) { this.calories = calories; }
-    public void setProtein(double protein) { this.protein = protein; }
-    public void setFat(double fat) { this.fat = fat; }
-    public void setCarbs(double carbs) { this.carbs = carbs; }
+    public void setCalories(Integer calories) { this.calories = calories; }
+    public void setProtein(Integer protein) { this.protein = protein; }
+    public void setFat(Integer fat) { this.fat = fat; }
+    public void setCarbs(Integer carbs) { this.carbs = carbs; }
 }

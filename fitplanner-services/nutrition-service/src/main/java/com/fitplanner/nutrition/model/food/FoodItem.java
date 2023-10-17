@@ -7,11 +7,11 @@ public class FoodItem {
 
     private String id;
     private String name;
-    private double calories;
-    private double protein;
-    private double fat;
-    private double carbs;
-    private double quantity;
+    private Double calories;
+    private Double protein;
+    private Double fat;
+    private Double carbs;
+    private Double quantity;
 
     public FoodItem() {
         this.id = UUID.randomUUID().toString();
@@ -28,11 +28,11 @@ public class FoodItem {
 
     // setters
     public void setName(String name) { this.name = name; }
-    public void setCalories(double calories) { this.calories = calories; }
-    public void setProtein(double protein) { this.protein = protein; }
-    public void setFat(double fat) { this.fat = fat; }
-    public void setCarbs(double carbs) { this.carbs = carbs; }
-    public void setQuantity(double quantity) { this.quantity = quantity; }
+    public void setCalories(Double calories) { this.calories = calories; }
+    public void setProtein(Double protein) { this.protein = protein; }
+    public void setFat(Double fat) { this.fat = fat; }
+    public void setCarbs(Double carbs) { this.carbs = carbs; }
+    public void setQuantity(Double quantity) { this.quantity = quantity; }
 
     @Override
     public boolean equals(Object o) {

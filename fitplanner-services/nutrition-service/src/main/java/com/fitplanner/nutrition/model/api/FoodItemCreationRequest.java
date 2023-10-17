@@ -9,8 +9,8 @@ public record FoodItemCreationRequest(
         @NotNull @NotEmpty String date,
         @NotNull @NotEmpty String mealName,
         @NotNull FoodItem foodItem,
-        @NotNull int calories,
-        @NotNull double protein,
-        @NotNull double fat,
-        @NotNull double carbs
+        @NotNull Integer calories,
+        @NotNull Double protein,
+        @NotNull Double fat,
+        @NotNull Double carbs
 ) {}

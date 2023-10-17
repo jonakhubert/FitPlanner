@@ -40,8 +40,7 @@ public class User implements UserDetails {
     private List<NutritionInfo> historicalNutritionInfos;
     private List<DailyMealPlan> dailyMealPlans;
 
-    public User(
-        String firstName, String lastName, String email, String password, Role role) {
+    public User(String firstName, String lastName, String email, String password, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
