@@ -121,6 +121,9 @@ public class AuthenticationService {
         if(user.getResetPasswordToken().getExpiredAt().isBefore(LocalDateTime.now()))
             throw new TokenExpiredException("Token is expired.");
 
+        if(!user.getResetPasswordToken().getToken().equals(request.resetPasswordToken()))
+            throw new TokenExpiredException("Token is expired.");
+
         userService.resetPassword(user, request.newPassword());
 
         return new ConfirmationResponse("Password reset successfully.");

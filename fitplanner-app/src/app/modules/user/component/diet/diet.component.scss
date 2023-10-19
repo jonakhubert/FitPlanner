@@ -8,6 +8,16 @@
   margin-bottom: 40px;
 }
 
+.container {
+  max-width: 85vw;
+}
+
+.food-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .prev {
   margin-right: 10px;
   cursor: pointer;
@@ -38,6 +48,9 @@
 
 .nutrients {
   margin-top: 20px;
+  .nutrient-column {
+    background-color: rgb(40, 118, 170);
+  }
 }
 
 .delete {
@@ -64,6 +77,34 @@
   height: 50px;
   display: inline-block;
   text-align: center;
+}
+
+.modal-content {
+  color: black;
+}
+
+.add {
+  cursor: pointer;
+}
+
+.input-group {
+  input {
+    border-width: 1px;
+  }
+}
+
+.input-group-text {
+  width: 90px;
+}
+
+.pie-chart {
+  width: 50%;
+  margin-left: 50px;
+}
+
+.chart-canvas {
+  width: 450px;
+  height: 450px;
 }
 
 td.macro {

@@ -1,5 +1,5 @@
 <div class="mask d-flex align-items-center">
-  <div class="container h-100">
+  <div class="container">
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="diary">
         <h2>Your food diary for:</h2>
@@ -42,19 +42,19 @@
               <ng-container *ngFor="let meal of dailyMealPlan.meals">
                 <!-- Display header row for the meal -->
                 <tr class="meal-header">
-                  <td class="meal-name">{{ meal.name }} <i class="fa-solid fa-square-plus fa-xl"></i> </td>
+                  <td class="meal-name">{{ meal.name }} <i class="fa-solid fa-square-plus fa-xl add" (click)="openModal(meal.name)" data-bs-toggle="modal" data-bs-target="#exampleModal"></i> </td>
                 </tr>
           
                 <!-- Loop through food items of the meal -->
                 <ng-container *ngFor="let foodItem of meal.foodItems">
                   <tr class="food">
                     <!-- Display food item details -->
-                    <td class="food-name">{{ foodItem.name }}</td>
+                    <td class="food-name">{{ foodItem.name }}, {{ foodItem.quantity }}g</td>
                     <td class="nutrient-column"> <span>{{ foodItem.calories }}</span></td>
                     <td class="nutrient-column"> <span>{{ foodItem.protein }}</span></td>
                     <td class="nutrient-column"> <span>{{ foodItem.fat }}</span></td>
                     <td class="nutrient-column"> <span>{{ foodItem.carbs }}</span></td>
-                    <td class="delete"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
+                    <td class="delete" (click)="removeFoodItem(foodItem.id, meal.name)"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
                   </tr>
                 </ng-container>
 
@@ -71,7 +71,7 @@
                   <td>&nbsp;</td>
                 </tr>
               </ng-container>
-  
+
               <!-- Display summary row for the day -->
               <tr class="day-summary">
                 <td class="first">Totals</td>
@@ -80,25 +80,103 @@
                 <td class="nutrient-column"> <span>{{ totalFat }}</span></td>
                 <td class="nutrient-column"> <span>{{ totalCarbs }}</span></td>
               </tr>
-  
+
               <tr class="day-summary">
                 <td class="first">Daily Goal</td>
-                <td class="macro"><span class="macro-value">10</span></td>
-                <td class="macro"><span class="macro-value">10</span></td>
-                <td class="macro"><span class="macro-value">10</span></td>
-                <td class="macro"><span class="macro-value">10</span></td>
+                <td class="macro"><span class="macro-value">{{ dailyMealPlan.dailyCalories }}</span></td>
+                <td class="macro"><span class="macro-value">{{ dailyMealPlan.dailyProtein }}</span></td>
+                <td class="macro"><span class="macro-value">{{ dailyMealPlan.dailyFat }}</span></td>
+                <td class="macro"><span class="macro-value">{{ dailyMealPlan.dailyCarbs }}</span></td>
               </tr>
-  
+
               <tr class="day-summary">
                 <td class="first">Remaining</td>
-                <td class="macro"><span class="macro-value">10</span></td>
-                <td class="macro"><span class="macro-value">10</span></td>
-                <td class="macro"><span class="macro-value">10</span></td>
-                <td class="macro"><span class="macro-value">10</span></td>
+                <td class="macro"><span class="macro-value">{{ remainingCalories }}</span></td>
+                <td class="macro"><span class="macro-value">{{ remainingProtein }}</span></td>
+                <td class="macro"><span class="macro-value">{{ remainingFat }}</span></td>
+                <td class="macro"><span class="macro-value">{{ remainingCarbs }}</span></td>
+              </tr>
+              <tr class="nutrients">
+                <td></td>
+                <td class="nutrient-column">Calories <div class="subtitle">kcal</div></td>
+                <td class="nutrient-column">Protein <div class="subtitle">g</div></td>
+                <td class="nutrient-column">Fat <div class="subtitle">g</div></td>
+                <td class="nutrient-column">Carbs <div class="subtitle">g</div></td>
               </tr>
             </ng-container>
           </table>
+
+          <div *ngIf="totalProtein !== 0 || totalFat !== 0 || totalCarbs !== 0" class="pie-chart">
+            <canvas baseChart
+              [type]="'pie'"
+              [datasets]="pieChartDatasets"
+              [labels]="pieChartLabels"
+              [options]="pieChartOptions"
+              [plugins]="pieChartPlugins"
+              [legend]="pieChartLegend"
+              class="chart-canvas">
+            </canvas>
+          </div>
+          
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title" id="exampleModalLabel"> <span style="font-size: 25px; font-weight: 700">Add your food item</span><br>
+          <small>Add a new food item with all macronutrients which is not present in our database.</small>
+        </p>
+      </div>
+
+      <div class="modal-body" *ngIf="foodItemForm">
+        <form [formGroup]="foodItemForm">
+          <div class="input-group input-group-sm mb-3">
+            <span class="input-group-text">Name</span>
+            <input type="text" [defaultValue]="" formControlName="name">
+          </div>
+          <div class="input-group input-group-sm mb-3">
+            <span class="input-group-text">Quantity (g)</span>
+            <input type="number" min="1" [defaultValue]=0 formControlName="quantity">
+          </div>
+          <div class="input-group input-group-sm mb-3">
+            <span class="input-group-text">Calories</span>
+            <input type="number" min="1" [defaultValue]=0 formControlName="calories">
+          </div>
+          <div class="input-group input-group-sm mb-3">
+            <span class="input-group-text">Protein (g)</span>
+            <input type="number" min="0" [defaultValue]=0 formControlName="protein">
+          </div>
+          <div class="input-group input-group-sm mb-3">
+            <span class="input-group-text">Fat (g)</span>
+            <input type="number" min="0" [defaultValue]=0 formControlName="fat">
+          </div>
+          <div class="input-group input-group-sm mb-3">
+            <span class="input-group-text">Carbs (g)</span>
+            <input type="number" min="0" [defaultValue]=0 formControlName="carbs">
+          </div>
+        </form>
+      </div>
+
+      <div *ngIf="submitted && foodItemForm" class="text-danger">
+        <div *ngIf="foodItemForm.controls['name'].errors">Name is required</div>
+        <div *ngIf="foodItemForm.controls['quantity'].errors">Quantity must be at least 1</div>
+        <div *ngIf="foodItemForm.controls['calories'].errors">Calories must be greater than 0</div>
+        <div *ngIf="foodItemForm.controls['protein'].errors">Protein must be 0 or greater</div>
+        <div *ngIf="foodItemForm.controls['fat'].errors">Fat must be 0 or greater</div>
+        <div *ngIf="foodItemForm.controls['carbs'].errors">Carbs must be 0 or greater</div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="addFoodItem()">Add</button>
+        <button id="closeBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
     </div>
   </div>
 </div>

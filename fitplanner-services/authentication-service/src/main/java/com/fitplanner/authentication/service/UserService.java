@@ -5,7 +5,7 @@ import com.fitplanner.authentication.model.tokens.ResetPasswordToken;
 import com.fitplanner.authentication.model.tokens.VerificationToken;
 import com.fitplanner.authentication.model.tokens.accesstoken.AccessToken;
 import com.fitplanner.authentication.model.api.RegisterRequest;
-import com.fitplanner.authentication.model.api.ResetPasswordRequest;
+import com.fitplanner.authentication.model.user.NutritionInfo;
 import com.fitplanner.authentication.model.user.Role;
 import com.fitplanner.authentication.model.user.User;
 import com.fitplanner.authentication.repository.UserRepository;
@@ -45,6 +45,8 @@ public class UserService {
             passwordEncoder.encode(request.password()),
             Role.USER
         );
+
+        setUserNutrients(user, request);
 
         return userRepository.save(user);
     }
@@ -129,5 +131,24 @@ public class UserService {
 
     public boolean isResetPasswordTokenValid(String token) {
         return userRepository.findByResetPasswordToken(token).isPresent();
+    }
+
+    private void setUserNutrients(User user, RegisterRequest request) {
+        var baseCalories = request.activity_level() == 1 ? (int)(request.weight() * 31)
+            : request.activity_level() == 2 ? (int)(request.weight() * 32)
+            : (int)(request.weight() * 33);
+
+        var totalCalories = request.goal() == 1 ? baseCalories - 300
+            : request.goal() == 3 ? baseCalories + 300
+            : baseCalories;
+
+        var protein = request.weight().intValue() * 2;
+        var fat = request.weight().intValue();
+        var carbs = (totalCalories - (protein * 4) - (fat * 9)) / 4;
+
+        var nutritionInfo = new NutritionInfo(totalCalories, protein, fat, carbs, request.height(), request.weight(),
+            request.goal(), request.activity_level());
+
+        user.setNutritionInfo(nutritionInfo);
     }
 }

@@ -29,6 +29,35 @@
               </div>
 
               <div class="form-outline mb-4">
+                <input type="number" min="0" placeholder="Height in cm" class="form-control form-control-lg" formControlName="height" [ngClass]="{'is-invalid': submitted && registerForm.controls['height'].errors}"/>
+                <div *ngIf="registerForm.hasError('invalidBMI')" class="text-danger">
+                  Invalid BMI. Please enter valid weight and height values.
+                </div>
+              </div>
+
+              <div class="form-outline mb-4">
+                <input type="number" min="0" placeholder="Weight in kg" class="form-control form-control-lg" formControlName="weight" [ngClass]="{'is-invalid': submitted && registerForm.controls['weight'].errors}"/>
+              </div>
+
+              <div class="form-outline mb-4">
+                <select class="form-select form-select-lg mb-3" aria-label="Default select example" formControlName="goal" [ngClass]="{'is-invalid': submitted && registerForm.controls['goal'].errors}">
+                  <option [ngValue]="null" disabled selected>Select your goal</option>
+                  <option [ngValue]=1>Lose weight</option>
+                  <option [ngValue]=2>Maintain weight</option>
+                  <option [ngValue]=3>Gain weight</option>
+                </select>
+              </div>
+
+              <div class="form-outline mb-4">
+                <select class="form-select form-select-lg mb-3" aria-label="Default select example" formControlName="activity_level" [ngClass]="{'is-invalid': submitted && registerForm.controls['activity_level'].errors}">
+                  <option [ngValue]="null" disabled selected>Select your activity level</option>
+                  <option [ngValue]=1>Low</option>
+                  <option [ngValue]=2>Active</option>
+                  <option [ngValue]=3>Very active</option>
+                </select>
+              </div>
+
+              <div class="form-outline mb-4">
                 <input type="email" placeholder="Email Address" class="form-control form-control-lg" formControlName="email" [ngClass]="{'is-invalid': submitted && registerForm.controls['email'].errors}"/>
                 <div *ngIf="submitted && registerForm.controls['email'].errors" class="text-danger">
                   <div *ngIf="registerForm.controls['email'].errors['pattern']">Email is not valid</div>

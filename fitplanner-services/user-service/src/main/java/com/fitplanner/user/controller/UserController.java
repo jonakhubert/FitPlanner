@@ -2,7 +2,10 @@ package com.fitplanner.user.controller;
 
 import com.fitplanner.user.model.api.ChangePasswordRequest;
 import com.fitplanner.user.model.api.ConfirmationResponse;
+import com.fitplanner.user.model.api.UserDetailsRequest;
+import com.fitplanner.user.model.user.NutritionInfo;
 import com.fitplanner.user.model.user.User;
+import com.fitplanner.user.model.user.UserDTO;
 import com.fitplanner.user.model.user.UserNutrition;
 import com.fitplanner.user.service.UserService;
 import jakarta.validation.Valid;
@@ -13,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/api/user")
+@RequestMapping(path = "/api/users")
 public class UserController {
 
     private final UserService userService;
@@ -40,15 +43,23 @@ public class UserController {
     }
 
     @GetMapping(
-        path = "/get",
+        path = "/{email}",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<User> getUser(@RequestParam("email") String email) {
+    public ResponseEntity<UserDTO> getUser(@PathVariable("email") String email) {
         return ResponseEntity.ok(userService.findUserByEmail(email));
     }
 
     @PostMapping(
-        path = "/save-user-nutrition",
+        path = "/details",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<ConfirmationResponse> updateUserDetails(@RequestBody @Valid UserDetailsRequest request) {
+        return ResponseEntity.ok(userService.updateUserDetails(request));
+    }
+
+    @PostMapping(
+        path = "/daily-meal-plans",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<Void> saveUserNutrition(@RequestBody UserNutrition user) {

@@ -1,7 +1,8 @@
 package com.fitplanner.nutrition.controller;
 
 import com.fitplanner.nutrition.model.api.ConfirmationResponse;
-import com.fitplanner.nutrition.model.api.MealRequest;
+import com.fitplanner.nutrition.model.api.FoodItemCreationRequest;
+import com.fitplanner.nutrition.model.api.FoodItemRemovalRequest;
 import com.fitplanner.nutrition.model.food.DailyMealPlan;
 import com.fitplanner.nutrition.service.NutritionService;
 import jakarta.validation.Valid;
@@ -22,29 +23,29 @@ public class NutritionController {
     }
 
     @PostMapping(
-        path = "/add-food-item",
+        path = "/food-items",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<ConfirmationResponse> addFoodItem(
-        @RequestBody @Valid MealRequest request,
+        @RequestBody @Valid FoodItemCreationRequest request,
         @RequestHeader("Authorization") String header
     ) {
         return ResponseEntity.ok(nutritionService.addFoodItem(request, header));
     }
 
-    @PostMapping(
-        path = "/remove-food-item",
+    @DeleteMapping(
+        path = "/food-items",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<ConfirmationResponse> removeFoodItem(
-        @RequestBody @Valid MealRequest request,
+        @RequestBody @Valid FoodItemRemovalRequest request,
         @RequestHeader("Authorization") String header
     ) {
         return ResponseEntity.ok(nutritionService.removeFoodItem(request, header));
     }
 
     @GetMapping(
-        path = "/daily-meal-plan",
+        path = "/daily-meal-plans",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<DailyMealPlan> getDailyMealPlan(

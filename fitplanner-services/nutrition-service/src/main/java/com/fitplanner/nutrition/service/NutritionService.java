@@ -2,15 +2,14 @@ package com.fitplanner.nutrition.service;
 
 import com.fitplanner.nutrition.client.UserServiceClient;
 import com.fitplanner.nutrition.model.api.ConfirmationResponse;
-import com.fitplanner.nutrition.model.api.MealRequest;
+import com.fitplanner.nutrition.model.api.FoodItemCreationRequest;
+import com.fitplanner.nutrition.model.api.FoodItemRemovalRequest;
 import com.fitplanner.nutrition.model.food.DailyMealPlan;
-import com.fitplanner.nutrition.model.food.FoodItem;
 import com.fitplanner.nutrition.model.food.Meal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 @Service
 public class NutritionService {
@@ -22,7 +21,7 @@ public class NutritionService {
         this.userServiceClient = userServiceClient;
     }
 
-    public ConfirmationResponse addFoodItem(MealRequest request, String header) {
+    public ConfirmationResponse addFoodItem(FoodItemCreationRequest request, String header) {
         var user = userServiceClient.getUser(request.email(), header);
 
         // if the daily meal plan with the specific date doesn't exist, create a new one
@@ -30,7 +29,10 @@ public class NutritionService {
             .filter(plan -> plan.getDate().equals(request.date()))
             .findFirst()
             .orElseGet(() -> {
-                DailyMealPlan newPlan = new DailyMealPlan(request.date());
+                var newPlan = new DailyMealPlan(
+                    request.date(), request.calories(), request.protein(), request.fat(),
+                    request.carbs()
+                );
                 user.getDailyMealPlans().add(newPlan);
                 return newPlan;
             });
@@ -45,18 +47,18 @@ public class NutritionService {
         existingMeal.ifPresentOrElse(
             meal -> meal.getFoodItems().add(request.foodItem()),
             () -> {
-                Meal newMeal = new Meal(request.mealName());
+                var newMeal = new Meal(request.mealName());
                 newMeal.getFoodItems().add(request.foodItem());
                 dailyMealPlan.getMeals().add(newMeal);
             }
         );
 
-        userServiceClient.saveUserNutrition(user, header);
+        userServiceClient.saveDailyMealPlans(user, header);
 
         return new ConfirmationResponse("Food item has been added.");
     }
 
-    public ConfirmationResponse removeFoodItem(MealRequest request, String header) {
+    public ConfirmationResponse removeFoodItem(FoodItemRemovalRequest request, String header) {
         var user = userServiceClient.getUser(request.email(), header);
 
         var userMeal = user.getDailyMealPlans().stream()
@@ -66,17 +68,20 @@ public class NutritionService {
             .findFirst();
 
         userMeal.ifPresent(meal -> {
-            Iterator<FoodItem> iterator = meal.getFoodItems().iterator();
-            while(iterator.hasNext()) {
-                FoodItem foodItem = iterator.next();
-                if(foodItem.equals(request.foodItem())) {
-                    iterator.remove();
-                    break; // Break the loop after removing the first occurrence
-                }
-            }
+            meal.getFoodItems().removeIf(foodItem -> foodItem.getId().equals(request.foodId()));
+
+            // check if any other meals contain food items
+            boolean hasFoodItems = user.getDailyMealPlans().stream()
+                .filter(plan -> plan.getDate().equals(request.date()))
+                .flatMap(plan -> plan.getMeals().stream())
+                .anyMatch(otherMeal -> !otherMeal.getFoodItems().isEmpty());
+
+            // if no other meals contain food items, remove the whole daily meal plan
+            if(!hasFoodItems)
+                user.getDailyMealPlans().removeIf(plan -> plan.getDate().equals(request.date()));
         });
 
-        userServiceClient.saveUserNutrition(user, header);
+        userServiceClient.saveDailyMealPlans(user, header);
 
         return new ConfirmationResponse("Food item has been removed.");
     }
@@ -84,9 +89,19 @@ public class NutritionService {
     public DailyMealPlan getDailyMealPlan(String email, String date, String header) {
         var user = userServiceClient.getUser(email, header);
 
+        var suitableNutritionInfo = user.getHistoricalNutritionInfos().stream()
+            .filter(info -> info.isDateInRange(date))
+            .findFirst()
+            .orElse(null);
+
+        var nutritionInfo = (suitableNutritionInfo != null) ? suitableNutritionInfo : user.getNutritionInfo();
+
         return user.getDailyMealPlans().stream()
-                .filter(plan -> plan.getDate().equals(date))
-                .findFirst()
-                .orElse(new DailyMealPlan(date, new ArrayList<>()));
+            .filter(plan -> plan.getDate().equals(date))
+            .findFirst()
+            .orElse(new DailyMealPlan(
+                date, new ArrayList<>(), nutritionInfo.getCalories(), nutritionInfo.getProtein(),
+                nutritionInfo.getFat(), nutritionInfo.getCarbs())
+            );
     }
 }

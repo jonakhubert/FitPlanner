@@ -7,17 +7,17 @@ import java.util.List;
 public class User {
 
     private String email;
-    // preferences TODO: add other parameters (height, weight, etc.)
-    private double calories;
+    private NutritionInfo nutritionInfo;
+    private List<NutritionInfo> historicalNutritionInfos;
     private List<DailyMealPlan> dailyMealPlans;
 
     // getters
     public String getEmail() { return email; }
+    public NutritionInfo getNutritionInfo() { return nutritionInfo; }
+    public List<NutritionInfo> getHistoricalNutritionInfos() { return historicalNutritionInfos; }
     public List<DailyMealPlan> getDailyMealPlans() { return dailyMealPlans; }
-    public double getCalories() { return calories; }
 
     // setters
     public void setEmail(String email) { this.email = email; }
-    public void setCalories(double calories) { this.calories = calories; }
     public void setDailyMealPlans(List<DailyMealPlan> dailyMealPlans) { this.dailyMealPlans = dailyMealPlans; }
 }

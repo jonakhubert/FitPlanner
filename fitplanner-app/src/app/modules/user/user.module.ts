@@ -16,6 +16,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCardModule } from '@angular/material/card';
+import { AccountDetailsComponent } from './component/account-details/account-details.component';
+import { NgChartsModule } from 'ng2-charts';
 
 
 @NgModule({
@@ -27,7 +29,8 @@ import { MatCardModule } from '@angular/material/card';
     AboutComponent,
     AccountSettingsComponent,
     PasswordChangeComponent,
-    AccountDeleteComponent
+    AccountDeleteComponent,
+    AccountDetailsComponent
   ],
   imports: [
     CommonModule,
@@ -39,7 +42,8 @@ import { MatCardModule } from '@angular/material/card';
     MatDatepickerModule,
     MatInputModule,
     MatNativeDateModule,
-    MatCardModule
+    MatCardModule,
+    NgChartsModule
   ]
 })
 export class UserModule { }
