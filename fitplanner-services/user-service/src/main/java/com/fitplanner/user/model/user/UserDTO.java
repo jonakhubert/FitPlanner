@@ -9,5 +9,6 @@ public record UserDTO(
         String lastName,
         String email,
         NutritionInfo nutritionInfo,
+        List<NutritionInfo> historicalNutritionInfos,
         List<DailyMealPlan> dailyMealPlans
 ) {}

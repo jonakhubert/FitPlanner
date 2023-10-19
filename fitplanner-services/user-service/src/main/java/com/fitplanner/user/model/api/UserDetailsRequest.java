@@ -7,8 +7,8 @@ public record UserDetailsRequest(
         @NotNull @NotEmpty String firstName,
         @NotNull @NotEmpty String lastName,
         @NotNull @NotEmpty String email,
-        @NotNull double height,
-        @NotNull double weight,
-        @NotNull int goal,
-        @NotNull int activity_level
+        @NotNull Double height,
+        @NotNull Double weight,
+        @NotNull Integer goal,
+        @NotNull Integer activity_level
 ) {}

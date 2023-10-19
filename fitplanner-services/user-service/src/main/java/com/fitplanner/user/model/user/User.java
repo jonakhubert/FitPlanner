@@ -30,6 +30,7 @@ public class User {
     private ResetPasswordToken resetPasswordToken;
 
     private NutritionInfo nutritionInfo;
+    private List<NutritionInfo> historicalNutritionInfos;
     private List<DailyMealPlan> dailyMealPlans;
 
     // getters
@@ -38,6 +39,7 @@ public class User {
     public String getEmail() { return email; }
     public Role getRole() { return role; }
     public NutritionInfo getNutritionInfo() { return nutritionInfo; }
+    public List<NutritionInfo> getHistoricalNutritionInfos() { return historicalNutritionInfos; }
     public List<DailyMealPlan> getDailyMealPlans() { return dailyMealPlans; }
 
     // setters

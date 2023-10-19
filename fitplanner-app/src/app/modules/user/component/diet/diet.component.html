@@ -1,5 +1,5 @@
 <div class="mask d-flex align-items-center">
-  <div class="container h-100">
+  <div class="container">
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="diary">
         <h2>Your food diary for:</h2>
@@ -71,7 +71,7 @@
                   <td>&nbsp;</td>
                 </tr>
               </ng-container>
-  
+
               <!-- Display summary row for the day -->
               <tr class="day-summary">
                 <td class="first">Totals</td>
@@ -80,7 +80,7 @@
                 <td class="nutrient-column"> <span>{{ totalFat }}</span></td>
                 <td class="nutrient-column"> <span>{{ totalCarbs }}</span></td>
               </tr>
-  
+
               <tr class="day-summary">
                 <td class="first">Daily Goal</td>
                 <td class="macro"><span class="macro-value">{{ dailyMealPlan.dailyCalories }}</span></td>
@@ -88,7 +88,7 @@
                 <td class="macro"><span class="macro-value">{{ dailyMealPlan.dailyFat }}</span></td>
                 <td class="macro"><span class="macro-value">{{ dailyMealPlan.dailyCarbs }}</span></td>
               </tr>
-  
+
               <tr class="day-summary">
                 <td class="first">Remaining</td>
                 <td class="macro"><span class="macro-value">{{ remainingCalories }}</span></td>
@@ -96,12 +96,35 @@
                 <td class="macro"><span class="macro-value">{{ remainingFat }}</span></td>
                 <td class="macro"><span class="macro-value">{{ remainingCarbs }}</span></td>
               </tr>
+              <tr class="nutrients">
+                <td></td>
+                <td class="nutrient-column">Calories <div class="subtitle">kcal</div></td>
+                <td class="nutrient-column">Protein <div class="subtitle">g</div></td>
+                <td class="nutrient-column">Fat <div class="subtitle">g</div></td>
+                <td class="nutrient-column">Carbs <div class="subtitle">g</div></td>
+              </tr>
             </ng-container>
           </table>
+
+          <div *ngIf="totalProtein !== 0 || totalFat !== 0 || totalCarbs !== 0" class="pie-chart">
+            <canvas baseChart
+              [type]="'pie'"
+              [datasets]="pieChartDatasets"
+              [labels]="pieChartLabels"
+              [options]="pieChartOptions"
+              [plugins]="pieChartPlugins"
+              [legend]="pieChartLegend"
+              class="chart-canvas">
+            </canvas>
+          </div>
+          
         </div>
+      </div>
     </div>
   </div>
 </div>
+
+
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">

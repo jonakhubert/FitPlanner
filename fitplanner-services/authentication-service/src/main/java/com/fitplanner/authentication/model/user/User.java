@@ -37,10 +37,10 @@ public class User implements UserDetails {
 
     // nutrition
     private NutritionInfo nutritionInfo;
+    private List<NutritionInfo> historicalNutritionInfos;
     private List<DailyMealPlan> dailyMealPlans;
 
-    public User(
-        String firstName, String lastName, String email, String password, Role role) {
+    public User(String firstName, String lastName, String email, String password, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -49,6 +49,7 @@ public class User implements UserDetails {
         this.accessToken = null;
         this.verificationToken = null;
         this.resetPasswordToken = null;
+        this.historicalNutritionInfos = new ArrayList<>();
         this.dailyMealPlans = new ArrayList<>();
     }
 
@@ -107,12 +108,13 @@ public class User implements UserDetails {
                 Objects.equals(accessToken, other.accessToken) &&
                 Objects.equals(verificationToken, other.verificationToken) &&
                 Objects.equals(resetPasswordToken, other.resetPasswordToken) &&
+                Objects.equals(historicalNutritionInfos, other.historicalNutritionInfos) &&
                 Objects.equals(dailyMealPlans, other.dailyMealPlans);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, firstName, lastName, email, password, role, accessToken, verificationToken,
-            resetPasswordToken, nutritionInfo, dailyMealPlans);
+            resetPasswordToken, nutritionInfo, historicalNutritionInfos, dailyMealPlans);
     }
 }

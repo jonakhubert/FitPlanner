@@ -134,17 +134,17 @@ public class UserService {
     }
 
     private void setUserNutrients(User user, RegisterRequest request) {
-        int baseCalories = request.activity_level() == 1 ? (int)(request.weight() * 31)
+        var baseCalories = request.activity_level() == 1 ? (int)(request.weight() * 31)
             : request.activity_level() == 2 ? (int)(request.weight() * 32)
             : (int)(request.weight() * 33);
 
-        int totalCalories = request.goal() == 1 ? baseCalories - 300
+        var totalCalories = request.goal() == 1 ? baseCalories - 300
             : request.goal() == 3 ? baseCalories + 300
             : baseCalories;
 
-        double protein = request.weight() * 2;
-        double fat = request.weight();
-        double carbs = (totalCalories - (protein * 4) - (fat * 9)) / 4;
+        var protein = request.weight().intValue() * 2;
+        var fat = request.weight().intValue();
+        var carbs = (totalCalories - (protein * 4) - (fat * 9)) / 4;
 
         var nutritionInfo = new NutritionInfo(totalCalories, protein, fat, carbs, request.height(), request.weight(),
             request.goal(), request.activity_level());

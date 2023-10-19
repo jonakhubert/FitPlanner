@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @Service
 public class UserService {
 
@@ -51,6 +54,16 @@ public class UserService {
         var user = userRepository.findByEmail(request.email())
             .orElseThrow(() -> new UserNotFoundException("User not found."));
 
+        var newDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        var currentNutritionInfo = user.getNutritionInfo();
+
+        if(!newDate.equals(currentNutritionInfo.getBeginDate())) {
+            currentNutritionInfo.setFinishDate(newDate);
+            user.getHistoricalNutritionInfos().add(currentNutritionInfo);
+
+            setUserNutrients(user, request);
+        }
+
         setUserNutrients(user, request);
         userRepository.save(user);
 
@@ -62,12 +75,6 @@ public class UserService {
             .orElseThrow(() -> new UserNotFoundException("User not found."));
     }
 
-    public NutritionInfo findUserNutrition(String email) {
-        var user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found."));
-
-        return user.getNutritionInfo();
-    }
-
     public void saveUserNutrition(UserNutrition userNutrition) {
         var user = userRepository.findByEmail(userNutrition.email())
             .orElseThrow(() -> new UserNotFoundException("User not found."));
@@ -77,17 +84,17 @@ public class UserService {
     }
 
     private void setUserNutrients(User user, UserDetailsRequest request) {
-        int baseCalories = request.activity_level() == 1 ? (int)(request.weight() * 31)
+        var baseCalories = request.activity_level() == 1 ? (int)(request.weight() * 31)
             : request.activity_level() == 2 ? (int)(request.weight() * 32)
             : (int)(request.weight() * 33);
 
-        int totalCalories = request.goal() == 1 ? baseCalories - 300
+        var totalCalories = request.goal() == 1 ? baseCalories - 300
             : request.goal() == 3 ? baseCalories + 300
             : baseCalories;
 
-        double protein = request.weight() * 2;
-        double fat = request.weight();
-        double carbs = (totalCalories - (protein * 4) - (fat * 9)) / 4;
+        var protein = request.weight().intValue() * 2;
+        var fat = request.weight().intValue();
+        var carbs = (totalCalories - (protein * 4) - (fat * 9)) / 4;
 
         var nutritionInfo = new NutritionInfo(totalCalories, protein, fat, carbs,request.height(),
             request.weight(), request.goal(), request.activity_level());

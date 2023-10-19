@@ -7,13 +7,14 @@ import java.util.List;
 public class User {
 
     private String email;
-    // TODO: LocalDateTime instead of string
     private NutritionInfo nutritionInfo;
+    private List<NutritionInfo> historicalNutritionInfos;
     private List<DailyMealPlan> dailyMealPlans;
 
     // getters
     public String getEmail() { return email; }
     public NutritionInfo getNutritionInfo() { return nutritionInfo; }
+    public List<NutritionInfo> getHistoricalNutritionInfos() { return historicalNutritionInfos; }
     public List<DailyMealPlan> getDailyMealPlans() { return dailyMealPlans; }
 
     // setters
