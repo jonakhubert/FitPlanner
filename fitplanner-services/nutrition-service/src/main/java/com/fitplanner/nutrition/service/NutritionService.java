@@ -6,19 +6,24 @@ import com.fitplanner.nutrition.model.api.FoodItemCreationRequest;
 import com.fitplanner.nutrition.model.api.FoodItemRemovalRequest;
 import com.fitplanner.nutrition.model.food.DailyMealPlan;
 import com.fitplanner.nutrition.model.food.Meal;
+import com.fitplanner.nutrition.model.food.Product;
+import com.fitplanner.nutrition.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class NutritionService {
 
     private final UserServiceClient userServiceClient;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public NutritionService(UserServiceClient userServiceClient) {
+    public NutritionService(UserServiceClient userServiceClient, ProductRepository productRepository) {
         this.userServiceClient = userServiceClient;
+        this.productRepository = productRepository;
     }
 
     public ConfirmationResponse addFoodItem(FoodItemCreationRequest request, String header) {
@@ -103,5 +108,10 @@ public class NutritionService {
                 date, new ArrayList<>(), nutritionInfo.getCalories(), nutritionInfo.getProtein(),
                 nutritionInfo.getFat(), nutritionInfo.getCarbs())
             );
+    }
+
+    public List<Product> getProducts(String name) {
+        return productRepository.findByNameIgnoreCase(name)
+            .orElseThrow(() -> new RuntimeException("products not found"));
     }
 }
