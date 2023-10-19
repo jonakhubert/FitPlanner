@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FoodItemRemovalRequest } from '../../interface/food-item-removal-request';
 import { ChartOptions } from 'chart.js';
+import { Product } from '../../interface/product';
 
 @Component({
   selector: 'app-diet',
@@ -28,6 +29,8 @@ export class DietComponent {
   remainingProtein: number = 0;
   remainingFat: number = 0;
   remainingCarbs: number = 0;
+  products: Product[] = [];
+  searchQuery = '';
 
   // pie chart
   pieChartOptions: ChartOptions<'pie'> = {
@@ -152,6 +155,20 @@ export class DietComponent {
       fat: [0, Validators.required],
       carbs: [0, Validators.required]
     })
+  }
+
+  searchProducts(name: string) {
+    this.nutritionService.getProducts(name).subscribe(
+    {
+      next: (response) => {
+        console.log(response);
+        this.products = response;
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    }
+    )
   }
 
   private fetchDailyMealPlan(): void {
