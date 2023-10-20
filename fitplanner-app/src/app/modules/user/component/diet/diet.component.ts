@@ -29,8 +29,6 @@ export class DietComponent {
   remainingProtein: number = 0;
   remainingFat: number = 0;
   remainingCarbs: number = 0;
-  products: Product[] = [];
-  searchQuery = '';
 
   // pie chart
   pieChartOptions: ChartOptions<'pie'> = {
@@ -122,11 +120,7 @@ export class DietComponent {
         email: email,
         date: this.formatDate(),
         mealName: this.selectedMeal,
-        foodItem: this.foodItemForm.value,
-        calories: this.dailyMealPlan.dailyCalories,
-        protein: this.dailyMealPlan.dailyProtein,
-        fat: this.dailyMealPlan.dailyFat,
-        carbs: this.dailyMealPlan.dailyCarbs
+        foodItem: this.foodItemForm.value
       }
       
       this.nutritionService.addFoodItem(request).subscribe(
@@ -155,20 +149,6 @@ export class DietComponent {
       fat: [0, Validators.required],
       carbs: [0, Validators.required]
     })
-  }
-
-  searchProducts(name: string) {
-    this.nutritionService.getProducts(name).subscribe(
-    {
-      next: (response) => {
-        console.log(response);
-        this.products = response;
-      },
-      error: (error) => {
-        console.log(error);
-      }
-    }
-    )
   }
 
   private fetchDailyMealPlan(): void {
@@ -204,7 +184,7 @@ export class DietComponent {
     this.formattedDate = this.selectedDate.toLocaleDateString('en-US', options);
   }
 
-  private formatDate(): string {
+  formatDate(): string {
     const year = this.selectedDate.getFullYear();
     const month = ('0' + (this.selectedDate.getMonth() + 1)).slice(-2);
     const day = ('0' + this.selectedDate.getDate()).slice(-2);
