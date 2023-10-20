@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -29,14 +30,18 @@ public class NutritionService {
     public ConfirmationResponse addFoodItem(FoodItemCreationRequest request, String header) {
         var user = userServiceClient.getUser(request.email(), header);
 
+        var nutritionInfo = user.getHistoricalNutritionInfos().stream()
+            .filter(info -> info.isDateInRange(request.date()))
+            .findFirst().orElseGet(user::getNutritionInfo);
+
         // if the daily meal plan with the specific date doesn't exist, create a new one
         var dailyMealPlan = user.getDailyMealPlans().stream()
             .filter(plan -> plan.getDate().equals(request.date()))
             .findFirst()
             .orElseGet(() -> {
                 var newPlan = new DailyMealPlan(
-                    request.date(), request.calories(), request.protein(), request.fat(),
-                    request.carbs()
+                    request.date(), nutritionInfo.getCalories(), nutritionInfo.getProtein(), nutritionInfo.getFat(),
+                    nutritionInfo.getCarbs()
                 );
                 user.getDailyMealPlans().add(newPlan);
                 return newPlan;
@@ -94,12 +99,9 @@ public class NutritionService {
     public DailyMealPlan getDailyMealPlan(String email, String date, String header) {
         var user = userServiceClient.getUser(email, header);
 
-        var suitableNutritionInfo = user.getHistoricalNutritionInfos().stream()
+        var nutritionInfo = user.getHistoricalNutritionInfos().stream()
             .filter(info -> info.isDateInRange(date))
-            .findFirst()
-            .orElse(null);
-
-        var nutritionInfo = (suitableNutritionInfo != null) ? suitableNutritionInfo : user.getNutritionInfo();
+            .findFirst().orElseGet(user::getNutritionInfo);
 
         return user.getDailyMealPlans().stream()
             .filter(plan -> plan.getDate().equals(date))
@@ -111,6 +113,9 @@ public class NutritionService {
     }
 
     public List<Product> getProducts(String name) {
+        if(name.isEmpty())
+            return Collections.emptyList();
+
         return productRepository.findByNameIgnoreCase(name)
             .orElseThrow(() -> new RuntimeException("products not found"));
     }
