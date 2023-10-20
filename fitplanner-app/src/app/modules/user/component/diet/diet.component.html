@@ -45,7 +45,7 @@
                   <td class="meal-name">
                     {{ meal.name }}
                     <i class="fa-solid fa-square-plus fa-xl add" (click)="openModal(meal.name)" data-bs-toggle="modal" data-bs-target="#addFoodItem"></i>
-                    <i class="fa-solid fa-magnifying-glass fa-lg search"></i>
+                    <i class="fa-solid fa-magnifying-glass fa-lg search" [routerLink]="['./search']" [queryParams]="{ date: formatDate() }"></i>
                   </td>
                 </tr>
           
@@ -184,28 +184,3 @@
     </div>
   </div>
 </div>
-
-<!-- search food item modal -->
-<!-- <div class="modal fade" id="searchFoodItem" tabindex="-1" aria-labelledby="searchFoodItem" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <p class="modal-title" id="searchFoodItem"> <span style="font-size: 25px; font-weight: 700">Search product</span><br></p>
-      </div>
-
-      <div class="modal-body">
-        <div class="modal-container">
-          <input type="text" placeholder="Search" [(ngModel)]="searchQuery">
-          <button type="submit" (click)="searchProducts(searchQuery)">Search</button>
-        </div>
-        <ul class="list-group mt-3">
-          <li *ngFor="let product of products" class="list-group-item">{{ product.name }}</li>
-        </ul>
-      </div>
-
-      <div class="modal-footer">
-        <button id="closeBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div> -->
