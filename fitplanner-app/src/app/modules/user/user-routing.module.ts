@@ -9,6 +9,8 @@ import { PasswordChangeComponent } from './component/password-change/password-ch
 import { AccountDeleteComponent } from './component/account-delete/account-delete.component';
 import { userGuard } from './guards/user/user.guard';
 import { AccountDetailsComponent } from './component/account-details/account-details.component';
+import { ProductSearchComponent } from './component/product-search/product-search.component';
+import { searchGuard } from './guards/search/search.guard';
 
 const routes: Routes = [
   {
@@ -17,11 +19,12 @@ const routes: Routes = [
     children: [
       { path: 'about', component: AboutComponent, canActivate: [userGuard] },
       { path: 'diet', component: DietComponent, canActivate: [userGuard] },
+      { path: 'diet/search', component: ProductSearchComponent, canActivate: [userGuard, searchGuard] },
       { path: 'workout', component: WorkoutComponent, canActivate: [userGuard] },
       { path: 'account-settings', component: AccountSettingsComponent, canActivate: [userGuard] },
-      { path: 'change-password', component: PasswordChangeComponent, canActivate: [userGuard] },
-      { path: 'delete-account', component: AccountDeleteComponent, canActivate: [userGuard] },
-      { path: 'account-details', component: AccountDetailsComponent, canActivate: [userGuard] },
+      { path: 'account-settings/change-password', component: PasswordChangeComponent, canActivate: [userGuard] },
+      { path: 'account-settings/delete-account', component: AccountDeleteComponent, canActivate: [userGuard] },
+      { path: 'account-settings/account-details', component: AccountDetailsComponent, canActivate: [userGuard] },
       { path: '', redirectTo: '/user/about', pathMatch: 'full' }
     ]
   }

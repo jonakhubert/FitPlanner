@@ -1,0 +1,42 @@
+<div class="container">
+  <h1 class="main-title">Find your product</h1>
+  <div class="search-bar">
+    <input type="text" placeholder="Search..." [(ngModel)]="searchQuery">
+    <button type="submit" (click)="searchProducts(searchQuery)">Search</button>
+  </div>
+  <div class="content">
+    <div class="left-fragment">
+      <ul class="list-group mt-3" *ngIf="products.length > 0; else noResultsTemplate">
+        <li *ngFor="let product of products" class="list-group-item" (click)="selectProduct(product)">{{ product.name }}</li>
+      </ul>
+      <ng-template #noResultsTemplate>
+        <p *ngIf="showNoResultsMessage">No results found.</p>
+      </ng-template>
+    </div>
+    <div class="right-fragment">
+      <ng-container *ngIf="selectedProduct">
+        <h3>{{ selectedProduct.name }}</h3>
+    
+        <div class="form-group">
+          <label for="servingSize">How much?</label>
+          <input type="number" min="1" [defaultValue]=0 class="form-control" [(ngModel)]="servingSize">
+        </div>
+    
+        <div class="form-group">
+          <label for="meal">To which meal?</label>
+          <select class="form-select" [(ngModel)]="selectedMeal">
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snack">Snack</option>
+          </select>
+        </div>
+    
+        <div class="button-group">
+          <button class="btn btn-primary">Add to Diary</button>
+          <button class="btn btn-primary">Nutrition info</button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
