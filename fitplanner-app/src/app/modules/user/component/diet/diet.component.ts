@@ -7,7 +7,6 @@ import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FoodItemRemovalRequest } from '../../interface/food-item-removal-request';
 import { ChartOptions } from 'chart.js';
-import { Product } from '../../interface/product';
 
 @Component({
   selector: 'app-diet',
