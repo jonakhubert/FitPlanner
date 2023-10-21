@@ -45,7 +45,7 @@
                   <td class="meal-name">
                     {{ meal.name }}
                     <i class="fa-solid fa-square-plus fa-xl add" (click)="openModal(meal.name)" data-bs-toggle="modal" data-bs-target="#addFoodItem"></i>
-                    <i class="fa-solid fa-magnifying-glass fa-lg search" [routerLink]="['./search']" [queryParams]="{ date: formatDate() }"></i>
+                    <i class="fa-solid fa-magnifying-glass fa-lg search" [routerLink]="['./search']" [queryParams]="{ date: formatDate(), meal: meal.name }"></i>
                   </td>
                 </tr>
           
