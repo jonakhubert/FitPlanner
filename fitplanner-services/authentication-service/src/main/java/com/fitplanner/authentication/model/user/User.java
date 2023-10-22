@@ -104,6 +104,7 @@ public class User implements UserDetails {
                 Objects.equals(email, other.email) &&
                 Objects.equals(password, other.password) &&
                 Objects.equals(role, other.role) &&
+                Objects.equals(enabled, other.enabled) &&
                 Objects.equals(nutritionInfo, other.nutritionInfo) &&
                 Objects.equals(accessToken, other.accessToken) &&
                 Objects.equals(verificationToken, other.verificationToken) &&
@@ -114,7 +115,7 @@ public class User implements UserDetails {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, password, role, accessToken, verificationToken,
+        return Objects.hash(id, firstName, lastName, email, password, role, enabled, accessToken, verificationToken,
             resetPasswordToken, nutritionInfo, historicalNutritionInfos, dailyMealPlans);
     }
 }
