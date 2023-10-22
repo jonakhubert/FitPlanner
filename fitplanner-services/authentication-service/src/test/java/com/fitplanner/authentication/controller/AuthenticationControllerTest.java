@@ -37,7 +37,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void register_ValidRegisterRequest_VerificationMessage() throws Exception {
         // given
-        var registerRequest = new RegisterRequest("any", "any", "any@gmail.com", "anyany");
+        var registerRequest = new RegisterRequest("any", "any", 191.0, 88.0, 1, 2, "any@gmail.com", "anyany");
         var confirmationResponse = new ConfirmationResponse("Verification email has been sent.");
 
         when(authenticationService.register(registerRequest)).thenReturn(confirmationResponse);
@@ -53,7 +53,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void register_RegisterRequestWithEmptyFirstName_ApiErrorWithStatus400() throws Exception {
         // given
-        var registerRequest = new RegisterRequest("", "any", "any@gmail.com", "any");
+        var registerRequest = new RegisterRequest("", "any", 191.0, 88.0, 1, 2, "any@gmail.com", "any");
 
         // then
         mockMvc.perform(post(baseUrl + "/register")
@@ -66,7 +66,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void register_RegisterRequestWithEmptyLastName_ApiErrorWithStatus400() throws Exception {
         // given
-        var registerRequest = new RegisterRequest("any", "", "any@gmail.com", "any");
+        var registerRequest = new RegisterRequest("any", "", 191.0, 88.0, 1, 2, "any@gmail.com", "any");
 
         // then
         mockMvc.perform(post(baseUrl + "/register")
@@ -79,7 +79,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void register_RegisterRequestWithEmptyEmail_ApiErrorWithStatus400() throws Exception {
         // given
-        var registerRequest = new RegisterRequest("any", "any", "", "any");
+        var registerRequest = new RegisterRequest("any", "any", 191.0, 88.0, 1, 2, "", "any");
 
         // then
         mockMvc.perform(post(baseUrl + "/register")
@@ -92,7 +92,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void register_RegisterRequestWithEmptyPassword_ApiErrorWithStatus400() throws Exception {
         // given
-        var registerRequest = new RegisterRequest("any", "any", "any@gmail.com", "");
+        var registerRequest = new RegisterRequest("any", "any", 191.0, 88.0, 1, 2, "any@gmail.com", "");
 
         // then
         mockMvc.perform(post(baseUrl + "/register")
@@ -105,7 +105,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void register_RegisterRequestWithInvalidEmailFormat_ApiErrorWithStatus400() throws Exception {
         // given
-        var registerRequest = new RegisterRequest("any", "any", "invalid-format", "anyany");
+        var registerRequest = new RegisterRequest("any", "any", 191.0, 88.0, 1, 2, "invalid-format", "anyany");
         var message = registerRequest.email() + " format is invalid.";
 
         when(authenticationService.register(registerRequest)).thenThrow(new InvalidEmailFormatException(message));
@@ -122,7 +122,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void register_RegisterRequestWithPasswordLengthLessThanSixCharacters_Status400() throws Exception {
         // given
-        var registerRequest = new RegisterRequest("any", "any", "invalid-format", "any");
+        var registerRequest = new RegisterRequest("any", "any", 191.0, 88.0, 1, 2, "invalid-format", "any");
 
         // then
         mockMvc.perform(post(baseUrl + "/register")
@@ -135,7 +135,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void register_RegisterRequestInUnsupportedMediaType_ApiErrorWithStatus415() throws Exception {
         // given
-        var registerRequest = new RegisterRequest("any", "any", "any@gmail.com", "any");
+        var registerRequest = new RegisterRequest("any", "any", 191.0, 88.0, 1, 2, "any@gmail.com", "any");
         var message = "Content-Type 'text/plain' is not supported";
 
         // then

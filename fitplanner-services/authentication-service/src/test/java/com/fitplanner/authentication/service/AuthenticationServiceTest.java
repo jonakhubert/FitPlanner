@@ -8,7 +8,6 @@ import com.fitplanner.authentication.model.api.RegisterRequest;
 import com.fitplanner.authentication.model.api.ResetPasswordRequest;
 import com.fitplanner.authentication.model.tokens.accesstoken.AccessToken;
 import com.fitplanner.authentication.model.user.User;
-import com.fitplanner.authentication.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,7 +41,7 @@ public class AuthenticationServiceTest {
     public void register_RegisterRequestWithNonExistingEmail_ConfirmationMessage() {
         // given
         var email = "any@gmail.com";
-        var request = new RegisterRequest("any", "any", email, "any");
+        var request = new RegisterRequest("any", "any", 191.0, 88.0, 1, 2, email, "any");
         var token = new VerificationToken("token", null, null);
         var user = new User("", "", email, "", null);
 
@@ -66,7 +64,7 @@ public class AuthenticationServiceTest {
     @Test
     public void register_RegisterRequestWithExistingEmail_UserAlreadyExistException() {
         // given
-        var request = new RegisterRequest("any", "any", "valid@gmail.com", "any");
+        var request = new RegisterRequest("any", "any", 191.0, 88.0, 1, 2, "valid@gmail.com", "any");
 
         when(userService.isUserExist(request.email())).thenReturn(true);
 
@@ -81,7 +79,7 @@ public class AuthenticationServiceTest {
     @Test
     public void register_RegisterRequestWithInvalidEmail_InvalidEmailFormatException() {
         // given
-        var request = new RegisterRequest("any", "any", "invalid", "any");
+        var request = new RegisterRequest("any", "any", 191.0, 88.0, 1, 2, "invalid", "any");
 
         // then
         assertThrows(InvalidEmailFormatException.class, () -> underTest.register(request));
