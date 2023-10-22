@@ -3,11 +3,13 @@ package com.fitplanner.nutrition.controller;
 import com.fitplanner.nutrition.model.api.ConfirmationResponse;
 import com.fitplanner.nutrition.model.api.FoodItemCreationRequest;
 import com.fitplanner.nutrition.model.api.FoodItemRemovalRequest;
+import com.fitplanner.nutrition.model.api.ProductRequest;
 import com.fitplanner.nutrition.model.food.DailyMealPlan;
 import com.fitplanner.nutrition.model.food.Product;
 import com.fitplanner.nutrition.service.NutritionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -67,11 +69,11 @@ public class NutritionController {
         return ResponseEntity.ok(nutritionService.getProducts(name));
     }
 
-//    @PostMapping(
-//        path = "/product"
-//    )
-//    public void addProduct(@RequestBody ProductRequest request) {
-//        var product = new Product(request.name(), request.calories(), request.protein(), request.fat(), request.carbs());
-//        productRepository.save(product);
-//    }
+    @PostMapping(
+        path = "/products"
+    )
+    public ResponseEntity<Void> addProduct(@RequestBody ProductRequest request) {
+        nutritionService.addProduct(request);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
