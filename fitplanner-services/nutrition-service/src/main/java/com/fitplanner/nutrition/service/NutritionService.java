@@ -4,6 +4,7 @@ import com.fitplanner.nutrition.client.UserServiceClient;
 import com.fitplanner.nutrition.model.api.ConfirmationResponse;
 import com.fitplanner.nutrition.model.api.FoodItemCreationRequest;
 import com.fitplanner.nutrition.model.api.FoodItemRemovalRequest;
+import com.fitplanner.nutrition.model.api.ProductRequest;
 import com.fitplanner.nutrition.model.food.DailyMealPlan;
 import com.fitplanner.nutrition.model.food.Meal;
 import com.fitplanner.nutrition.model.food.Product;
@@ -118,5 +119,10 @@ public class NutritionService {
 
         return productRepository.findByNameIgnoreCase(name)
             .orElseThrow(() -> new RuntimeException("products not found"));
+    }
+
+    public void addProduct(ProductRequest request) {
+        var product = new Product(request.name(), request.calories(), request.protein(), request.fat(), request.carbs());
+        productRepository.save(product);
     }
 }
