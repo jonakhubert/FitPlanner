@@ -18,6 +18,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatCardModule } from '@angular/material/card';
 import { AccountDetailsComponent } from './component/account-details/account-details.component';
 import { NgChartsModule } from 'ng2-charts';
+import { ProductSearchComponent } from './component/product-search/product-search.component';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { NgChartsModule } from 'ng2-charts';
     AccountSettingsComponent,
     PasswordChangeComponent,
     AccountDeleteComponent,
-    AccountDetailsComponent
+    AccountDetailsComponent,
+    ProductSearchComponent
   ],
   imports: [
     CommonModule,

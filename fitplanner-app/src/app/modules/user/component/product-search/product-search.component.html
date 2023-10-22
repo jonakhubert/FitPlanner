@@ -1,0 +1,75 @@
+<div class="container">
+  <h1 class="main-title">Find your product</h1>
+  <div class="search-bar">
+    <input type="text" placeholder="Search..." [(ngModel)]="searchQuery">
+    <button type="submit" (click)="searchProducts(searchQuery)">Search</button>
+  </div>
+  <div class="content">
+    <div class="left-fragment">
+      <ul class="list-group mt-3" *ngIf="products.length > 0; else noResultsTemplate">
+        <li *ngFor="let product of products" class="list-group-item" (click)="selectProduct(product)">{{ product.name }}</li>
+      </ul>
+      <ng-template #noResultsTemplate>
+        <p *ngIf="showNoResultsMessage">No results found.</p>
+      </ng-template>
+    </div>
+    <div class="right-fragment">
+      <ng-container *ngIf="selectedProduct">
+        <h3>{{ selectedProduct.name }}</h3>
+    
+        <form [formGroup]="foodItemForm" (ngSubmit)="onSubmit()">
+          <div class="form-outline mb-4">
+            <label for="servingSize">How much? (g)</label>
+            <input type="number" min="1" class="form-control" formControlName="quantity" [ngClass]="{'is-invalid': submitted && foodItemForm.controls['quantity'].errors}">
+            <div *ngIf="submitted && foodItemForm.controls['quantity'].errors" class="text-danger">
+              <div>Quantity must be greater than 0.</div>
+            </div>
+          </div>
+
+          <div class="form-outline mb-4">
+            <label for="meal">To which meal?</label>
+            <select class="form-select mb-3" aria-label="Default select example" formControlName="meal" [ngClass]="{'is-invalid': submitted && foodItemForm.controls['meal'].errors}">
+              <option [ngValue]="'Breakfast'">Breakfast</option>
+              <option [ngValue]="'Lunch'">Lunch</option>
+              <option [ngValue]="'Dinner'">Dinner</option>
+              <option [ngValue]="'Snacks'">Snacks</option>
+            </select>
+          </div>
+      
+          <div class="button-group">
+            <button type="submit" class="btn btn-primary">Add to diary</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nutritionInfo">Nutrition info</button>
+          </div>
+        </form>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+
+<!-- nutrition info modal -->
+<div class="modal fade" id="nutritionInfo" tabindex="-1" aria-labelledby="nutritionInfo" aria-hidden="true" (hidden.bs.modal)="resetModalQuantity()">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title" id="addFoodItem"> <span style="font-size: 25px; font-weight: 700; margin-bottom: 10px;">Nutrition Facts</span><br></p>
+      </div>
+
+      <div class="modal-body">
+        <h4 style="margin-bottom: 20px;"><span style="font-size: 25px;">{{ selectedProduct?.name }}</span></h4>
+        <div class="input-group input-group-sm mb-3">
+          <span class="input-group-text">Quantity (g)</span>
+          <input type="number" min="1" [defaultValue]=0 [(ngModel)]="modalQuantity" (ngModelChange)="onQuantityChange($event)">
+        </div>
+        <p>Calories: {{ calculateCalories(modalQuantity) }}kcal</p>
+        <p>Protein: {{ calculateProtein(modalQuantity) }}g</p>
+        <p>Fat: {{ calculateFat(modalQuantity) }}g</p>
+        <p>Carbs: {{ calculateCarbs(modalQuantity) }}g</p>
+      </div>
+
+      <div class="modal-footer">
+        <button id="closeBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

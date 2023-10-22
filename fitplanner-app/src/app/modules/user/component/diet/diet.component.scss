@@ -9,7 +9,7 @@
 }
 
 .container {
-  max-width: 85vw;
+  max-width: 90vw;
 }
 
 .food-container {
@@ -84,6 +84,11 @@
 }
 
 .add {
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.search {
   cursor: pointer;
 }
 

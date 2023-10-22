@@ -4,9 +4,12 @@ export interface FoodItemCreationRequest {
     email: string,
     date: string,
     mealName: string,
-    foodItem: FoodItem,
-    calories: number,
-    protein: number,
-    fat: number,
-    carbs: number
+    foodItem: {
+        name: string,
+        calories: number,
+        protein: number,
+        fat: number,
+        carbs: number,
+        quantity: number
+    }
 }

@@ -1,6 +1,5 @@
 package com.fitplanner.authentication.service;
 
-import com.fitplanner.authentication.exception.model.UserAlreadyExistException;
 import com.fitplanner.authentication.exception.model.UserNotFoundException;
 import com.fitplanner.authentication.model.api.RegisterRequest;
 import com.fitplanner.authentication.model.tokens.ResetPasswordToken;
@@ -92,7 +91,7 @@ public class UserServiceTest {
     public void createUser_RegisterRequest_User() {
         // given
         var encodedPassword = "encodedPassword";
-        var request = new RegisterRequest("any", "any", "any@gmail.com", "anyany");
+        var request = new RegisterRequest("any", "any", 191.0, 88.0, 1, 2, "any@gmail.com", "anyany");
         var user = new User(
             request.firstName(),
             request.lastName(),

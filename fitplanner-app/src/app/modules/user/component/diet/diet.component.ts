@@ -119,11 +119,7 @@ export class DietComponent {
         email: email,
         date: this.formatDate(),
         mealName: this.selectedMeal,
-        foodItem: this.foodItemForm.value,
-        calories: this.dailyMealPlan.dailyCalories,
-        protein: this.dailyMealPlan.dailyProtein,
-        fat: this.dailyMealPlan.dailyFat,
-        carbs: this.dailyMealPlan.dailyCarbs
+        foodItem: this.foodItemForm.value
       }
       
       this.nutritionService.addFoodItem(request).subscribe(
@@ -187,7 +183,7 @@ export class DietComponent {
     this.formattedDate = this.selectedDate.toLocaleDateString('en-US', options);
   }
 
-  private formatDate(): string {
+  formatDate(): string {
     const year = this.selectedDate.getFullYear();
     const month = ('0' + (this.selectedDate.getMonth() + 1)).slice(-2);
     const day = ('0' + this.selectedDate.getDate()).slice(-2);

@@ -5,6 +5,7 @@ import { DailyMealPlan } from '../../interface/daily-meal-plan';
 import { FoodItemCreationRequest } from '../../interface/food-item-creation-request';
 import { ConfirmationResponse } from 'src/app/interface/confirmation-response';
 import { FoodItemRemovalRequest } from '../../interface/food-item-removal-request';
+import { Product } from '../../interface/product';
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +43,15 @@ export class NutritionService {
     };
     
     return this.http.delete<string>(`${this.apiUrl}/food-items`, httpOptions)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        throw error;
+      })
+    )
+  }
+
+  public getProducts(name: string): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/products?name=${name}`)
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw error;

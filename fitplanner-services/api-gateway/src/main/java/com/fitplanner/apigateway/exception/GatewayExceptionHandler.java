@@ -13,8 +13,6 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Mono;
 
-import java.util.Map;
-
 @Component
 public class GatewayExceptionHandler extends AbstractErrorWebExceptionHandler {
 
@@ -35,7 +33,7 @@ public class GatewayExceptionHandler extends AbstractErrorWebExceptionHandler {
     }
 
     private Mono<ServerResponse> renderException(ServerRequest request) {
-        Map<String, Object> error = this.getErrorAttributes(request, ErrorAttributeOptions.defaults());
+        var error = this.getErrorAttributes(request, ErrorAttributeOptions.defaults());
         error.remove("requestId");
         return ServerResponse.status(HttpStatus.SERVICE_UNAVAILABLE).contentType(MediaType.APPLICATION_JSON)
             .body(BodyInserters.fromValue(error));

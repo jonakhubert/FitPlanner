@@ -138,7 +138,7 @@ public class AuthenticationService {
             + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 
         return Pattern.compile(regexPattern)
-                .matcher(email)
-                .matches();
+            .matcher(email)
+            .matches();
     }
 }
