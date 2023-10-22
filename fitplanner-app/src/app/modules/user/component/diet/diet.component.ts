@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { NutritionService } from '../../services/nutrition/nutrition.service';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { DailyMealPlan } from '../../interface/daily-meal-plan';
 import { FoodItemCreationRequest } from '../../interface/food-item-creation-request';
 import { ToastrService } from 'ngx-toastr';
@@ -14,7 +13,6 @@ import { ChartOptions } from 'chart.js';
   styleUrls: ['./diet.component.scss']
 })
 export class DietComponent {
-  selectedDate: Date = new Date();
   formattedDate: string = '';
   foodItemForm!: FormGroup;
   dailyMealPlan: DailyMealPlan | undefined;
@@ -63,24 +61,12 @@ export class DietComponent {
 
   ngOnInit(): void {
     this.submitted = false;
-    const storedDate = localStorage.getItem('selectedDate');
-    this.selectedDate = storedDate ? new Date(storedDate) : new Date();
-    this.displayDate();
     this.fetchDailyMealPlan();
   }
 
-  onDateSelected(event: MatDatepickerInputEvent<Date>): void {
-    this.selectedDate = event.value ?? new Date();
-    this.saveSelectedDate();
-    this.displayDate();
-    this.fetchDailyMealPlan();
-  }
-
-  goToDate(direction: 'previous' | 'next'): void {
-    const days = direction === 'next' ? 1 : -1;
-    this.selectedDate.setDate(this.selectedDate.getDate() + days);
-    this.saveSelectedDate();
-    this.displayDate();
+  onDateSelected(date: string): void {
+    this.formattedDate = date;
+    console.log(date)
     this.fetchDailyMealPlan();
   }
 
@@ -90,7 +76,7 @@ export class DietComponent {
     if(email) {
       const request: FoodItemRemovalRequest = {
         email: email,
-        date: this.formatDate(),
+        date: this.formattedDate,
         mealName: mealName,
         foodId: foodId
       };
@@ -117,7 +103,7 @@ export class DietComponent {
     if(email && this.selectedMeal && this.dailyMealPlan) {
       const request: FoodItemCreationRequest = {
         email: email,
-        date: this.formatDate(),
+        date: this.formattedDate,
         mealName: this.selectedMeal,
         foodItem: this.foodItemForm.value
       }
@@ -154,7 +140,7 @@ export class DietComponent {
     const email = localStorage.getItem("userEmail");
   
     if(email) {
-      this.nutritionService.getDailyMealPlan(email, this.formatDate()).subscribe(
+      this.nutritionService.getDailyMealPlan(email, this.formattedDate).subscribe(
       {
         next: (response) => {
           console.log(response);
@@ -170,29 +156,6 @@ export class DietComponent {
         }
       });
     }
-  }
-
-  private displayDate(): void {
-    const options: Intl.DateTimeFormatOptions = { 
-      weekday: 'long', 
-      month: 'long', 
-      day: 'numeric', 
-      year: 'numeric' 
-    };
-
-    this.formattedDate = this.selectedDate.toLocaleDateString('en-US', options);
-  }
-
-  formatDate(): string {
-    const year = this.selectedDate.getFullYear();
-    const month = ('0' + (this.selectedDate.getMonth() + 1)).slice(-2);
-    const day = ('0' + this.selectedDate.getDate()).slice(-2);
-  
-    return `${year}-${month}-${day}`;
-  }
-
-  private saveSelectedDate(): void {
-    localStorage.setItem('selectedDate', this.selectedDate.toISOString());
   }
 
   private calculateMealTotals(): void {

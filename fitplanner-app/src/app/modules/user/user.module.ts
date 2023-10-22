@@ -19,6 +19,7 @@ import { MatCardModule } from '@angular/material/card';
 import { AccountDetailsComponent } from './component/account-details/account-details.component';
 import { NgChartsModule } from 'ng2-charts';
 import { ProductSearchComponent } from './component/product-search/product-search.component';
+import { DateSelectorComponent } from './component/date-selector/date-selector.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { ProductSearchComponent } from './component/product-search/product-searc
     PasswordChangeComponent,
     AccountDeleteComponent,
     AccountDetailsComponent,
-    ProductSearchComponent
+    ProductSearchComponent,
+    DateSelectorComponent
   ],
   imports: [
     CommonModule,
