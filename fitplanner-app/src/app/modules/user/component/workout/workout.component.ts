@@ -6,5 +6,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./workout.component.scss']
 })
 export class WorkoutComponent {
+  formattedDate: string = '';
 
+  onDateSelected(date: string): void {
+    this.formattedDate = date;
+    console.log(date);
+  }
 }
