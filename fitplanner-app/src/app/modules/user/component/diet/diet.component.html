@@ -40,7 +40,7 @@
                     <td class="nutrient-column"> <span>{{ foodItem.protein }}</span></td>
                     <td class="nutrient-column"> <span>{{ foodItem.fat }}</span></td>
                     <td class="nutrient-column"> <span>{{ foodItem.carbs }}</span></td>
-                    <!-- <td class="delete" (click)="removeFoodItem(foodItem.id, meal.name)"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td> -->
+                    <td class="delete" (click)="removeFoodItem(foodItem.id, meal.name)"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
                   </tr>
                 </ng-container>
 
@@ -160,7 +160,7 @@
       </div>
 
       <div class="modal-footer">
-        <!-- <button type="button" class="btn btn-primary" (click)="addFoodItem()">Add</button> -->
+        <button type="button" class="btn btn-primary" (click)="addFoodItem()">Add</button>
         <button id="closeBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>

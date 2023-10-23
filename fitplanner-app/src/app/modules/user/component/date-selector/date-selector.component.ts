@@ -40,7 +40,6 @@ export class DateSelectorComponent {
 
   emitDateOutput(): void {
     this.dateOutput.emit(this.formatDate());
-    console.log(this.formatDate())
   }
 
   private displayDate(): void {

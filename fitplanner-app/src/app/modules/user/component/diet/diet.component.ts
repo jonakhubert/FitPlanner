@@ -66,7 +66,6 @@ export class DietComponent {
 
   onDateSelected(date: string): void {
     this.formattedDate = date;
-    console.log(date)
     this.fetchDailyMealPlan();
   }
 

@@ -4,7 +4,6 @@ import { Product } from '../../interface/product';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FoodItemCreationRequest } from '../../interface/food-item-creation-request';
-import { FoodItem } from '../../interface/food-item';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -95,7 +94,7 @@ export class ProductSearchComponent {
       this.nutritionService.addFoodItem(request).subscribe(
       {
         next: (response) => {
-          this.router.navigate(['/user/diet'])
+          this.router.navigate(['/user/diet']);
           this.toastr.success(response.confirmation_message, "Success");
         },
         error: (error) => {
