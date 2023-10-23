@@ -86,7 +86,7 @@ export class DietComponent {
           this.ngOnInit();
         },
         error: (error) => {
-          console.log(error)
+          console.log(error);
         }
       });
     }
@@ -138,7 +138,7 @@ export class DietComponent {
   private fetchDailyMealPlan(): void {
     const email = localStorage.getItem("userEmail");
   
-    if(email) {
+    if(email && this.formattedDate) {
       this.nutritionService.getDailyMealPlan(email, this.formattedDate).subscribe(
       {
         next: (response) => {
@@ -149,7 +149,7 @@ export class DietComponent {
           this.calculateRemaining();
         },
         error: (error) => {
-          console.log(error)
+          console.log(error);
           if(error.status === 503)
             this.toastr.error("The Nutrition Service cannot be reached. Try again later.", "Error");
         }

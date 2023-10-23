@@ -12,13 +12,15 @@ export class DateSelectorComponent {
   @Output() dateOutput = new EventEmitter<string>();
 
   ngOnInit(): void {
-    this.selectedDate = new Date();
+    const storedDate = localStorage.getItem('selectedDate');
+    this.selectedDate = storedDate ? new Date(storedDate) : new Date();
     this.displayDate();
     this.emitDateOutput();
   }
 
   onDateSelected(event: MatDatepickerInputEvent<Date>): void {
     this.selectedDate = event.value ?? new Date();
+    this.saveSelectedDate();
     this.displayDate();
     this.emitDateOutput();
   }
@@ -26,6 +28,7 @@ export class DateSelectorComponent {
   goToDate(direction: 'previous' | 'next'): void {
     const days = direction === 'next' ? 1 : -1;
     this.selectedDate.setDate(this.selectedDate.getDate() + days);
+    this.saveSelectedDate();
     this.displayDate();
     this.emitDateOutput();
   }
@@ -51,5 +54,9 @@ export class DateSelectorComponent {
     };
 
     this.formattedDate = this.selectedDate.toLocaleDateString('en-US', options);
+  }
+
+  private saveSelectedDate(): void {
+    localStorage.setItem('selectedDate', this.selectedDate.toISOString());
   }
 }
