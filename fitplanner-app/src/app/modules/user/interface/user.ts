@@ -1,4 +1,4 @@
-import { DailyMealPlan } from "./daily-meal-plan";
+import { MealPlan } from "./meal-plan";
 import { NutritionInfo } from "./nutrition-info";
 
 export interface User {
@@ -6,5 +6,5 @@ export interface User {
     lastName: string,
     email: string,
     nutritionInfo: NutritionInfo,
-    dailyMealPlans: DailyMealPlan[] 
+    mealPlans: MealPlan[] 
 }
