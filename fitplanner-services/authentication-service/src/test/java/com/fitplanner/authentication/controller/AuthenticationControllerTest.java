@@ -32,7 +32,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     private MockMvc mockMvc;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final String baseUrl = "/api/auth";
+    private final String baseUrl = "/api/user-authentication";
 
     @Test
     public void register_ValidRegisterRequest_VerificationMessage() throws Exception {
@@ -43,7 +43,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         when(authenticationService.register(registerRequest)).thenReturn(confirmationResponse);
 
         // then
-        mockMvc.perform(post(baseUrl + "/register")
+        mockMvc.perform(post(baseUrl + "/registration")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(registerRequest)))
             .andExpect(status().isOk())
@@ -56,7 +56,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         var registerRequest = new RegisterRequest("", "any", 191.0, 88.0, 1, 2, "any@gmail.com", "any");
 
         // then
-        mockMvc.perform(post(baseUrl + "/register")
+        mockMvc.perform(post(baseUrl + "/registration")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(registerRequest)))
             .andExpect(status().isBadRequest())
@@ -69,7 +69,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         var registerRequest = new RegisterRequest("any", "", 191.0, 88.0, 1, 2, "any@gmail.com", "any");
 
         // then
-        mockMvc.perform(post(baseUrl + "/register")
+        mockMvc.perform(post(baseUrl + "/registration")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(registerRequest)))
             .andExpect(status().isBadRequest())
@@ -82,7 +82,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         var registerRequest = new RegisterRequest("any", "any", 191.0, 88.0, 1, 2, "", "any");
 
         // then
-        mockMvc.perform(post(baseUrl + "/register")
+        mockMvc.perform(post(baseUrl + "/registration")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(registerRequest)))
             .andExpect(status().isBadRequest())
@@ -95,7 +95,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         var registerRequest = new RegisterRequest("any", "any", 191.0, 88.0, 1, 2, "any@gmail.com", "");
 
         // then
-        mockMvc.perform(post(baseUrl + "/register")
+        mockMvc.perform(post(baseUrl + "/registration")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(registerRequest)))
             .andExpect(status().isBadRequest())
@@ -111,7 +111,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         when(authenticationService.register(registerRequest)).thenThrow(new InvalidEmailFormatException(message));
 
         // then
-        mockMvc.perform(post(baseUrl + "/register")
+        mockMvc.perform(post(baseUrl + "/registration")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(registerRequest)))
             .andExpect(status().isBadRequest())
@@ -125,7 +125,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         var registerRequest = new RegisterRequest("any", "any", 191.0, 88.0, 1, 2, "invalid-format", "any");
 
         // then
-        mockMvc.perform(post(baseUrl + "/register")
+        mockMvc.perform(post(baseUrl + "/registration")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(registerRequest)))
             .andExpect(status().isBadRequest())
@@ -139,7 +139,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         var message = "Content-Type 'text/plain' is not supported";
 
         // then
-        mockMvc.perform(post(baseUrl + "/register")
+        mockMvc.perform(post(baseUrl + "/registration")
             .contentType(MediaType.TEXT_PLAIN_VALUE)
             .content(objectMapper.writeValueAsString(registerRequest)))
             .andExpect(status().isUnsupportedMediaType())
@@ -153,7 +153,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         var message = "Request method 'GET' is not supported";
 
         // then
-        mockMvc.perform(get(baseUrl + "/register"))
+        mockMvc.perform(get(baseUrl + "/registration"))
             .andExpect(status().isMethodNotAllowed())
             .andExpect(jsonPath("$.statusCode").value(405))
             .andExpect(jsonPath("$.message").value(message));
@@ -257,7 +257,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         when(authenticationService.isAccessTokenValid(token)).thenReturn(true);
 
         //then
-        mockMvc.perform(post(baseUrl + "/validate-access-token")
+        mockMvc.perform(post(baseUrl + "/access-tokens")
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk());
@@ -271,7 +271,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         when(authenticationService.isAccessTokenValid(token)).thenReturn(false);
 
         //then
-        mockMvc.perform(post(baseUrl + "/validate-access-token")
+        mockMvc.perform(post(baseUrl + "/access-tokens")
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + token))
             .andExpect(status().isUnauthorized());
@@ -280,7 +280,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void validateAccessToken_NoAuthorizationHeader_Status401() throws Exception {
         //then
-        mockMvc.perform(post(baseUrl + "/validate-access-token")
+        mockMvc.perform(post(baseUrl + "/access-tokens")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized());
     }
@@ -288,7 +288,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void validateAccessToken_InvalidAuthorizationHeader_Status401() throws Exception {
         //then
-        mockMvc.perform(post(baseUrl + "/validate-access-token")
+        mockMvc.perform(post(baseUrl + "/access-tokens")
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Invalid"))
             .andExpect(status().isUnauthorized());
@@ -304,8 +304,8 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         when(authenticationService.verify(verificationToken)).thenReturn(confirmationResponse);
 
         // then
-        mockMvc.perform(get(baseUrl + "/verify")
-            .param("verification_token", verificationToken))
+        mockMvc.perform(get(baseUrl + "/verification-tokens")
+            .param("token", verificationToken))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.confirmation_message").value(message));
     }
@@ -319,8 +319,8 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         when(authenticationService.verify(verificationToken)).thenThrow(new TokenNotFoundException(message));
 
         // then
-        mockMvc.perform(get(baseUrl + "/verify")
-            .param("verification_token", verificationToken))
+        mockMvc.perform(get(baseUrl + "/verification-tokens")
+            .param("token", verificationToken))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.message").value(message));
     }
@@ -328,7 +328,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void verify_NoVerificationToken_Status401() throws Exception {
         // then
-        mockMvc.perform(get(baseUrl + "/verify"))
+        mockMvc.perform(get(baseUrl + "/verification-tokens"))
             .andExpect(status().isUnauthorized());
     }
 
@@ -341,8 +341,8 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         when(authenticationService.verify(verificationToken)).thenThrow(new UserAlreadyVerifiedException(message));
 
         // then
-        mockMvc.perform(get(baseUrl + "/verify")
-            .param("verification_token", verificationToken))
+        mockMvc.perform(get(baseUrl + "/verification-tokens")
+            .param("token", verificationToken))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.message").value(message));
     }
@@ -356,8 +356,8 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         when(authenticationService.verify(verificationToken)).thenThrow(new TokenExpiredException(message));
 
         // then
-        mockMvc.perform(get(baseUrl + "/verify")
-            .param("verification_token", verificationToken))
+        mockMvc.perform(get(baseUrl + "/verification-tokens")
+            .param("token", verificationToken))
             .andExpect(status().isUnauthorized())
             .andExpect(jsonPath("$.message").value(message));
     }
@@ -371,8 +371,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         when(authenticationService.forgotPassword(email)).thenReturn(new ConfirmationResponse(message));
 
         //then
-        mockMvc.perform(post(baseUrl + "/forgot-password")
-            .param("email", email))
+        mockMvc.perform(post(baseUrl + "/users/{email}/password-reminder", email))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.confirmation_message").value(message));
 
@@ -387,29 +386,22 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         when(authenticationService.forgotPassword(email)).thenThrow(new UserNotFoundException(message));
 
         //then
-        mockMvc.perform(post(baseUrl + "/forgot-password")
-            .param("email", email))
+        mockMvc.perform(post(baseUrl + "/users/{email}/password-reminder", email))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.message").value(message));
-    }
-
-    @Test
-    public void forgotPassword_NoUserEmail_Status401() throws Exception {
-        // then
-        mockMvc.perform(post(baseUrl + "/forgot-password"))
-            .andExpect(status().isUnauthorized());
     }
 
     @Test
     public void resetPassword_ValidResetPasswordRequest_ConfirmationMessage() throws Exception {
         // given
         var message = "Password reset successfully.";
-        var request = new ResetPasswordRequest("any@gmail.com", "token", "password");
+        var request = new ResetPasswordRequest("token", "password");
+        var email = "any@gmail.com";
 
-        when(authenticationService.resetPassword(request)).thenReturn(new ConfirmationResponse(message));
+        when(authenticationService.resetPassword(email, request)).thenReturn(new ConfirmationResponse(message));
 
         //then
-        mockMvc.perform(post(baseUrl + "/reset-password")
+        mockMvc.perform(post(baseUrl + "/users/{email}/password-reset", email)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
@@ -417,24 +409,13 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     }
 
     @Test
-    public void resetPassword_ResetPasswordWithEmptyEmail_Status400() throws Exception {
-        // given
-        var request = new ResetPasswordRequest("", "token", "password");
-
-        //then
-        mockMvc.perform(post(baseUrl + "/reset-password")
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isBadRequest());
-    }
-
-    @Test
     public void resetPassword_ResetPasswordWithEmptyToken_Status400() throws Exception {
         // given
-        var request = new ResetPasswordRequest("any@gmail.com", "", "password");
+        var request = new ResetPasswordRequest("", "password");
+        var email = "any@gmail.com";
 
         //then
-        mockMvc.perform(post(baseUrl + "/reset-password")
+        mockMvc.perform(post(baseUrl + "/users/{email}/password-reset", email)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest());
@@ -443,10 +424,11 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void resetPassword_ResetPasswordWithEmptyPassword_Status400() throws Exception {
         // given
-        var request = new ResetPasswordRequest("any@gmail.com", "token", "");
+        var request = new ResetPasswordRequest("token", "");
+        var email = "any@gmail.com";
 
         //then
-        mockMvc.perform(post(baseUrl + "/reset-password")
+        mockMvc.perform(post(baseUrl + "/users/{email}/password-reset", email)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest());
@@ -455,10 +437,11 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void resetPassword_ResetPasswordWithPasswordLessThanSixCharacters_Status400() throws Exception {
         // given
-        var request = new ResetPasswordRequest("any@gmail.com", "token", "any");
+        var request = new ResetPasswordRequest("token", "any");
+        var email = "any@gmail.com";
 
         //then
-        mockMvc.perform(post(baseUrl + "/reset-password")
+        mockMvc.perform(post(baseUrl + "/users/{email}/password-reset", email)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest());
@@ -468,12 +451,13 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     public void resetPassword_ResetPasswordRequestWithNonExistingEmail_Status404() throws Exception {
         // given
         var message = "User not found.";
-        var request = new ResetPasswordRequest("any@gmail.com", "token", "password");
+        var request = new ResetPasswordRequest("token", "password");
+        var email = "any@gmail.com";
 
-        when(authenticationService.resetPassword(request)).thenThrow(new UserNotFoundException(message));
+        when(authenticationService.resetPassword(email, request)).thenThrow(new UserNotFoundException(message));
 
         //then
-        mockMvc.perform(post(baseUrl + "/reset-password")
+        mockMvc.perform(post(baseUrl + "/users/{email}/password-reset", email)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isNotFound())
@@ -484,12 +468,13 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     public void resetPassword_ResetPasswordRequestWithNonExistingToken_Status404() throws Exception {
         // given
         var message = "Token not found.";
-        var request = new ResetPasswordRequest("any@gmail.com", "token", "password");
+        var request = new ResetPasswordRequest("token", "password");
+        var email = "any@gmail.com";
 
-        when(authenticationService.resetPassword(request)).thenThrow(new TokenNotFoundException(message));
+        when(authenticationService.resetPassword(email, request)).thenThrow(new TokenNotFoundException(message));
 
         //then
-        mockMvc.perform(post(baseUrl + "/reset-password")
+        mockMvc.perform(post(baseUrl + "/users/{email}/password-reset", email)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isNotFound())
@@ -500,12 +485,13 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     public void resetPassword_ResetPasswordRequestWithExpiredToken_Status401() throws Exception {
         // given
         var message = "Token is expired.";
-        var request = new ResetPasswordRequest("any@gmail.com", "token", "password");
+        var request = new ResetPasswordRequest("token", "password");
+        var email = "any@gmail.com";
 
-        when(authenticationService.resetPassword(request)).thenThrow(new TokenExpiredException(message));
+        when(authenticationService.resetPassword(email, request)).thenThrow(new TokenExpiredException(message));
 
         //then
-        mockMvc.perform(post(baseUrl + "/reset-password")
+        mockMvc.perform(post(baseUrl + "/users/{email}/password-reset", email)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isUnauthorized())
@@ -520,7 +506,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         when(authenticationService.isResetPasswordTokenValid(token)).thenReturn(true);
 
         //then
-        mockMvc.perform(post(baseUrl + "/validate-reset-password-token")
+        mockMvc.perform(post(baseUrl + "/reset-password-tokens")
             .contentType(MediaType.APPLICATION_JSON)
             .header("X-Reset-Password-Token", token))
             .andExpect(status().isOk());
@@ -534,7 +520,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         when(authenticationService.isResetPasswordTokenValid(token)).thenReturn(false);
 
         //then
-        mockMvc.perform(post(baseUrl + "/validate-reset-password-token")
+        mockMvc.perform(post(baseUrl + "/reset-password-tokens")
             .contentType(MediaType.APPLICATION_JSON)
             .header("X-Reset-Password-Token", token))
             .andExpect(status().isUnauthorized());
@@ -543,7 +529,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     @Test
     public void validateResetPasswordToken_NoToken_Status401() throws Exception {
         //then
-        mockMvc.perform(post(baseUrl + "/validate-reset-password-token")
+        mockMvc.perform(post(baseUrl + "/reset-password-tokens")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized());
     }
