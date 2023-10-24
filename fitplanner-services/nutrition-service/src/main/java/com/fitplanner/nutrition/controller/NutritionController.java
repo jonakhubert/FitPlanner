@@ -1,13 +1,11 @@
 package com.fitplanner.nutrition.controller;
 
 import com.fitplanner.nutrition.model.api.ConfirmationResponse;
-import com.fitplanner.nutrition.model.api.FoodItemCreationRequest;
-import com.fitplanner.nutrition.model.api.FoodItemRemovalRequest;
 import com.fitplanner.nutrition.model.api.ProductRequest;
-import com.fitplanner.nutrition.model.food.DailyMealPlan;
+import com.fitplanner.nutrition.model.food.MealPlan;
+import com.fitplanner.nutrition.model.food.FoodItem;
 import com.fitplanner.nutrition.model.food.Product;
 import com.fitplanner.nutrition.service.NutritionService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,37 +26,36 @@ public class NutritionController {
     }
 
     @PostMapping(
-        path = "/food-items",
+        path = "/users/{email}/meal-plans/{date}/meals/{meal}/food-items",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<ConfirmationResponse> addFoodItem(
-        @RequestBody @Valid FoodItemCreationRequest request,
-        @RequestHeader("Authorization") String header
+        @PathVariable("email") String email, @PathVariable("date") String date, @PathVariable("meal") String mealName,
+        @RequestBody FoodItem foodItem, @RequestHeader("Authorization") String header
     ) {
-        return ResponseEntity.ok(nutritionService.addFoodItem(request, header));
+        return ResponseEntity.ok(nutritionService.addFoodItem(email, date, mealName, foodItem, header));
     }
 
     @DeleteMapping(
-        path = "/food-items",
+        path = "/users/{email}/meal-plans/{date}/meals/{meal}/food-items/{id}",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<ConfirmationResponse> removeFoodItem(
-        @RequestBody @Valid FoodItemRemovalRequest request,
-        @RequestHeader("Authorization") String header
+        @PathVariable("email") String email, @PathVariable("date") String date, @PathVariable("meal") String mealName,
+        @PathVariable("id") String foodId, @RequestHeader("Authorization") String header
     ) {
-        return ResponseEntity.ok(nutritionService.removeFoodItem(request, header));
+        return ResponseEntity.ok(nutritionService.removeFoodItem(email, date, mealName, foodId, header));
     }
 
     @GetMapping(
-        path = "/daily-meal-plans",
+        path = "/users/{email}/meal-plans/{date}",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<DailyMealPlan> getDailyMealPlan(
-        @RequestParam("email") String email,
-        @RequestParam("date") String date,
+    public ResponseEntity<MealPlan> getMealPlan(
+        @PathVariable("email") String email, @PathVariable("date") String date,
         @RequestHeader("Authorization") String header
     ) {
-        return ResponseEntity.ok(nutritionService.getDailyMealPlan(email, date, header));
+        return ResponseEntity.ok(nutritionService.getMealPlan(email, date, header));
     }
 
     @GetMapping(

@@ -1,13 +1,12 @@
 package com.fitplanner.user.service;
 
 import com.fitplanner.user.exception.model.UserNotFoundException;
-import com.fitplanner.user.model.api.ChangePasswordRequest;
 import com.fitplanner.user.model.api.ConfirmationResponse;
 import com.fitplanner.user.model.api.UserDetailsRequest;
+import com.fitplanner.user.model.food.MealPlan;
 import com.fitplanner.user.model.user.NutritionInfo;
 import com.fitplanner.user.model.user.User;
 import com.fitplanner.user.model.user.UserDTO;
-import com.fitplanner.user.model.user.UserNutrition;
 import com.fitplanner.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -30,11 +30,11 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ConfirmationResponse changePassword(ChangePasswordRequest request) {
-        var user = userRepository.findByEmail(request.email())
+    public ConfirmationResponse changePassword(String email, String newPassword) {
+        var user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UserNotFoundException("User not found."));
 
-        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setPassword(passwordEncoder.encode(newPassword));
         user.setAccessToken(null);
         userRepository.save(user);
 
@@ -50,8 +50,8 @@ public class UserService {
         return new ConfirmationResponse("Account has been deleted.");
     }
 
-    public ConfirmationResponse updateUserDetails(UserDetailsRequest request) {
-        var user = userRepository.findByEmail(request.email())
+    public ConfirmationResponse updateUserDetails(String email, UserDetailsRequest request) {
+        var user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UserNotFoundException("User not found."));
 
         var newDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -75,11 +75,11 @@ public class UserService {
             .orElseThrow(() -> new UserNotFoundException("User not found."));
     }
 
-    public void saveUserNutrition(UserNutrition userNutrition) {
-        var user = userRepository.findByEmail(userNutrition.email())
+    public void saveUserDailyMealPlans(String email, List<MealPlan> mealPlans) {
+        var user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UserNotFoundException("User not found."));
 
-        user.setDailyMealPlans(userNutrition.dailyMealPlans());
+        user.setDailyMealPlans(mealPlans);
         userRepository.save(user);
     }
 

@@ -3,7 +3,7 @@ package com.fitplanner.nutrition.model.food;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DailyMealPlan {
+public class MealPlan {
 
     private String date;
     private List<Meal> meals;
@@ -12,7 +12,7 @@ public class DailyMealPlan {
     private double dailyFat;
     private double dailyCarbs;
 
-    public DailyMealPlan(String date, List<Meal> meals, int dailyCalories, double dailyProtein, double dailyFat, double dailyCarbs) {
+    public MealPlan(String date, List<Meal> meals, int dailyCalories, double dailyProtein, double dailyFat, double dailyCarbs) {
         this.date = date;
         this.meals = meals;
         this.dailyCalories = dailyCalories;
@@ -22,11 +22,11 @@ public class DailyMealPlan {
         initializeMeals();
     }
 
-    public DailyMealPlan(String date, int dailyCalories, double dailyProtein, double dailyFat, double dailyCarbs) {
+    public MealPlan(String date, int dailyCalories, double dailyProtein, double dailyFat, double dailyCarbs) {
         this(date, new ArrayList<>(), dailyCalories, dailyProtein, dailyFat, dailyCarbs);
     }
 
-    public DailyMealPlan() {}
+    public MealPlan() {}
 
     // getters
     public List<Meal> getMeals() { return meals; }

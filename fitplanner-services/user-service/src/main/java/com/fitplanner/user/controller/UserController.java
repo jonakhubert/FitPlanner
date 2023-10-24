@@ -1,12 +1,9 @@
 package com.fitplanner.user.controller;
 
-import com.fitplanner.user.model.api.ChangePasswordRequest;
 import com.fitplanner.user.model.api.ConfirmationResponse;
 import com.fitplanner.user.model.api.UserDetailsRequest;
-import com.fitplanner.user.model.user.NutritionInfo;
-import com.fitplanner.user.model.user.User;
+import com.fitplanner.user.model.food.MealPlan;
 import com.fitplanner.user.model.user.UserDTO;
-import com.fitplanner.user.model.user.UserNutrition;
 import com.fitplanner.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping(path = "/api/users")
+@RequestMapping(path = "/api/user-management")
 public class UserController {
 
     private final UserService userService;
@@ -27,23 +26,28 @@ public class UserController {
     }
 
     @PostMapping(
-        path = "/change-password",
+        path = "/users/{email}/password-change",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<ConfirmationResponse> changePassword(@RequestBody @Valid ChangePasswordRequest request) {
-        return ResponseEntity.ok(userService.changePassword(request));
+    public ResponseEntity<ConfirmationResponse> changePassword(
+        @PathVariable("email") String email,
+        @RequestBody String newPassword
+    ) {
+        return ResponseEntity.ok(userService.changePassword(email, newPassword));
     }
 
     @PostMapping(
-        path = "/delete-account",
+        path = "/users/{email}/account-deletion",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<ConfirmationResponse> deleteAccount(@RequestParam("email") String email) {
+    public ResponseEntity<ConfirmationResponse> deleteAccount(
+        @PathVariable("email") String email
+    ) {
         return ResponseEntity.ok(userService.deleteAccount(email));
     }
 
     @GetMapping(
-        path = "/{email}",
+        path = "/users/{email}",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<UserDTO> getUser(@PathVariable("email") String email) {
@@ -51,19 +55,25 @@ public class UserController {
     }
 
     @PostMapping(
-        path = "/details",
+        path = "/users/{email}/details",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<ConfirmationResponse> updateUserDetails(@RequestBody @Valid UserDetailsRequest request) {
-        return ResponseEntity.ok(userService.updateUserDetails(request));
+    public ResponseEntity<ConfirmationResponse> updateUserDetails(
+        @PathVariable("email") String email,
+        @RequestBody @Valid UserDetailsRequest request
+    ) {
+        return ResponseEntity.ok(userService.updateUserDetails(email, request));
     }
 
     @PostMapping(
-        path = "/daily-meal-plans",
+        path = "/users/{email}/details/nutrition/meal-plans",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Void> saveUserNutrition(@RequestBody UserNutrition user) {
-        userService.saveUserNutrition(user);
+    public ResponseEntity<Void> saveUserDailyMealPlans(
+        @PathVariable("email") String email,
+        @RequestBody List<MealPlan> mealPlans
+    ) {
+        userService.saveUserDailyMealPlans(email, mealPlans);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

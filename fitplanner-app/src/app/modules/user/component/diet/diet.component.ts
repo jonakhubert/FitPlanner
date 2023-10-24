@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
 import { NutritionService } from '../../services/nutrition/nutrition.service';
-import { DailyMealPlan } from '../../interface/daily-meal-plan';
-import { FoodItemCreationRequest } from '../../interface/food-item-creation-request';
+import { MealPlan } from '../../interface/meal-plan';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FoodItemRemovalRequest } from '../../interface/food-item-removal-request';
 import { ChartOptions } from 'chart.js';
 
 @Component({
@@ -15,7 +13,7 @@ import { ChartOptions } from 'chart.js';
 export class DietComponent {
   formattedDate: string = '';
   foodItemForm!: FormGroup;
-  dailyMealPlan: DailyMealPlan | undefined;
+  mealPlan: MealPlan | undefined;
   selectedMeal!: string | null;
   totalCalories: number = 0;
   totalProtein: number = 0;
@@ -61,26 +59,19 @@ export class DietComponent {
 
   ngOnInit(): void {
     this.submitted = false;
-    this.fetchDailyMealPlan();
+    this.fetchMealPlan();
   }
 
   onDateSelected(date: string): void {
     this.formattedDate = date;
-    this.fetchDailyMealPlan();
+    this.fetchMealPlan();
   }
 
   removeFoodItem(foodId: string, mealName: string): void {
     const email = localStorage.getItem("userEmail");
 
     if(email) {
-      const request: FoodItemRemovalRequest = {
-        email: email,
-        date: this.formattedDate,
-        mealName: mealName,
-        foodId: foodId
-      };
-      
-      this.nutritionService.removeFoodItem(request).subscribe(
+      this.nutritionService.removeFoodItem(email, this.formattedDate, mealName, foodId).subscribe(
       {
         next: (response) => {
           this.ngOnInit();
@@ -99,15 +90,8 @@ export class DietComponent {
       return;
 
     const email = localStorage.getItem('userEmail');
-    if(email && this.selectedMeal && this.dailyMealPlan) {
-      const request: FoodItemCreationRequest = {
-        email: email,
-        date: this.formattedDate,
-        mealName: this.selectedMeal,
-        foodItem: this.foodItemForm.value
-      }
-      
-      this.nutritionService.addFoodItem(request).subscribe(
+    if(email && this.selectedMeal && this.mealPlan) {
+      this.nutritionService.addFoodItem(email, this.formattedDate, this.selectedMeal, this.foodItemForm.value).subscribe(
       {
         next: (response) => {
           const closeButton = document.getElementById("closeBtn");
@@ -135,15 +119,15 @@ export class DietComponent {
     })
   }
 
-  private fetchDailyMealPlan(): void {
+  private fetchMealPlan(): void {
     const email = localStorage.getItem("userEmail");
   
     if(email && this.formattedDate) {
-      this.nutritionService.getDailyMealPlan(email, this.formattedDate).subscribe(
+      this.nutritionService.getMealPlan(email, this.formattedDate).subscribe(
       {
         next: (response) => {
           console.log(response);
-          this.dailyMealPlan = response;
+          this.mealPlan = response;
           this.calculateMealTotals();
           this.calculateTotals();
           this.calculateRemaining();
@@ -158,8 +142,8 @@ export class DietComponent {
   }
 
   private calculateMealTotals(): void {
-    if(this.dailyMealPlan) {
-      this.dailyMealPlan.meals.forEach(meal => {
+    if(this.mealPlan) {
+      this.mealPlan.meals.forEach(meal => {
         let totalCalories = 0;
         let totalProtein = 0;
         let totalFat = 0;
@@ -193,8 +177,8 @@ export class DietComponent {
     this.totalFat = 0;
     this.totalCarbs = 0;
   
-    if(this.dailyMealPlan) {
-      this.dailyMealPlan.meals.forEach(meal => {
+    if(this.mealPlan) {
+      this.mealPlan.meals.forEach(meal => {
         this.totalCalories += meal.mealTotals.calories;
         this.totalProtein += meal.mealTotals.protein;
         this.totalFat += meal.mealTotals.fat;
@@ -211,11 +195,11 @@ export class DietComponent {
   }
 
   private calculateRemaining(): void {
-    if(this.dailyMealPlan) {
-      this.remainingCalories = this.dailyMealPlan.dailyCalories - this.totalCalories;
-      this.remainingProtein = this.dailyMealPlan.dailyProtein - this.totalProtein;
-      this.remainingFat = this.dailyMealPlan.dailyFat - this.totalFat;
-      this.remainingCarbs = this.dailyMealPlan.dailyCarbs - this.totalCarbs;
+    if(this.mealPlan) {
+      this.remainingCalories = this.mealPlan.dailyCalories - this.totalCalories;
+      this.remainingProtein = this.mealPlan.dailyProtein - this.totalProtein;
+      this.remainingFat = this.mealPlan.dailyFat - this.totalFat;
+      this.remainingCarbs = this.mealPlan.dailyCarbs - this.totalCarbs;
     }
   }
 

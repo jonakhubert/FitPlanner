@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/api/auth")
+@RequestMapping(path = "/api/authentication")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
@@ -22,7 +22,7 @@ public class AuthenticationController {
     }
 
     @PostMapping(
-        path = "/register",
+        path = "/registration",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<ConfirmationResponse> register(
@@ -42,7 +42,7 @@ public class AuthenticationController {
     }
 
     @PostMapping(
-        path = "/validate-access-token"
+        path = "/access-tokens"
     )
     public ResponseEntity<Void> validateAccessToken(
         @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
@@ -58,37 +58,38 @@ public class AuthenticationController {
     }
 
     @GetMapping(
-        path = "/verify",
+        path = "/verification-tokens",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<ConfirmationResponse> verify(
-        @RequestParam("verification_token") String verificationToken
+        @RequestParam("token") String verificationToken
     ) {
         return ResponseEntity.ok(authenticationService.verify(verificationToken));
     }
 
     @PostMapping(
-        path = "/forgot-password",
+        path = "/users/{email}/password-reminder",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<ConfirmationResponse> forgotPassword(
-        @RequestParam("email") String email
+        @PathVariable("email") String email
     ) {
         return ResponseEntity.ok(authenticationService.forgotPassword(email));
     }
 
     @PostMapping(
-        path = "/reset-password",
+        path = "/users/{email}/password-reset",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<ConfirmationResponse> resetPassword(
+        @PathVariable("email") String email,
         @RequestBody @Valid ResetPasswordRequest request
     ) {
-        return ResponseEntity.ok(authenticationService.resetPassword(request));
+        return ResponseEntity.ok(authenticationService.resetPassword(email, request));
     }
 
     @PostMapping(
-        path = "/validate-reset-password-token",
+        path = "/reset-password-tokens",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<Void> validateResetPasswordToken(

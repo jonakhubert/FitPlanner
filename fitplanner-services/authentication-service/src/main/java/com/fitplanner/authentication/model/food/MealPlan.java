@@ -3,7 +3,7 @@ package com.fitplanner.authentication.model.food;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DailyMealPlan {
+public class MealPlan {
 
     private String date;
     private List<Meal> meals;
@@ -12,7 +12,7 @@ public class DailyMealPlan {
     private double dailyFat;
     private double dailyCarbs;
 
-    public DailyMealPlan(String date) {
+    public MealPlan(String date) {
         this.date = date;
         this.meals = new ArrayList<>();
     }

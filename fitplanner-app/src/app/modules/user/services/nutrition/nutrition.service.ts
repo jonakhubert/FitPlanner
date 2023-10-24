@@ -1,10 +1,9 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
-import { DailyMealPlan } from '../../interface/daily-meal-plan';
-import { FoodItemCreationRequest } from '../../interface/food-item-creation-request';
+import { MealPlan } from '../../interface/meal-plan';
+import { FoodItemRequest } from '../../interface/food-item-request';
 import { ConfirmationResponse } from 'src/app/interface/confirmation-response';
-import { FoodItemRemovalRequest } from '../../interface/food-item-removal-request';
 import { Product } from '../../interface/product';
 
 @Injectable({
@@ -16,8 +15,8 @@ export class NutritionService {
 
   constructor(private http: HttpClient) {}
 
-  public getDailyMealPlan(email: string, date: string): Observable<DailyMealPlan> {
-    return this.http.get<DailyMealPlan>(`${this.apiUrl}/daily-meal-plans?email=${email}&date=${date}`)
+  public getMealPlan(email: string, date: string): Observable<MealPlan> {
+    return this.http.get<MealPlan>(`${this.apiUrl}/users/${email}/meal-plans/${date}`)
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw error;
@@ -25,8 +24,8 @@ export class NutritionService {
     )
   }
 
-  public addFoodItem(request: FoodItemCreationRequest): Observable<ConfirmationResponse> {
-    return this.http.post<ConfirmationResponse>(`${this.apiUrl}/food-items`, request)
+  public addFoodItem(email: string, date: string, mealName: string, request: FoodItemRequest): Observable<ConfirmationResponse> {
+    return this.http.post<ConfirmationResponse>(`${this.apiUrl}/users/${email}/meal-plans/${date}/meals/${mealName}/food-items`, request)
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw error;
@@ -34,15 +33,8 @@ export class NutritionService {
     )
   }
 
-  public removeFoodItem(request: FoodItemRemovalRequest): Observable<string> {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      }),
-      body: request
-    };
-    
-    return this.http.delete<string>(`${this.apiUrl}/food-items`, httpOptions)
+  public removeFoodItem(email: string, date: string, mealName: string, id: string): Observable<string> {
+    return this.http.delete<string>(`${this.apiUrl}/users/${email}/meal-plans/${date}/meals/${mealName}/food-items/${id}`)
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw error;

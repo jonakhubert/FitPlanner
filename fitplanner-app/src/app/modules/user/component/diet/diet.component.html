@@ -8,7 +8,7 @@
 
         <div class="food-container">
           <table>
-            <ng-container *ngIf="dailyMealPlan">
+            <ng-container *ngIf="mealPlan">
               <!-- Display nutrients header -->
               <tr class="nutrients">
                 <td></td>
@@ -21,7 +21,7 @@
                 <td>&nbsp;</td>
               </tr>
 
-              <ng-container *ngFor="let meal of dailyMealPlan.meals">
+              <ng-container *ngFor="let meal of mealPlan.meals">
                 <!-- Display header row for the meal -->
                 <tr class="meal-header">
                   <td class="meal-name">
@@ -69,10 +69,10 @@
 
               <tr class="day-summary">
                 <td class="first">Daily Goal</td>
-                <td class="macro"><span class="macro-value">{{ dailyMealPlan.dailyCalories }}</span></td>
-                <td class="macro"><span class="macro-value">{{ dailyMealPlan.dailyProtein }}</span></td>
-                <td class="macro"><span class="macro-value">{{ dailyMealPlan.dailyFat }}</span></td>
-                <td class="macro"><span class="macro-value">{{ dailyMealPlan.dailyCarbs }}</span></td>
+                <td class="macro"><span class="macro-value">{{ mealPlan.dailyCalories }}</span></td>
+                <td class="macro"><span class="macro-value">{{ mealPlan.dailyProtein }}</span></td>
+                <td class="macro"><span class="macro-value">{{ mealPlan.dailyFat }}</span></td>
+                <td class="macro"><span class="macro-value">{{ mealPlan.dailyCarbs }}</span></td>
               </tr>
 
               <tr class="day-summary">

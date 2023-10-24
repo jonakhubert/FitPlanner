@@ -1,6 +1,6 @@
 package com.fitplanner.authentication.model.user;
 
-import com.fitplanner.authentication.model.food.DailyMealPlan;
+import com.fitplanner.authentication.model.food.MealPlan;
 import com.fitplanner.authentication.model.tokens.ResetPasswordToken;
 import com.fitplanner.authentication.model.tokens.VerificationToken;
 import com.fitplanner.authentication.model.tokens.accesstoken.AccessToken;
@@ -38,7 +38,7 @@ public class User implements UserDetails {
     // nutrition
     private NutritionInfo nutritionInfo;
     private List<NutritionInfo> historicalNutritionInfos;
-    private List<DailyMealPlan> dailyMealPlans;
+    private List<MealPlan> mealPlans;
 
     public User(String firstName, String lastName, String email, String password, Role role) {
         this.firstName = firstName;
@@ -50,7 +50,7 @@ public class User implements UserDetails {
         this.verificationToken = null;
         this.resetPasswordToken = null;
         this.historicalNutritionInfos = new ArrayList<>();
-        this.dailyMealPlans = new ArrayList<>();
+        this.mealPlans = new ArrayList<>();
     }
 
     public User() {}
@@ -110,12 +110,12 @@ public class User implements UserDetails {
                 Objects.equals(verificationToken, other.verificationToken) &&
                 Objects.equals(resetPasswordToken, other.resetPasswordToken) &&
                 Objects.equals(historicalNutritionInfos, other.historicalNutritionInfos) &&
-                Objects.equals(dailyMealPlans, other.dailyMealPlans);
+                Objects.equals(mealPlans, other.mealPlans);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, firstName, lastName, email, password, role, enabled, accessToken, verificationToken,
-            resetPasswordToken, nutritionInfo, historicalNutritionInfos, dailyMealPlans);
+            resetPasswordToken, nutritionInfo, historicalNutritionInfos, mealPlans);
     }
 }

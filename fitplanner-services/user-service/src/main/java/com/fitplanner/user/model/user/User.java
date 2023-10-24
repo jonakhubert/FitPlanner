@@ -1,6 +1,6 @@
 package com.fitplanner.user.model.user;
 
-import com.fitplanner.user.model.food.DailyMealPlan;
+import com.fitplanner.user.model.food.MealPlan;
 import com.fitplanner.user.model.tokens.ResetPasswordToken;
 import com.fitplanner.user.model.tokens.VerificationToken;
 import com.fitplanner.user.model.tokens.accesstoken.AccessToken;
@@ -31,7 +31,7 @@ public class User {
 
     private NutritionInfo nutritionInfo;
     private List<NutritionInfo> historicalNutritionInfos;
-    private List<DailyMealPlan> dailyMealPlans;
+    private List<MealPlan> mealPlans;
 
     // getters
     public String getFirstName() { return firstName; }
@@ -40,11 +40,11 @@ public class User {
     public Role getRole() { return role; }
     public NutritionInfo getNutritionInfo() { return nutritionInfo; }
     public List<NutritionInfo> getHistoricalNutritionInfos() { return historicalNutritionInfos; }
-    public List<DailyMealPlan> getDailyMealPlans() { return dailyMealPlans; }
+    public List<MealPlan> getMealPlans() { return mealPlans; }
 
     // setters
     public void setPassword(String password) { this.password = password; }
     public void setAccessToken(AccessToken accessToken) { this.accessToken = accessToken; }
-    public void setDailyMealPlans(List<DailyMealPlan> dailyMealPlans) { this.dailyMealPlans = dailyMealPlans; }
+    public void setDailyMealPlans(List<MealPlan> mealPlans) { this.mealPlans = mealPlans; }
     public void setNutritionInfo(NutritionInfo nutritionInfo) { this.nutritionInfo = nutritionInfo; }
 }

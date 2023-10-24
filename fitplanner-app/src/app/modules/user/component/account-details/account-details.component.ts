@@ -3,6 +3,7 @@ import { UserService } from '../../services/user/user.service';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { User } from '../../interface/user';
 import { ToastrService } from 'ngx-toastr';
+import { UserDetailsRequest } from '../../interface/user-details-request';
 
 @Component({
   selector: 'app-account-details',
@@ -42,7 +43,16 @@ export class AccountDetailsComponent {
     if(this.accountForm.invalid)
       return;
 
-    this.userService.updateUserDetails(this.accountForm.getRawValue()).subscribe({
+    const request: UserDetailsRequest = {
+      firstName: this.accountForm.get('firstName')!.value,
+      lastName: this.accountForm.get('lastName')!.value,
+      height: this.accountForm.get('height')!.value,
+      weight: this.accountForm.get('weight')!.value,
+      goal: this.accountForm.get('goal')!.value,
+      activity_level: this.accountForm.get('activity_level')!.value
+    }
+
+    this.userService.updateUserDetails(this.accountForm.get('email')!.value, request).subscribe({
       next: (response) => {
         this.toastr.success("User updated successfully.", "Success");
         this.ngOnInit();

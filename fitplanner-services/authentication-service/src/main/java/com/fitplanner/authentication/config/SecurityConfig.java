@@ -42,7 +42,7 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorizeHttpRequests ->
                 authorizeHttpRequests
-                    .requestMatchers("/api/auth/**")
+                    .requestMatchers("/api/authentication/**")
                     .permitAll()
                     .anyRequest()
                     .authenticated()
@@ -57,7 +57,7 @@ public class SecurityConfig {
                 logout
                     .deleteCookies("remove")
                     .invalidateHttpSession(false)
-                    .logoutUrl("/api/auth/logout")
+                    .logoutUrl("/api/authentication/logout")
                     .addLogoutHandler(logoutHandler)
                     .logoutSuccessHandler((request, response, authentication) ->
                         SecurityContextHolder.clearContext()

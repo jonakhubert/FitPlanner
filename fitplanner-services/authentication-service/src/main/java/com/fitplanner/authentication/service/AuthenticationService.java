@@ -42,7 +42,9 @@ public class AuthenticationService {
         var user = userService.createUser(request);
         var verificationToken = userService.createVerificationToken(user);
 
-        var link = "http://localhost:8222/api/auth/verify?verification_token=" + verificationToken.getToken();
+        var link = "http://localhost:8222/api/user-authentication/verification-tokens?token="
+            + verificationToken.getToken();
+
         emailService.send(user.getUsername(), "Confirm your account", EmailBuilder.buildEmailBody(link, "Confirm"));
 
         return new ConfirmationResponse("Verification email has been sent.");
@@ -57,7 +59,9 @@ public class AuthenticationService {
         if(!user.isEnabled()) {
             var verificationToken = userService.createVerificationToken(user);
 
-            var link = "http://localhost:8222/api/auth/verify?verification_token=" + verificationToken.getToken();
+            var link = "http://localhost:8222/api/user-authentication/verification-tokens?token="
+                + verificationToken.getToken();
+
             emailService.send(user.getUsername(), "Confirm your account", EmailBuilder.buildEmailBody(link, "Confirm"));
 
             throw new UserNotVerifiedException("User is not verified. Verification email has been resent.");
@@ -112,11 +116,11 @@ public class AuthenticationService {
         return new ConfirmationResponse("Reset password has been sent.");
     }
 
-    public ConfirmationResponse resetPassword(ResetPasswordRequest request) {
-        if(!isEmailValid(request.email()))
-            throw new InvalidEmailFormatException(request.email() + " format is invalid.");
+    public ConfirmationResponse resetPassword(String email, ResetPasswordRequest request) {
+        if(!isEmailValid(email))
+            throw new InvalidEmailFormatException(email + " format is invalid.");
 
-        var user = userService.getUserByEmail(request.email());
+        var user = userService.getUserByEmail(email);
 
         if(user.getResetPasswordToken().getExpiredAt().isBefore(LocalDateTime.now()))
             throw new TokenExpiredException("Token is expired.");
