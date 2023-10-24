@@ -38,7 +38,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
             return webClientBuilder.build()
                 .post()
-                .uri("http://localhost:8222/api/user-authentication/access-tokens")
+                .uri("http://localhost:8222/api/authentication/access-tokens")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .exchangeToMono(clientResponse -> {
                     if (clientResponse.statusCode().is2xxSuccessful())

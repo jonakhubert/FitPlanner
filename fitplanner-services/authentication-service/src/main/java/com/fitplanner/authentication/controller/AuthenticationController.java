@@ -58,11 +58,11 @@ public class AuthenticationController {
     }
 
     @GetMapping(
-        path = "/verification-tokens",
+        path = "/verification-tokens/{token}",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<ConfirmationResponse> verify(
-        @RequestParam("token") String verificationToken
+        @PathVariable("token") String verificationToken
     ) {
         return ResponseEntity.ok(authenticationService.verify(verificationToken));
     }

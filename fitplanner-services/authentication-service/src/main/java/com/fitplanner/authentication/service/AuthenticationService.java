@@ -42,8 +42,7 @@ public class AuthenticationService {
         var user = userService.createUser(request);
         var verificationToken = userService.createVerificationToken(user);
 
-        var link = "http://localhost:8222/api/user-authentication/verification-tokens?token="
-            + verificationToken.getToken();
+        var link = "http://localhost:8222/api/authentication/verification-tokens/" + verificationToken.getToken();
 
         emailService.send(user.getUsername(), "Confirm your account", EmailBuilder.buildEmailBody(link, "Confirm"));
 
@@ -59,8 +58,7 @@ public class AuthenticationService {
         if(!user.isEnabled()) {
             var verificationToken = userService.createVerificationToken(user);
 
-            var link = "http://localhost:8222/api/user-authentication/verification-tokens?token="
-                + verificationToken.getToken();
+            var link = "http://localhost:8222/api/authentication/verification-tokens/" + verificationToken.getToken();
 
             emailService.send(user.getUsername(), "Confirm your account", EmailBuilder.buildEmailBody(link, "Confirm"));
 
