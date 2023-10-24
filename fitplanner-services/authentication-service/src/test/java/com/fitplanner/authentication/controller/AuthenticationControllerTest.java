@@ -32,7 +32,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
     private MockMvc mockMvc;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final String baseUrl = "/api/user-authentication";
+    private final String baseUrl = "/api/authentication";
 
     @Test
     public void register_ValidRegisterRequest_VerificationMessage() throws Exception {
@@ -304,8 +304,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         when(authenticationService.verify(verificationToken)).thenReturn(confirmationResponse);
 
         // then
-        mockMvc.perform(get(baseUrl + "/verification-tokens")
-            .param("token", verificationToken))
+        mockMvc.perform(get(baseUrl + "/verification-tokens/{token}", verificationToken))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.confirmation_message").value(message));
     }
@@ -319,17 +318,9 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         when(authenticationService.verify(verificationToken)).thenThrow(new TokenNotFoundException(message));
 
         // then
-        mockMvc.perform(get(baseUrl + "/verification-tokens")
-            .param("token", verificationToken))
+        mockMvc.perform(get(baseUrl + "/verification-tokens/{token}", verificationToken))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.message").value(message));
-    }
-
-    @Test
-    public void verify_NoVerificationToken_Status401() throws Exception {
-        // then
-        mockMvc.perform(get(baseUrl + "/verification-tokens"))
-            .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -341,8 +332,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         when(authenticationService.verify(verificationToken)).thenThrow(new UserAlreadyVerifiedException(message));
 
         // then
-        mockMvc.perform(get(baseUrl + "/verification-tokens")
-            .param("token", verificationToken))
+        mockMvc.perform(get(baseUrl + "/verification-tokens/{token}", verificationToken))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.message").value(message));
     }
@@ -356,8 +346,7 @@ public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mo
         when(authenticationService.verify(verificationToken)).thenThrow(new TokenExpiredException(message));
 
         // then
-        mockMvc.perform(get(baseUrl + "/verification-tokens")
-            .param("token", verificationToken))
+        mockMvc.perform(get(baseUrl + "/verification-tokens/{token}", verificationToken))
             .andExpect(status().isUnauthorized())
             .andExpect(jsonPath("$.message").value(message));
     }
