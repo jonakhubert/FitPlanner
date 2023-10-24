@@ -117,7 +117,7 @@ public class NutritionService {
             return Collections.emptyList();
 
         return productRepository.findByNameIgnoreCase(name)
-            .orElseThrow(() -> new RuntimeException("products not found"));
+            .orElse(Collections.emptyList());
     }
 
     public void addProduct(ProductRequest request) {
