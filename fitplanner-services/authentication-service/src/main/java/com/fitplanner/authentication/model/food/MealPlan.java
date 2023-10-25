@@ -1,6 +1,5 @@
 package com.fitplanner.authentication.model.food;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MealPlan {
@@ -12,14 +11,11 @@ public class MealPlan {
     private double dailyFat;
     private double dailyCarbs;
 
-    public MealPlan(String date) {
-        this.date = date;
-        this.meals = new ArrayList<>();
-    }
+    public MealPlan() {}
 
     // getters
-    public List<Meal> getMeals() { return meals; }
     public String getDate() { return date; }
+    public List<Meal> getMeals() { return meals; }
     public int getDailyCalories() { return dailyCalories; }
     public double getDailyProtein() { return dailyProtein; }
     public double getDailyFat() { return dailyFat; }
