@@ -4,6 +4,7 @@ import com.fitplanner.user.model.food.MealPlan;
 import com.fitplanner.user.model.tokens.ResetPasswordToken;
 import com.fitplanner.user.model.tokens.VerificationToken;
 import com.fitplanner.user.model.tokens.accesstoken.AccessToken;
+import com.fitplanner.user.model.training.WorkoutPlan;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import org.springframework.data.annotation.Id;
@@ -29,9 +30,15 @@ public class User {
     private VerificationToken verificationToken;
     private ResetPasswordToken resetPasswordToken;
 
+    // nutrition
     private NutritionInfo nutritionInfo;
     private List<NutritionInfo> historicalNutritionInfos;
     private List<MealPlan> mealPlans;
+
+    // workout
+    private List<WorkoutPlan> workoutPlans;
+
+    public User() {}
 
     // getters
     public String getFirstName() { return firstName; }
@@ -41,10 +48,12 @@ public class User {
     public NutritionInfo getNutritionInfo() { return nutritionInfo; }
     public List<NutritionInfo> getHistoricalNutritionInfos() { return historicalNutritionInfos; }
     public List<MealPlan> getMealPlans() { return mealPlans; }
+    public List<WorkoutPlan> getWorkoutPlans() { return workoutPlans; }
 
     // setters
     public void setPassword(String password) { this.password = password; }
     public void setAccessToken(AccessToken accessToken) { this.accessToken = accessToken; }
-    public void setDailyMealPlans(List<MealPlan> mealPlans) { this.mealPlans = mealPlans; }
     public void setNutritionInfo(NutritionInfo nutritionInfo) { this.nutritionInfo = nutritionInfo; }
+    public void setDailyMealPlans(List<MealPlan> mealPlans) { this.mealPlans = mealPlans; }
+    public void setWorkoutPlans(List<WorkoutPlan> workoutPlans) { this.workoutPlans = workoutPlans; }
 }

@@ -4,6 +4,7 @@ import com.fitplanner.authentication.model.food.MealPlan;
 import com.fitplanner.authentication.model.tokens.ResetPasswordToken;
 import com.fitplanner.authentication.model.tokens.VerificationToken;
 import com.fitplanner.authentication.model.tokens.accesstoken.AccessToken;
+import com.fitplanner.authentication.model.training.WorkoutPlan;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import org.springframework.data.annotation.Id;
@@ -40,6 +41,9 @@ public class User implements UserDetails {
     private List<NutritionInfo> historicalNutritionInfos;
     private List<MealPlan> mealPlans;
 
+    // workout
+    private List<WorkoutPlan> workoutPlans;
+
     public User(String firstName, String lastName, String email, String password, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -51,6 +55,7 @@ public class User implements UserDetails {
         this.resetPasswordToken = null;
         this.historicalNutritionInfos = new ArrayList<>();
         this.mealPlans = new ArrayList<>();
+        this.workoutPlans = new ArrayList<>();
     }
 
     public User() {}
@@ -110,12 +115,13 @@ public class User implements UserDetails {
                 Objects.equals(verificationToken, other.verificationToken) &&
                 Objects.equals(resetPasswordToken, other.resetPasswordToken) &&
                 Objects.equals(historicalNutritionInfos, other.historicalNutritionInfos) &&
-                Objects.equals(mealPlans, other.mealPlans);
+                Objects.equals(mealPlans, other.mealPlans) &&
+                Objects.equals(workoutPlans, other.workoutPlans);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, firstName, lastName, email, password, role, enabled, accessToken, verificationToken,
-            resetPasswordToken, nutritionInfo, historicalNutritionInfos, mealPlans);
+            resetPasswordToken, nutritionInfo, historicalNutritionInfos, mealPlans, workoutPlans);
     }
 }
