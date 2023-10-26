@@ -3,6 +3,7 @@ package com.fitplanner.user.controller;
 import com.fitplanner.user.model.api.ConfirmationResponse;
 import com.fitplanner.user.model.api.UserDetailsRequest;
 import com.fitplanner.user.model.food.MealPlan;
+import com.fitplanner.user.model.training.WorkoutPlan;
 import com.fitplanner.user.model.user.UserDTO;
 import com.fitplanner.user.service.UserService;
 import jakarta.validation.Valid;
@@ -69,11 +70,23 @@ public class UserController {
         path = "/users/{email}/details/nutrition/meal-plans",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Void> saveUserDailyMealPlans(
+    public ResponseEntity<Void> saveUserMealPlans(
         @PathVariable("email") String email,
         @RequestBody List<MealPlan> mealPlans
     ) {
-        userService.saveUserDailyMealPlans(email, mealPlans);
+        userService.saveUserMealPlans(email, mealPlans);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping(
+        path = "/users/{email}/details/workout/workout-plans",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Void> saveUserWorkoutPlans(
+        @PathVariable("email") String email,
+        @RequestBody List<WorkoutPlan> workoutPlans
+    ) {
+        userService.saveUserWorkoutPlans(email, workoutPlans);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
