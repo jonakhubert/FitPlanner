@@ -33,8 +33,8 @@ export class NutritionService {
     )
   }
 
-  public removeFoodItem(email: string, date: string, mealName: string, id: string): Observable<string> {
-    return this.http.delete<string>(`${this.apiUrl}/users/${email}/meal-plans/${date}/meals/${mealName}/food-items/${id}`)
+  public removeFoodItem(email: string, date: string, mealName: string, id: string): Observable<ConfirmationResponse> {
+    return this.http.delete<ConfirmationResponse>(`${this.apiUrl}/users/${email}/meal-plans/${date}/meals/${mealName}/food-items/${id}`)
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw error;
