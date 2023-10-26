@@ -7,36 +7,36 @@
         <app-date-selector (dateOutput)="onDateSelected($event)"></app-date-selector>
 
         <div class="workout-container">
-          <table>
-            <tr class="workout-parameters">
-              <td></td>
-              <td class="workout-column">Sets</td>
-              <td class="workout-column">Reps/Set</td>
-              <td class="workout-column">Weight/Set</td>
-            </tr>
-      
-            <tr class="exercise">
-              <td class="exercise-name">deadlift</td>
-              <td class="workout-column"> <span>4</span></td>
-              <td class="workout-column"> <span>12</span></td>
-              <td class="workout-column"> <span>120</span></td>
-              <td class="delete"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
-            </tr>
-            <tr class="exercise">
-              <td class="exercise-name">incline bench press</td>
-              <td class="workout-column"> <span>4</span></td>
-              <td class="workout-column"> <span>12</span></td>
-              <td class="workout-column"> <span>120</span></td>
-              <td class="delete"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
-            </tr>
-            <tr class="exercise">
-              <td class="exercise-name">deadlift</td>
-              <td class="workout-column"> <span>4</span></td>
-              <td class="workout-column"> <span>12</span></td>
-              <td class="workout-column"> <span>120</span></td>
-              <td class="delete"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
-            </tr>
-          </table> 
+          <ng-container *ngIf="workoutPlan">
+            <table>
+              <tr class="workout-parameters">
+                <td class="add" routerLink="/">Add Exercise</td>
+                <td class="workout-column">
+                  <div class="workout-column-wrapper">Sets</div>
+                </td>
+                <td class="workout-column">
+                  <div class="workout-column-wrapper">Reps/Set</div>
+                </td>
+                <td class="workout-column">
+                  <div class="workout-column-wrapper">Weight/Set</div>
+                </td>
+              </tr>
+              <tr class="spacer">
+                <td>&nbsp;</td>
+              </tr>
+              
+
+              <ng-container *ngFor="let exerciseInfo of workoutPlan.exerciseInfos">
+                <tr class="exercise">
+                  <td class="exercise-name">{{ exerciseInfo.name }}</td>
+                  <td class="workout-column"> <span>{{ exerciseInfo.sets }}</span></td>
+                  <td class="workout-column"> <span>{{ exerciseInfo.reps }}</span></td>
+                  <td class="workout-column"> <span>{{ exerciseInfo.weight }}kg</span></td>
+                  <td class="delete" (click)="removeExerciseInfo(exerciseInfo.id)"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
+                </tr>
+              </ng-container>
+            </table> 
+          </ng-container>  
         </div>
       </div>
     </div>
@@ -53,7 +53,7 @@
       </div>
 
       <div class="modal-body">
-        <iframe width="100%" height="600" src="https://www.youtube.com/embed/dBMidaBb8v8?list=PL_LnEwg3rwYQfZKCEMJHX6GBfsH3CQ96W" title="How to Deadlift: 5 Simple Steps" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        <iframe width="100%" height="600" src="" title="How to Deadlift: 5 Simple Steps" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
       </div>
 
       <div class="modal-footer">

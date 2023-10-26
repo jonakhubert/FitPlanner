@@ -22,12 +22,21 @@
   text-align: center;
   width: 80px;
 
-  .workout-column {
-    background-color: rgb(40, 118, 170);
+  .add {
+    text-align: left;
+    width: 50%;
+    font-weight: bold;
+    cursor: pointer;
+    color: rgb(108, 165, 202);
   }
 }
 
+.workout-column-wrapper {
+  background-color: rgb(40, 118, 170);
+}
+
 .workout-column {
+  padding: 0 2px;
   text-align: center;
 }
 
