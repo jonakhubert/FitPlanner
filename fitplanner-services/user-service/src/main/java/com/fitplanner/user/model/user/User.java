@@ -54,6 +54,13 @@ public class User {
     public void setPassword(String password) { this.password = password; }
     public void setAccessToken(AccessToken accessToken) { this.accessToken = accessToken; }
     public void setNutritionInfo(NutritionInfo nutritionInfo) { this.nutritionInfo = nutritionInfo; }
-    public void setDailyMealPlans(List<MealPlan> mealPlans) { this.mealPlans = mealPlans; }
+    public void setMealPlans(List<MealPlan> mealPlans) { this.mealPlans = mealPlans; }
     public void setWorkoutPlans(List<WorkoutPlan> workoutPlans) { this.workoutPlans = workoutPlans; }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "workoutPlans=" + workoutPlans +
+                '}';
+    }
 }

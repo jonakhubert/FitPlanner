@@ -83,13 +83,14 @@ export class DietComponent {
     }
   }
 
-  addFoodItem() { 
+  addFoodItem(): void { 
     this.submitted = true;
     
     if(this.foodItemForm.invalid)
       return;
 
     const email = localStorage.getItem('userEmail');
+    
     if(email && this.selectedMeal && this.mealPlan) {
       this.nutritionService.addFoodItem(email, this.formattedDate, this.selectedMeal, this.foodItemForm.value).subscribe(
       {

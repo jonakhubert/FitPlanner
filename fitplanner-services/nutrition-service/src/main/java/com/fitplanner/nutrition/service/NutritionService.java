@@ -81,7 +81,7 @@ public class NutritionService {
             meal.getFoodItems().removeIf(foodItem -> foodItem.getId().equals(foodId));
 
             // check if any other meals contain food items
-            boolean hasFoodItems = user.getMealPlans().stream()
+            var hasFoodItems = user.getMealPlans().stream()
                 .filter(plan -> plan.getDate().equals(date))
                 .flatMap(plan -> plan.getMeals().stream())
                 .anyMatch(otherMeal -> !otherMeal.getFoodItems().isEmpty());
