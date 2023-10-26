@@ -20,6 +20,7 @@
 
 .nutrient-column {
   text-align: center;
+  padding: 0 2px;
   width: 80px;
 }
 
@@ -29,9 +30,10 @@
 
 .nutrients {
   margin-top: 20px;
-  .nutrient-column {
-    background-color: rgb(40, 118, 170);
-  }
+}
+
+.nutrient-column-wrapper {
+  background-color: rgb(40, 118, 170);
 }
 
 .delete {

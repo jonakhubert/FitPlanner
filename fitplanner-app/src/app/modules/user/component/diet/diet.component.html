@@ -7,18 +7,31 @@
         <app-date-selector (dateOutput)="onDateSelected($event)"></app-date-selector>
 
         <div class="food-container">
-          <table>
-            <ng-container *ngIf="mealPlan">
+          <ng-container *ngIf="mealPlan">
+            <table>
               <!-- Display nutrients header -->
               <tr class="nutrients">
                 <td></td>
-                <td class="nutrient-column">Calories <div class="subtitle">kcal</div></td>
-                <td class="nutrient-column">Protein <div class="subtitle">g</div></td>
-                <td class="nutrient-column">Fat <div class="subtitle">g</div></td>
-                <td class="nutrient-column">Carbs <div class="subtitle">g</div></td>
-              </tr>
-              <tr class="spacer">
-                <td>&nbsp;</td>
+                <td class="nutrient-column">
+                  <div class="nutrient-column-wrapper">
+                    Calories <div class="subtitle">kcal</div>
+                  </div>
+                </td>
+                <td class="nutrient-column">
+                  <div class="nutrient-column-wrapper">
+                    Protein <div class="subtitle">g</div>
+                  </div>
+                </td>
+                <td class="nutrient-column">
+                  <div class="nutrient-column-wrapper">
+                    Fat <div class="subtitle">g</div>
+                  </div>
+                </td>
+                <td class="nutrient-column">
+                  <div class="nutrient-column-wrapper">
+                    Carbs <div class="subtitle">g</div>
+                  </div>
+                </td>
               </tr>
 
               <ng-container *ngFor="let meal of mealPlan.meals">
@@ -84,13 +97,29 @@
               </tr>
               <tr class="nutrients">
                 <td></td>
-                <td class="nutrient-column">Calories <div class="subtitle">kcal</div></td>
-                <td class="nutrient-column">Protein <div class="subtitle">g</div></td>
-                <td class="nutrient-column">Fat <div class="subtitle">g</div></td>
-                <td class="nutrient-column">Carbs <div class="subtitle">g</div></td>
+                <td class="nutrient-column">
+                  <div class="nutrient-column-wrapper">
+                    Calories <div class="subtitle">kcal</div>
+                  </div>
+                </td>
+                <td class="nutrient-column">
+                  <div class="nutrient-column-wrapper">
+                    Protein <div class="subtitle">g</div>
+                  </div>
+                </td>
+                <td class="nutrient-column">
+                  <div class="nutrient-column-wrapper">
+                    Fat <div class="subtitle">g</div>
+                  </div>
+                </td>
+                <td class="nutrient-column">
+                  <div class="nutrient-column-wrapper">
+                    Carbs <div class="subtitle">g</div>
+                  </div>
+                </td>
               </tr>
-            </ng-container>
-          </table>
+            </table>
+          </ng-container>
 
           <div *ngIf="totalProtein !== 0 || totalFat !== 0 || totalCarbs !== 0" class="pie-chart">
             <canvas baseChart
