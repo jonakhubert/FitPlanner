@@ -4,6 +4,7 @@ import com.fitplanner.user.exception.model.UserNotFoundException;
 import com.fitplanner.user.model.api.ConfirmationResponse;
 import com.fitplanner.user.model.api.UserDetailsRequest;
 import com.fitplanner.user.model.food.MealPlan;
+import com.fitplanner.user.model.training.WorkoutPlan;
 import com.fitplanner.user.model.user.NutritionInfo;
 import com.fitplanner.user.model.user.User;
 import com.fitplanner.user.model.user.UserDTO;
@@ -75,11 +76,19 @@ public class UserService {
             .orElseThrow(() -> new UserNotFoundException("User not found."));
     }
 
-    public void saveUserDailyMealPlans(String email, List<MealPlan> mealPlans) {
+    public void saveUserMealPlans(String email, List<MealPlan> mealPlans) {
         var user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UserNotFoundException("User not found."));
 
-        user.setDailyMealPlans(mealPlans);
+        user.setMealPlans(mealPlans);
+        userRepository.save(user);
+    }
+
+    public void saveUserWorkoutPlans(String email, List<WorkoutPlan> workoutPlans) {
+        var user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UserNotFoundException("User not found."));
+
+        user.setWorkoutPlans(workoutPlans);
         userRepository.save(user);
     }
 
