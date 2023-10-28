@@ -6,9 +6,16 @@ export const searchGuard: CanActivateFn = (route, state) => {
   const dateParam = route.queryParamMap.get('date');
   const dateFormatRegex = /^\d{4}-\d{2}-\d{2}$/;
 
-    if(dateParam && dateParam.match(dateFormatRegex))
-      return true;
+  if (dateParam && dateParam.match(dateFormatRegex))
+    return true;
+  else {
+    const currentUrl = state.url;
 
-    router.navigate(['user/diet'])
+    if(currentUrl.includes('/user/workout'))
+      router.navigate(['user/workout']);
+    else if (currentUrl.includes('/user/diet'))
+      router.navigate(['user/diet']);
+
     return false;
+  }
 };
