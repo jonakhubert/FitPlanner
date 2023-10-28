@@ -26,12 +26,9 @@ public class WorkoutController {
         this.workoutService = workoutService;
     }
 
-    @PostMapping(
-        path = "users/{email}/workout-plans/{date}/exercises",
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<ConfirmationResponse> addExerciseInfo(
-        @PathVariable("email") String email, @PathVariable("date") String date, @RequestBody ExerciseInfo exerciseInfo,
+    @PostMapping(path = "users/{email}/workout-plans/{date}/exercises", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ConfirmationResponse> addExerciseInfo(@PathVariable("email") String email,
+        @PathVariable("date") String date, @RequestBody ExerciseInfo exerciseInfo,
         @RequestHeader("Authorization") String header
     ) {
         return ResponseEntity.ok(workoutService.addExerciseInfo(email, date, exerciseInfo, header));
@@ -41,20 +38,16 @@ public class WorkoutController {
         path = "users/{email}/workout-plans/{date}/exercises/{id}",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<ConfirmationResponse> removeExerciseInfo(
-        @PathVariable("email") String email, @PathVariable("date") String date, @PathVariable("id") String exerciseInfoId,
+    public ResponseEntity<ConfirmationResponse> removeExerciseInfo(@PathVariable("email") String email,
+        @PathVariable("date") String date, @PathVariable("id") String exerciseInfoId,
         @RequestHeader("Authorization") String header
     ) {
         return ResponseEntity.ok(workoutService.removeExerciseInfo(email, date, exerciseInfoId, header));
     }
 
-    @GetMapping(
-        path = "users/{email}/workout-plans/{date}",
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<WorkoutPlan> getWorkoutPlan(
-        @PathVariable("email") String email, @PathVariable("date") String date,
-        @RequestHeader("Authorization") String header
+    @GetMapping(path = "users/{email}/workout-plans/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<WorkoutPlan> getWorkoutPlan(@PathVariable("email") String email,
+        @PathVariable("date") String date, @RequestHeader("Authorization") String header
     ) {
         return ResponseEntity.ok(workoutService.getWorkoutPlan(email, date, header));
     }
@@ -64,9 +57,7 @@ public class WorkoutController {
         return ResponseEntity.ok(workoutService.getExercises(name));
     }
 
-    @PostMapping(
-        path = "/exercises"
-    )
+    @PostMapping(path = "/exercises")
     public ResponseEntity<Void> addExercise(@RequestBody @Valid ExerciseRequest request) {
         workoutService.addExercise(request);
         return ResponseEntity.status(HttpStatus.OK).build();

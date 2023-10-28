@@ -86,7 +86,7 @@ export class ProductSearchComponent {
         quantity: this.foodItemForm.get('quantity')!.value
       }
       
-      this.nutritionService.addFoodItem(email, this.date, this.selectedMeal, request).subscribe(
+      this.nutritionService.addFoodItem(email, this.date, this.foodItemForm.get('meal')!.value, request).subscribe(
       {
         next: (response) => {
           this.router.navigate(['/user/diet']);

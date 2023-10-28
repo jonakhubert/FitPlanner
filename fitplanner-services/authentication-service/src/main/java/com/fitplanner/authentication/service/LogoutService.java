@@ -50,6 +50,7 @@ public class LogoutService implements LogoutHandler {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         var objectMapper = new ObjectMapper();
+
         try {
             response.getWriter().write(objectMapper.writeValueAsString(apiError));
         } catch (IOException e) {

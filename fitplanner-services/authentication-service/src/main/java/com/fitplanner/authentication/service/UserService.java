@@ -142,8 +142,8 @@ public class UserService {
             : request.goal() == 3 ? baseCalories + 300
             : baseCalories;
 
-        var protein = request.weight().intValue() * 2;
-        var fat = request.weight().intValue();
+        var protein = (int) request.weight() * 2;
+        var fat = (int) request.weight();
         var carbs = (totalCalories - (protein * 4) - (fat * 9)) / 4;
 
         var nutritionInfo = new NutritionInfo(totalCalories, protein, fat, carbs, request.height(), request.weight(),

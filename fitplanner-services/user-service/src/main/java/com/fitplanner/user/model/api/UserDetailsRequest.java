@@ -6,8 +6,8 @@ import jakarta.validation.constraints.NotNull;
 public record UserDetailsRequest(
         @NotNull @NotEmpty String firstName,
         @NotNull @NotEmpty String lastName,
-        @NotNull Double height,
-        @NotNull Double weight,
-        @NotNull Integer goal,
-        @NotNull Integer activity_level
+        @NotNull double height,
+        @NotNull double weight,
+        @NotNull int goal,
+        @NotNull int activity_level
 ) {}

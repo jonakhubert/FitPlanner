@@ -32,11 +32,11 @@ public class User {
 
     // nutrition
     private NutritionInfo nutritionInfo;
-    private List<NutritionInfo> historicalNutritionInfos;
-    private List<MealPlan> mealPlans;
+    private List<NutritionInfo> historicalNutritionInfoList;
+    private List<MealPlan> mealPlanList;
 
     // workout
-    private List<WorkoutPlan> workoutPlans;
+    private List<WorkoutPlan> workoutPlanList;
 
     public User() {}
 
@@ -46,21 +46,14 @@ public class User {
     public String getEmail() { return email; }
     public Role getRole() { return role; }
     public NutritionInfo getNutritionInfo() { return nutritionInfo; }
-    public List<NutritionInfo> getHistoricalNutritionInfos() { return historicalNutritionInfos; }
-    public List<MealPlan> getMealPlans() { return mealPlans; }
-    public List<WorkoutPlan> getWorkoutPlans() { return workoutPlans; }
+    public List<NutritionInfo> getHistoricalNutritionInfoList() { return historicalNutritionInfoList; }
+    public List<MealPlan> getMealPlanList() { return mealPlanList; }
+    public List<WorkoutPlan> getWorkoutPlanList() { return workoutPlanList; }
 
     // setters
     public void setPassword(String password) { this.password = password; }
     public void setAccessToken(AccessToken accessToken) { this.accessToken = accessToken; }
     public void setNutritionInfo(NutritionInfo nutritionInfo) { this.nutritionInfo = nutritionInfo; }
-    public void setMealPlans(List<MealPlan> mealPlans) { this.mealPlans = mealPlans; }
-    public void setWorkoutPlans(List<WorkoutPlan> workoutPlans) { this.workoutPlans = workoutPlans; }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "workoutPlans=" + workoutPlans +
-                '}';
-    }
+    public void setMealPlanList(List<MealPlan> mealPlanList) { this.mealPlanList = mealPlanList; }
+    public void setWorkoutPlanList(List<WorkoutPlan> workoutPlanList) { this.workoutPlanList = workoutPlanList; }
 }

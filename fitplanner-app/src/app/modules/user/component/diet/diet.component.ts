@@ -144,13 +144,13 @@ export class DietComponent {
 
   private calculateMealTotals(): void {
     if(this.mealPlan) {
-      this.mealPlan.meals.forEach(meal => {
+      this.mealPlan.mealList.forEach(meal => {
         let totalCalories = 0;
         let totalProtein = 0;
         let totalFat = 0;
         let totalCarbs = 0;
 
-        meal.foodItems.forEach(foodItem => {
+        meal.foodItemList.forEach(foodItem => {
           totalCalories += foodItem.calories;
           totalProtein += foodItem.protein;
           totalFat += foodItem.fat;
@@ -179,7 +179,7 @@ export class DietComponent {
     this.totalCarbs = 0;
   
     if(this.mealPlan) {
-      this.mealPlan.meals.forEach(meal => {
+      this.mealPlan.mealList.forEach(meal => {
         this.totalCalories += meal.mealTotals.calories;
         this.totalProtein += meal.mealTotals.protein;
         this.totalFat += meal.mealTotals.fat;

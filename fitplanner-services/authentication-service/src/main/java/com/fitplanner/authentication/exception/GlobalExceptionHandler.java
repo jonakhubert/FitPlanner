@@ -25,10 +25,7 @@ import java.time.LocalDateTime;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ApiError> handleUserNotFoundException(
-        UserNotFoundException ex,
-        HttpServletRequest request
-    ) {
+    public ResponseEntity<ApiError> handleUserNotFoundException(UserNotFoundException ex, HttpServletRequest request) {
         var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
@@ -40,8 +37,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserAlreadyExistException.class)
-    public ResponseEntity<ApiError> handleUserAlreadyExistException(
-        UserAlreadyExistException ex,
+    public ResponseEntity<ApiError> handleUserAlreadyExistException(UserAlreadyExistException ex,
         HttpServletRequest request
     ) {
         var apiError = new ApiError(
@@ -55,8 +51,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserAlreadyVerifiedException.class)
-    public ResponseEntity<ApiError> handleUserAlreadyVerifiedException(
-        UserAlreadyVerifiedException ex,
+    public ResponseEntity<ApiError> handleUserAlreadyVerifiedException(UserAlreadyVerifiedException ex,
         HttpServletRequest request
     ) {
         var apiError = new ApiError(
@@ -70,8 +65,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserNotVerifiedException.class)
-    public ResponseEntity<ApiError> handleUserNotVerifiedException(
-        UserNotVerifiedException ex,
+    public ResponseEntity<ApiError> handleUserNotVerifiedException(UserNotVerifiedException ex,
         HttpServletRequest request
     ) {
         var apiError = new ApiError(
@@ -85,10 +79,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<ApiError> handleTokenExpiredException(
-        TokenExpiredException ex,
-        HttpServletRequest request
-    ) {
+    public ResponseEntity<ApiError> handleTokenExpiredException(TokenExpiredException ex, HttpServletRequest request) {
         var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
@@ -100,10 +91,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(TokenNotFoundException.class)
-    public ResponseEntity<ApiError> handleTokenNotFoundException(
-        TokenNotFoundException ex,
-        HttpServletRequest request
-    ) {
+    public ResponseEntity<ApiError> handleTokenNotFoundException(TokenNotFoundException ex, HttpServletRequest request) {
         var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
@@ -115,8 +103,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ApiError> handleMethodNotSupportedException(
-        HttpRequestMethodNotSupportedException ex,
+    public ResponseEntity<ApiError> handleMethodNotSupportedException(HttpRequestMethodNotSupportedException ex,
         HttpServletRequest request
     ) {
         var apiError = new ApiError(
@@ -130,8 +117,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ApiError> handleHttpMessageNotReadableException(
-        HttpMessageNotReadableException ex,
+    public ResponseEntity<ApiError> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex,
         HttpServletRequest request
     ) {
         var apiError = new ApiError(
@@ -145,8 +131,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-    public ResponseEntity<ApiError> handleNotSupportedMediaTypeException(
-        HttpMediaTypeNotSupportedException ex,
+    public ResponseEntity<ApiError> handleNotSupportedMediaTypeException(HttpMediaTypeNotSupportedException ex,
         HttpServletRequest request
     ) {
         var apiError = new ApiError(
@@ -160,8 +145,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiError> handleMethodArgumentNotValidException(
-        MethodArgumentNotValidException ex,
+    public ResponseEntity<ApiError> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex,
         HttpServletRequest request
     ) {
         var apiError = new ApiError(
@@ -175,8 +159,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidEmailFormatException.class)
-    public ResponseEntity<ApiError> handleInvalidEmailFormatException(
-        InvalidEmailFormatException ex,
+    public ResponseEntity<ApiError> handleInvalidEmailFormatException(InvalidEmailFormatException ex,
         HttpServletRequest request
     ) {
         var apiError = new ApiError(
@@ -190,10 +173,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ApiError> handleBadCredentialsException(
-        BadCredentialsException ex,
-        HttpServletRequest request
-    ) {
+    public ResponseEntity<ApiError> handleBadCredentialsException(BadCredentialsException ex, HttpServletRequest request) {
         var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
@@ -205,10 +185,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConnectException.class)
-    public ResponseEntity<ApiError> handleConnectException(
-        ConnectException ex,
-        HttpServletRequest request
-    ) {
+    public ResponseEntity<ApiError> handleConnectException(ConnectException ex, HttpServletRequest request) {
         var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
@@ -220,10 +197,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MailSendException.class)
-    public ResponseEntity<ApiError> handleMessagingException(
-        MessagingException ex,
-        HttpServletRequest request
-    ) {
+    public ResponseEntity<ApiError> handleMessagingException(MessagingException ex, HttpServletRequest request) {
         var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),
@@ -235,8 +209,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<ApiError> handleMissingParameterException(
-        MissingServletRequestParameterException ex,
+    public ResponseEntity<ApiError> handleMissingParameterException(MissingServletRequestParameterException ex,
         HttpServletRequest request
     ) {
         var apiError = new ApiError(
@@ -250,8 +223,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MissingRequestHeaderException.class)
-    public ResponseEntity<ApiError> handleMissingRequestHeaderException(
-        MissingRequestHeaderException ex,
+    public ResponseEntity<ApiError> handleMissingRequestHeaderException(MissingRequestHeaderException ex,
         HttpServletRequest request
     ) {
         var apiError = new ApiError(
@@ -265,10 +237,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MongoTimeoutException.class)
-    public ResponseEntity<ApiError> handleMongoTimeoutException(
-        MongoTimeoutException ex,
-        HttpServletRequest request
-    ) {
+    public ResponseEntity<ApiError> handleMongoTimeoutException(MongoTimeoutException ex, HttpServletRequest request) {
         var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),

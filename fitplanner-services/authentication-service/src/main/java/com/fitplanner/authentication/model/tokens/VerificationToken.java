@@ -12,11 +12,7 @@ public class VerificationToken {
 
     public VerificationToken() {}
 
-    public VerificationToken(
-        String token,
-        LocalDateTime createdAt,
-        LocalDateTime expiredAt
-    ) {
+    public VerificationToken(String token, LocalDateTime createdAt, LocalDateTime expiredAt) {
         this.token = token;
         this.createdAt = createdAt;
         this.expiredAt = expiredAt;

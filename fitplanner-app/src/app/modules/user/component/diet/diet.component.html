@@ -34,7 +34,7 @@
                 </td>
               </tr>
 
-              <ng-container *ngFor="let meal of mealPlan.meals">
+              <ng-container *ngFor="let meal of mealPlan.mealList">
                 <!-- Display header row for the meal -->
                 <tr class="meal-header">
                   <td class="meal-name">
@@ -45,7 +45,7 @@
                 </tr>
           
                 <!-- Loop through food items of the meal -->
-                <ng-container *ngFor="let foodItem of meal.foodItems">
+                <ng-container *ngFor="let foodItem of meal.foodItemList">
                   <tr class="food">
                     <!-- Display food item details -->
                     <td class="food-name">{{ foodItem.name }}, {{ foodItem.quantity }}g</td>

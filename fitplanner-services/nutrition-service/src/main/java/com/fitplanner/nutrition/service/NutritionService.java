@@ -30,12 +30,12 @@ public class NutritionService {
     public ConfirmationResponse addFoodItem(String email, String date, String mealName, FoodItem foodItem, String header) {
         var user = userServiceClient.getUser(email, header);
 
-        var nutritionInfo = user.getHistoricalNutritionInfos().stream()
+        var nutritionInfo = user.getHistoricalNutritionInfoList().stream()
             .filter(info -> info.isDateInRange(date))
             .findFirst().orElseGet(user::getNutritionInfo);
 
         // if the meal plan with the specific date doesn't exist, create a new one
-        var dailyMealPlan = user.getMealPlans().stream()
+        var mealPlan = user.getMealPlanList().stream()
             .filter(plan -> plan.getDate().equals(date))
             .findFirst()
             .orElseGet(() -> {
@@ -43,27 +43,27 @@ public class NutritionService {
                     date, nutritionInfo.getCalories(), nutritionInfo.getProtein(), nutritionInfo.getFat(),
                     nutritionInfo.getCarbs()
                 );
-                user.getMealPlans().add(newPlan);
+                user.getMealPlanList().add(newPlan);
                 return newPlan;
             });
 
         // find the meal in the mealPlan with the specified name
-        var existingMeal = dailyMealPlan.getMeals().stream()
+        var existingMeal = mealPlan.getMealList().stream()
             .filter(meal -> meal.getName().equals(mealName))
             .findFirst();
 
         // if the meal already exists, add the new food item to it
         // otherwise create a new meal with the specified name and the new food item
         existingMeal.ifPresentOrElse(
-            meal -> meal.getFoodItems().add(foodItem),
+            meal -> meal.getFoodItemList().add(foodItem),
             () -> {
                 var newMeal = new Meal(mealName);
-                newMeal.getFoodItems().add(foodItem);
-                dailyMealPlan.getMeals().add(newMeal);
+                newMeal.getFoodItemList().add(foodItem);
+                mealPlan.getMealList().add(newMeal);
             }
         );
 
-        userServiceClient.saveMealPlans(email, user.getMealPlans(), header);
+        userServiceClient.saveMealPlanList(email, user.getMealPlanList(), header);
 
         return new ConfirmationResponse("Food item has been added.");
     }
@@ -71,27 +71,27 @@ public class NutritionService {
     public ConfirmationResponse removeFoodItem(String email, String date, String mealName, String foodId, String header) {
         var user = userServiceClient.getUser(email, header);
 
-        var userMeal = user.getMealPlans().stream()
+        var userMeal = user.getMealPlanList().stream()
             .filter(plan -> plan.getDate().equals(date))
-            .flatMap(plan -> plan.getMeals().stream())
+            .flatMap(plan -> plan.getMealList().stream())
             .filter(meal -> meal.getName().equals(mealName))
             .findFirst();
 
         userMeal.ifPresent(meal -> {
-            meal.getFoodItems().removeIf(foodItem -> foodItem.getId().equals(foodId));
+            meal.getFoodItemList().removeIf(foodItem -> foodItem.getId().equals(foodId));
 
             // check if any other meals contain food items
-            var hasFoodItems = user.getMealPlans().stream()
+            var hasFoodItems = user.getMealPlanList().stream()
                 .filter(plan -> plan.getDate().equals(date))
-                .flatMap(plan -> plan.getMeals().stream())
-                .anyMatch(otherMeal -> !otherMeal.getFoodItems().isEmpty());
+                .flatMap(plan -> plan.getMealList().stream())
+                .anyMatch(otherMeal -> !otherMeal.getFoodItemList().isEmpty());
 
             // if no other meals contain food items, remove the whole daily meal plan
             if(!hasFoodItems)
-                user.getMealPlans().removeIf(plan -> plan.getDate().equals(date));
+                user.getMealPlanList().removeIf(plan -> plan.getDate().equals(date));
         });
 
-        userServiceClient.saveMealPlans(email, user.getMealPlans(), header);
+        userServiceClient.saveMealPlanList(email, user.getMealPlanList(), header);
 
         return new ConfirmationResponse("Food item has been removed.");
     }
@@ -99,11 +99,11 @@ public class NutritionService {
     public MealPlan getMealPlan(String email, String date, String header) {
         var user = userServiceClient.getUser(email, header);
 
-        var nutritionInfo = user.getHistoricalNutritionInfos().stream()
+        var nutritionInfo = user.getHistoricalNutritionInfoList().stream()
             .filter(info -> info.isDateInRange(date))
             .findFirst().orElseGet(user::getNutritionInfo);
 
-        return user.getMealPlans().stream()
+        return user.getMealPlanList().stream()
             .filter(plan -> plan.getDate().equals(date))
             .findFirst()
             .orElse(new MealPlan(

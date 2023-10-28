@@ -8,9 +8,9 @@ public class ExerciseInfo {
     private String id;
     private String name;
     private String link;
-    private Integer sets;
-    private Integer reps;
-    private Double weight;
+    private int sets;
+    private int reps;
+    private double weight;
 
     public ExerciseInfo() {
         this.id = UUID.randomUUID().toString();
@@ -20,17 +20,17 @@ public class ExerciseInfo {
     public String getId() { return id; }
     public String getName() { return name; }
     public String getLink() { return link; }
-    public Integer getSets() { return sets; }
-    public Integer getReps() { return reps; }
-    public Double getWeight() { return weight; }
+    public int getSets() { return sets; }
+    public int getReps() { return reps; }
+    public double getWeight() { return weight; }
 
     // setters
     public void setId(String id) { this.id = id; }
     public void setName(String name) { this.name = name; }
     public void setLink(String link) { this.link = link; }
-    public void setSets(Integer sets) { this.sets = sets; }
-    public void setReps(Integer reps) { this.reps = reps; }
-    public void setWeight(Double weight) { this.weight = weight; }
+    public void setSets(int sets) { this.sets = sets; }
+    public void setReps(int reps) { this.reps = reps; }
+    public void setWeight(double weight) { this.weight = weight; }
 
     @Override
     public boolean equals(Object o) {

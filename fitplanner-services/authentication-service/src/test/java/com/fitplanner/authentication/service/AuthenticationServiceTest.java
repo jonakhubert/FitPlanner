@@ -235,11 +235,8 @@ public class AuthenticationServiceTest {
     public void verify_ExpiredToken_TokenExpiredException() {
         // given
         var token = "token";
-        var verificationToken = new VerificationToken(
-            token,
-            LocalDateTime.now().minusMinutes(10),
-            LocalDateTime.now().minusMinutes(5)
-        );
+        var verificationToken = new VerificationToken(token, LocalDateTime.now().minusMinutes(10),
+            LocalDateTime.now().minusMinutes(5));
         var user = new User();
         user.setVerificationToken(verificationToken);
 

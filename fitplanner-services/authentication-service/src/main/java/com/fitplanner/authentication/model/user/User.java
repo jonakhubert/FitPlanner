@@ -38,11 +38,11 @@ public class User implements UserDetails {
 
     // nutrition
     private NutritionInfo nutritionInfo;
-    private List<NutritionInfo> historicalNutritionInfos;
-    private List<MealPlan> mealPlans;
+    private List<NutritionInfo> historicalNutritionInfoList;
+    private List<MealPlan> mealPlanList;
 
     // workout
-    private List<WorkoutPlan> workoutPlans;
+    private List<WorkoutPlan> workoutPlanList;
 
     public User(String firstName, String lastName, String email, String password, Role role) {
         this.firstName = firstName;
@@ -53,9 +53,9 @@ public class User implements UserDetails {
         this.accessToken = null;
         this.verificationToken = null;
         this.resetPasswordToken = null;
-        this.historicalNutritionInfos = new ArrayList<>();
-        this.mealPlans = new ArrayList<>();
-        this.workoutPlans = new ArrayList<>();
+        this.historicalNutritionInfoList = new ArrayList<>();
+        this.mealPlanList = new ArrayList<>();
+        this.workoutPlanList = new ArrayList<>();
     }
 
     public User() {}
@@ -114,14 +114,14 @@ public class User implements UserDetails {
                 Objects.equals(accessToken, other.accessToken) &&
                 Objects.equals(verificationToken, other.verificationToken) &&
                 Objects.equals(resetPasswordToken, other.resetPasswordToken) &&
-                Objects.equals(historicalNutritionInfos, other.historicalNutritionInfos) &&
-                Objects.equals(mealPlans, other.mealPlans) &&
-                Objects.equals(workoutPlans, other.workoutPlans);
+                Objects.equals(historicalNutritionInfoList, other.historicalNutritionInfoList) &&
+                Objects.equals(mealPlanList, other.mealPlanList) &&
+                Objects.equals(workoutPlanList, other.workoutPlanList);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, firstName, lastName, email, password, role, enabled, accessToken, verificationToken,
-            resetPasswordToken, nutritionInfo, historicalNutritionInfos, mealPlans, workoutPlans);
+            resetPasswordToken, nutritionInfo, historicalNutritionInfoList, mealPlanList, workoutPlanList);
     }
 }

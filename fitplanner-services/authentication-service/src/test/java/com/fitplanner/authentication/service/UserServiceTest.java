@@ -92,13 +92,7 @@ public class UserServiceTest {
         // given
         var encodedPassword = "encodedPassword";
         var request = new RegisterRequest("any", "any", 191.0, 88.0, 1, 2, "any@gmail.com", "anyany");
-        var user = new User(
-            request.firstName(),
-            request.lastName(),
-            request.email(),
-            encodedPassword,
-            Role.USER
-        );
+        var user = new User(request.firstName(), request.lastName(), request.email(), encodedPassword, Role.USER);
 
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(passwordEncoder.encode(anyString())).thenReturn(encodedPassword);

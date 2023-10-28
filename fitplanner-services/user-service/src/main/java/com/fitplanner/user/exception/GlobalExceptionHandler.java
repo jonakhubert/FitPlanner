@@ -14,10 +14,7 @@ import java.time.LocalDateTime;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ApiError> handleUserNotFoundException(
-        UserNotFoundException ex,
-        HttpServletRequest request
-    ) {
+    public ResponseEntity<ApiError> handleUserNotFoundException(UserNotFoundException ex, HttpServletRequest request) {
         var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),

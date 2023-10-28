@@ -29,9 +29,9 @@ public class NutritionController {
         path = "/users/{email}/meal-plans/{date}/meals/{meal}/food-items",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<ConfirmationResponse> addFoodItem(
-        @PathVariable("email") String email, @PathVariable("date") String date, @PathVariable("meal") String mealName,
-        @RequestBody FoodItem foodItem, @RequestHeader("Authorization") String header
+    public ResponseEntity<ConfirmationResponse> addFoodItem(@PathVariable("email") String email,
+        @PathVariable("date") String date, @PathVariable("meal") String mealName, @RequestBody FoodItem foodItem,
+        @RequestHeader("Authorization") String header
     ) {
         return ResponseEntity.ok(nutritionService.addFoodItem(email, date, mealName, foodItem, header));
     }
@@ -47,28 +47,19 @@ public class NutritionController {
         return ResponseEntity.ok(nutritionService.removeFoodItem(email, date, mealName, foodId, header));
     }
 
-    @GetMapping(
-        path = "/users/{email}/meal-plans/{date}",
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<MealPlan> getMealPlan(
-        @PathVariable("email") String email, @PathVariable("date") String date,
+    @GetMapping(path = "/users/{email}/meal-plans/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<MealPlan> getMealPlan(@PathVariable("email") String email, @PathVariable("date") String date,
         @RequestHeader("Authorization") String header
     ) {
         return ResponseEntity.ok(nutritionService.getMealPlan(email, date, header));
     }
 
-    @GetMapping(
-        path = "/products",
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
+    @GetMapping(path = "/products", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Product>> getProducts(@RequestParam("name") String name) {
         return ResponseEntity.ok(nutritionService.getProducts(name));
     }
 
-    @PostMapping(
-        path = "/products"
-    )
+    @PostMapping(path = "/products")
     public ResponseEntity<Void> addProduct(@RequestBody ProductRequest request) {
         nutritionService.addProduct(request);
         return ResponseEntity.status(HttpStatus.OK).build();

@@ -28,17 +28,17 @@ public class WorkoutService {
     public ConfirmationResponse addExerciseInfo(String email, String date, ExerciseInfo exerciseInfo, String header) {
         var user = userServiceClient.getUser(email, header);
 
-        var workoutPlan = user.getWorkoutPlans().stream()
+        var workoutPlan = user.getWorkoutPlanList().stream()
             .filter(plan -> plan.getDate().equals(date))
             .findFirst()
             .orElseGet(() -> {
                var newPlan = new WorkoutPlan(date);
-               user.getWorkoutPlans().add(newPlan);
+               user.getWorkoutPlanList().add(newPlan);
                return newPlan;
             });
 
-        workoutPlan.getExerciseInfos().add(exerciseInfo);
-        userServiceClient.saveWorkoutPlans(email, user.getWorkoutPlans(), header);
+        workoutPlan.getExerciseInfoList().add(exerciseInfo);
+        userServiceClient.saveWorkoutPlanList(email, user.getWorkoutPlanList(), header);
 
         return new ConfirmationResponse("Exercise has been added.");
     }
@@ -46,22 +46,22 @@ public class WorkoutService {
     public ConfirmationResponse removeExerciseInfo(String email, String date, String exerciseInfoId, String header) {
         var user = userServiceClient.getUser(email, header);
 
-        var userWorkoutPlan = user.getWorkoutPlans().stream()
+        var userWorkoutPlan = user.getWorkoutPlanList().stream()
             .filter(plan -> plan.getDate().equals(date))
             .findFirst();
 
         userWorkoutPlan.ifPresent(workoutPlan -> {
-            workoutPlan.getExerciseInfos().removeIf(exerciseInfo -> exerciseInfo.getId().equals(exerciseInfoId));
+            workoutPlan.getExerciseInfoList().removeIf(exerciseInfo -> exerciseInfo.getId().equals(exerciseInfoId));
 
-            var hasExerciseInfos = user.getWorkoutPlans().stream()
+            var hasExerciseInfos = user.getWorkoutPlanList().stream()
                 .filter(plan -> plan.getDate().equals(date))
-                .anyMatch(plan -> !plan.getExerciseInfos().isEmpty());
+                .anyMatch(plan -> !plan.getExerciseInfoList().isEmpty());
 
             if(!hasExerciseInfos)
-                user.getWorkoutPlans().removeIf(plan -> plan.getDate().equals(date));
+                user.getWorkoutPlanList().removeIf(plan -> plan.getDate().equals(date));
         });
 
-        userServiceClient.saveWorkoutPlans(email, user.getWorkoutPlans(), header);
+        userServiceClient.saveWorkoutPlanList(email, user.getWorkoutPlanList(), header);
 
         return new ConfirmationResponse("Exercise has been removed.");
     }
@@ -69,7 +69,7 @@ public class WorkoutService {
     public WorkoutPlan getWorkoutPlan(String email, String date, String header) {
         var user = userServiceClient.getUser(email, header);
 
-        return user.getWorkoutPlans().stream()
+        return user.getWorkoutPlanList().stream()
             .filter(plan -> plan.getDate().equals(date))
             .findFirst()
             .orElse(new WorkoutPlan(date));

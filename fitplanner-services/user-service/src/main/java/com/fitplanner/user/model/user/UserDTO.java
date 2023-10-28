@@ -10,7 +10,7 @@ public record UserDTO(
         String lastName,
         String email,
         NutritionInfo nutritionInfo,
-        List<NutritionInfo> historicalNutritionInfos,
-        List<MealPlan> mealPlans,
-        List<WorkoutPlan> workoutPlans
+        List<NutritionInfo> historicalNutritionInfoList,
+        List<MealPlan> mealPlanList,
+        List<WorkoutPlan> workoutPlanList
 ) {}

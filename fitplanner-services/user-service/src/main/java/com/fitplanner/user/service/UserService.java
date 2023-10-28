@@ -60,7 +60,7 @@ public class UserService {
 
         if(!newDate.equals(currentNutritionInfo.getBeginDate())) {
             currentNutritionInfo.setFinishDate(newDate);
-            user.getHistoricalNutritionInfos().add(currentNutritionInfo);
+            user.getHistoricalNutritionInfoList().add(currentNutritionInfo);
 
             setUserNutrients(user, request);
         }
@@ -76,19 +76,19 @@ public class UserService {
             .orElseThrow(() -> new UserNotFoundException("User not found."));
     }
 
-    public void saveUserMealPlans(String email, List<MealPlan> mealPlans) {
+    public void saveUserMealPlanList(String email, List<MealPlan> mealPlanList) {
         var user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UserNotFoundException("User not found."));
 
-        user.setMealPlans(mealPlans);
+        user.setMealPlanList(mealPlanList);
         userRepository.save(user);
     }
 
-    public void saveUserWorkoutPlans(String email, List<WorkoutPlan> workoutPlans) {
+    public void saveUserWorkoutPlanList(String email, List<WorkoutPlan> workoutPlanList) {
         var user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UserNotFoundException("User not found."));
 
-        user.setWorkoutPlans(workoutPlans);
+        user.setWorkoutPlanList(workoutPlanList);
         userRepository.save(user);
     }
 
@@ -101,12 +101,12 @@ public class UserService {
             : request.goal() == 3 ? baseCalories + 300
             : baseCalories;
 
-        var protein = request.weight().intValue() * 2;
-        var fat = request.weight().intValue();
+        var protein = (int) request.weight() * 2;
+        var fat = (int) request.weight();
         var carbs = (totalCalories - (protein * 4) - (fat * 9)) / 4;
 
-        var nutritionInfo = new NutritionInfo(totalCalories, protein, fat, carbs,request.height(),
-            request.weight(), request.goal(), request.activity_level());
+        var nutritionInfo = new NutritionInfo(totalCalories, protein, fat, carbs,request.height(), request.weight(),
+            request.goal(), request.activity_level());
 
         user.setNutritionInfo(nutritionInfo);
     }

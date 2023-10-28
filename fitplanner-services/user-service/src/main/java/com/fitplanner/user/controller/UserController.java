@@ -26,67 +26,43 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(
-        path = "/users/{email}/password-change",
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<ConfirmationResponse> changePassword(
-        @PathVariable("email") String email,
+    @PostMapping(path = "/users/{email}/password-change", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ConfirmationResponse> changePassword(@PathVariable("email") String email,
         @RequestBody String newPassword
     ) {
         return ResponseEntity.ok(userService.changePassword(email, newPassword));
     }
 
-    @PostMapping(
-        path = "/users/{email}/account-deletion",
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<ConfirmationResponse> deleteAccount(
-        @PathVariable("email") String email
-    ) {
+    @PostMapping(path = "/users/{email}/account-deletion", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ConfirmationResponse> deleteAccount(@PathVariable("email") String email) {
         return ResponseEntity.ok(userService.deleteAccount(email));
     }
 
-    @GetMapping(
-        path = "/users/{email}",
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
+    @GetMapping(path = "/users/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> getUser(@PathVariable("email") String email) {
         return ResponseEntity.ok(userService.findUserByEmail(email));
     }
 
-    @PostMapping(
-        path = "/users/{email}/details",
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<ConfirmationResponse> updateUserDetails(
-        @PathVariable("email") String email,
+    @PostMapping(path = "/users/{email}/details", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ConfirmationResponse> updateUserDetails(@PathVariable("email") String email,
         @RequestBody @Valid UserDetailsRequest request
     ) {
         return ResponseEntity.ok(userService.updateUserDetails(email, request));
     }
 
-    @PostMapping(
-        path = "/users/{email}/details/nutrition/meal-plans",
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<Void> saveUserMealPlans(
-        @PathVariable("email") String email,
-        @RequestBody List<MealPlan> mealPlans
+    @PostMapping(path = "/users/{email}/details/nutrition/meal-plans", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> saveUserMealPlanList(@PathVariable("email") String email,
+        @RequestBody List<MealPlan> mealPlanList
     ) {
-        userService.saveUserMealPlans(email, mealPlans);
+        userService.saveUserMealPlanList(email, mealPlanList);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PostMapping(
-        path = "/users/{email}/details/workout/workout-plans",
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<Void> saveUserWorkoutPlans(
-        @PathVariable("email") String email,
-        @RequestBody List<WorkoutPlan> workoutPlans
+    @PostMapping(path = "/users/{email}/details/workout/workout-plans", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> saveUserWorkoutPlanList(@PathVariable("email") String email,
+        @RequestBody List<WorkoutPlan> workoutPlanList
     ) {
-        userService.saveUserWorkoutPlans(email, workoutPlans);
+        userService.saveUserWorkoutPlanList(email, workoutPlanList);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

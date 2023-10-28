@@ -16,9 +16,9 @@ public class UserDTOMapper implements Function<User, UserDTO> {
             user.getLastName(),
             user.getEmail(),
             user.getNutritionInfo(),
-            user.getHistoricalNutritionInfos(),
-            user.getMealPlans(),
-            user.getWorkoutPlans()
+            user.getHistoricalNutritionInfoList(),
+            user.getMealPlanList(),
+            user.getWorkoutPlanList()
         );
     }
 }
