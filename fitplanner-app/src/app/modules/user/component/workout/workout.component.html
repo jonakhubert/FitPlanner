@@ -10,7 +10,7 @@
           <ng-container *ngIf="workoutPlan">
             <table>
               <tr class="workout-parameters">
-                <td class="add" routerLink="/">Add Exercise</td>
+                <td class="add" [routerLink]="['./search']" [queryParams]="{ date: formattedDate }">Add Exercise</td>
                 <td class="workout-column">
                   <div class="workout-column-wrapper">Sets</div>
                 </td>
@@ -28,7 +28,12 @@
 
               <ng-container *ngFor="let exerciseInfo of workoutPlan.exerciseInfos">
                 <tr class="exercise">
-                  <td class="exercise-name">{{ exerciseInfo.name }}</td>
+                  <td class="exercise-name">
+                    {{ exerciseInfo.name }} 
+                    <span class="exercise-video">
+                      <i class="fa-solid fa-circle-play fa-lg" (click)="openModal(exerciseInfo)"data-bs-toggle="modal" data-bs-target="#exerciseVideo"></i>
+                    </span>
+                  </td>
                   <td class="workout-column"> <span>{{ exerciseInfo.sets }}</span></td>
                   <td class="workout-column"> <span>{{ exerciseInfo.reps }}</span></td>
                   <td class="workout-column"> <span>{{ exerciseInfo.weight }}kg</span></td>
@@ -44,16 +49,16 @@
 </div>
 
 
-<!-- video modal -->
-<div class="modal fade" id="video" tabindex="-1" aria-labelledby="videoModal" aria-hidden="true">
+<!-- exercise presentation modal -->
+<div class="modal fade" id="exerciseVideo" tabindex="-1" aria-labelledby="exerciseVideo" aria-hidden="true">
   <div class="modal-dialog modal-xl">
-    <div class="modal-content">
+    <div class="modal-content" *ngIf="selectedExerciseInfo">
       <div class="modal-header">
-        <p class="modal-title" id="video"> <span style="font-size: 25px; font-weight: 700">Video</span><br></p>
+        <p class="modal-title"> <span style="font-size: 25px; font-weight: 700">{{ selectedExerciseInfo.name }}</span><br></p>
       </div>
 
       <div class="modal-body">
-        <iframe width="100%" height="600" src="" title="How to Deadlift: 5 Simple Steps" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        <iframe width="100%" height="600" [src]="getSafeUrl()" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
       </div>
 
       <div class="modal-footer">

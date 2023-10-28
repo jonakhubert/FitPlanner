@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { WorkoutService } from '../../services/workout/workout.service';
-import { FormBuilder } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
 import { WorkoutPlan } from '../../interface/workout-plan';
+import { ExerciseInfo } from '../../interface/exercise-info';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-workout',
@@ -12,11 +12,11 @@ import { WorkoutPlan } from '../../interface/workout-plan';
 export class WorkoutComponent {
   formattedDate: string = '';
   workoutPlan: WorkoutPlan | undefined;
+  selectedExerciseInfo: ExerciseInfo | undefined;
 
   constructor(
     private workoutService: WorkoutService,
-    private formBuilder: FormBuilder,
-    private toastr: ToastrService
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -42,6 +42,14 @@ export class WorkoutComponent {
         }
       })
     }
+  }
+
+  openModal(exerciseInfo: ExerciseInfo): void {
+    this.selectedExerciseInfo = exerciseInfo;
+  }
+
+  getSafeUrl() {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(this.selectedExerciseInfo!.link);
   }
 
   private fetchWorkoutPlan(): void {
