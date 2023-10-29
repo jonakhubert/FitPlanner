@@ -1,6 +1,6 @@
-package com.fitplanner.user.model.training;
+package com.fitplanner.authentication.model.training;
 
-public record ExerciseInfo(
+public record UserStrengthExercise(
         String id,
         String name,
         String link,

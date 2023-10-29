@@ -1,6 +1,6 @@
-import { ExerciseInfo } from "./exercise-info";
+import { UserStrengthExercise } from "./user-strength-exercise";
 
 export interface WorkoutPlan {
     date: string,
-    exerciseInfoList: ExerciseInfo[]
+    strengthExerciseList: UserStrengthExercise[]
 }

@@ -5,11 +5,11 @@ import java.util.List;
 public class WorkoutPlan {
 
     private String date;
-    private List<ExerciseInfo> exerciseInfoList;
+    private List<UserStrengthExercise> strengthExerciseList;
 
     public WorkoutPlan() {}
 
     // getters
     public String getDate() { return date; }
-    public List<ExerciseInfo> getExerciseInfoList() { return exerciseInfoList; }
+    public List<UserStrengthExercise> getStrengthExerciseList() { return strengthExerciseList; }
 }

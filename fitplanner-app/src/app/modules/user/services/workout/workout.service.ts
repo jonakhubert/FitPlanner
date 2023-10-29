@@ -2,9 +2,9 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
 import { WorkoutPlan } from '../../interface/workout-plan';
-import { ExerciseInfoRequest } from '../../interface/exercise-info-request';
+import { StrengthExerciseRequest } from '../../interface/strength-exercise-request';
 import { ConfirmationResponse } from 'src/app/interface/confirmation-response';
-import { Exercise } from '../../interface/exercise';
+import { StrengthExercise } from '../../interface/strength-exercise';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class WorkoutService {
 
   constructor(private http: HttpClient) {}
 
-  public getWorkoutPlan(email: string, date: string): Observable<WorkoutPlan> {
+  public getUserWorkoutPlan(email: string, date: string): Observable<WorkoutPlan> {
     return this.http.get<WorkoutPlan>(`${this.apiUrl}/users/${email}/workout-plans/${date}`)
     .pipe(
       catchError((error: HttpErrorResponse) =>{
@@ -24,8 +24,8 @@ export class WorkoutService {
     )
   }
 
-  public addExerciseInfo(email: string, date: string, request: ExerciseInfoRequest): Observable<ConfirmationResponse> {
-    return this.http.post<ConfirmationResponse>(`${this.apiUrl}/users/${email}/workout-plans/${date}/exercises`, request)
+  public addUserStrengthExercise(email: string, date: string, request: StrengthExerciseRequest): Observable<ConfirmationResponse> {
+    return this.http.post<ConfirmationResponse>(`${this.apiUrl}/users/${email}/workout-plans/${date}/strength-exercises`, request)
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw error;
@@ -33,8 +33,8 @@ export class WorkoutService {
     )
   }
 
-  public removeExerciseInfo(email: string, date: string, id: string): Observable<ConfirmationResponse> {
-    return this.http.delete<ConfirmationResponse>(`${this.apiUrl}/users/${email}/workout-plans/${date}/exercises/${id}`)
+  public removeUserStrengthExercise(email: string, date: string, id: string): Observable<ConfirmationResponse> {
+    return this.http.delete<ConfirmationResponse>(`${this.apiUrl}/users/${email}/workout-plans/${date}/strength-exercises/${id}`)
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw error;
@@ -42,8 +42,8 @@ export class WorkoutService {
     )
   }
 
-  public getExercises(name: string): Observable<Exercise[]> {
-    return this.http.get<Exercise[]>(`${this.apiUrl}/exercises?name=${name}`)
+  public getStrengthExercises(name: string): Observable<StrengthExercise[]> {
+    return this.http.get<StrengthExercise[]>(`${this.apiUrl}/strength-exercises?name=${name}`)
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw error;

@@ -3,7 +3,7 @@ package com.fitplanner.workout.model.training;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ExerciseInfo {
+public class UserStrengthExercise {
 
     private String id;
     private String name;
@@ -12,7 +12,7 @@ public class ExerciseInfo {
     private int reps;
     private double weight;
 
-    public ExerciseInfo() {
+    public UserStrengthExercise() {
         this.id = UUID.randomUUID().toString();
     }
 
@@ -36,7 +36,7 @@ public class ExerciseInfo {
     public boolean equals(Object o) {
         if(o == this)
             return true;
-        if(!(o instanceof ExerciseInfo other))
+        if(!(o instanceof UserStrengthExercise other))
             return false;
 
         return  Objects.equals(id, other.id) &&

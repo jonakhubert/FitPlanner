@@ -2,11 +2,11 @@ package com.fitplanner.workout.service;
 
 import com.fitplanner.workout.client.UserServiceClient;
 import com.fitplanner.workout.model.api.ConfirmationResponse;
-import com.fitplanner.workout.model.api.ExerciseRequest;
-import com.fitplanner.workout.model.training.Exercise;
-import com.fitplanner.workout.model.training.ExerciseInfo;
+import com.fitplanner.workout.model.api.StrengthExerciseRequest;
+import com.fitplanner.workout.model.training.StrengthExercise;
+import com.fitplanner.workout.model.training.UserStrengthExercise;
 import com.fitplanner.workout.model.training.WorkoutPlan;
-import com.fitplanner.workout.repository.ExerciseRepository;
+import com.fitplanner.workout.repository.StrengthExerciseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,16 +16,18 @@ import java.util.List;
 @Service
 public class WorkoutService {
 
-    private final ExerciseRepository exerciseRepository;
+    private final StrengthExerciseRepository strengthExerciseRepository;
     private final UserServiceClient userServiceClient;
 
     @Autowired
-    public WorkoutService(ExerciseRepository exerciseRepository, UserServiceClient userServiceClient) {
-        this.exerciseRepository = exerciseRepository;
+    public WorkoutService(StrengthExerciseRepository strengthExerciseRepository, UserServiceClient userServiceClient) {
+        this.strengthExerciseRepository = strengthExerciseRepository;
         this.userServiceClient = userServiceClient;
     }
 
-    public ConfirmationResponse addExerciseInfo(String email, String date, ExerciseInfo exerciseInfo, String header) {
+    public ConfirmationResponse addUserStrengthExercise(String email, String date, UserStrengthExercise strengthExercise,
+        String header
+    ) {
         var user = userServiceClient.getUser(email, header);
 
         var workoutPlan = user.getWorkoutPlanList().stream()
@@ -37,13 +39,15 @@ public class WorkoutService {
                return newPlan;
             });
 
-        workoutPlan.getExerciseInfoList().add(exerciseInfo);
-        userServiceClient.saveWorkoutPlanList(email, user.getWorkoutPlanList(), header);
+        workoutPlan.getStrengthExerciseList().add(strengthExercise);
+        userServiceClient.saveUserWorkoutPlanList(email, user.getWorkoutPlanList(), header);
 
         return new ConfirmationResponse("Exercise has been added.");
     }
 
-    public ConfirmationResponse removeExerciseInfo(String email, String date, String exerciseInfoId, String header) {
+    public ConfirmationResponse removeUserStrengthExercise(String email, String date, String strengthExerciseId,
+        String header
+    ) {
         var user = userServiceClient.getUser(email, header);
 
         var userWorkoutPlan = user.getWorkoutPlanList().stream()
@@ -51,17 +55,17 @@ public class WorkoutService {
             .findFirst();
 
         userWorkoutPlan.ifPresent(workoutPlan -> {
-            workoutPlan.getExerciseInfoList().removeIf(exerciseInfo -> exerciseInfo.getId().equals(exerciseInfoId));
+            workoutPlan.getStrengthExerciseList().removeIf(exerciseInfo -> exerciseInfo.getId().equals(strengthExerciseId));
 
-            var hasExerciseInfos = user.getWorkoutPlanList().stream()
+            var hasStrengthExerciseList = user.getWorkoutPlanList().stream()
                 .filter(plan -> plan.getDate().equals(date))
-                .anyMatch(plan -> !plan.getExerciseInfoList().isEmpty());
+                .anyMatch(plan -> !plan.getStrengthExerciseList().isEmpty());
 
-            if(!hasExerciseInfos)
+            if(!hasStrengthExerciseList)
                 user.getWorkoutPlanList().removeIf(plan -> plan.getDate().equals(date));
         });
 
-        userServiceClient.saveWorkoutPlanList(email, user.getWorkoutPlanList(), header);
+        userServiceClient.saveUserWorkoutPlanList(email, user.getWorkoutPlanList(), header);
 
         return new ConfirmationResponse("Exercise has been removed.");
     }
@@ -75,16 +79,16 @@ public class WorkoutService {
             .orElse(new WorkoutPlan(date));
     }
 
-    public List<Exercise> getExercises(String name) {
+    public List<StrengthExercise> getStrengthExercises(String name) {
         if(name.isEmpty())
             return Collections.emptyList();
 
-        return exerciseRepository.findByNameIgnoreCase(name)
+        return strengthExerciseRepository.findByNameIgnoreCase(name)
             .orElse(Collections.emptyList());
     }
 
-    public void addExercise(ExerciseRequest exerciseRequest) {
-        var exercise = new Exercise(exerciseRequest.name(), exerciseRequest.link());
-        exerciseRepository.save(exercise);
+    public void addStrengthExercise(StrengthExerciseRequest request) {
+        var exercise = new StrengthExercise(request.name(), request.link());
+        strengthExerciseRepository.save(exercise);
     }
 }

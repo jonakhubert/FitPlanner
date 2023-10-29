@@ -10,7 +10,7 @@
           <ng-container *ngIf="workoutPlan">
             <table>
               <tr class="workout-parameters">
-                <td class="add" [routerLink]="['./search']" [queryParams]="{ date: formattedDate }">Add Exercise</td>
+                <td class="add" [routerLink]="['./strength-exercise/search']" [queryParams]="{ date: formattedDate }">Add Strength Exercise</td>
                 <td class="workout-column">
                   <div class="workout-column-wrapper">Sets</div>
                 </td>
@@ -26,18 +26,18 @@
               </tr>
               
 
-              <ng-container *ngFor="let exerciseInfo of workoutPlan.exerciseInfoList">
+              <ng-container *ngFor="let strengthExercise of workoutPlan.strengthExerciseList">
                 <tr class="exercise">
                   <td class="exercise-name">
-                    {{ exerciseInfo.name }} 
+                    {{ strengthExercise.name }} 
                     <span class="exercise-video">
-                      <i class="fa-solid fa-circle-play fa-lg" (click)="openModal(exerciseInfo)"data-bs-toggle="modal" data-bs-target="#exerciseVideo"></i>
+                      <i class="fa-solid fa-circle-play fa-lg" (click)="openModal(strengthExercise)"data-bs-toggle="modal" data-bs-target="#exerciseVideo"></i>
                     </span>
                   </td>
-                  <td class="workout-column"> <span>{{ exerciseInfo.sets }}</span></td>
-                  <td class="workout-column"> <span>{{ exerciseInfo.reps }}</span></td>
-                  <td class="workout-column"> <span>{{ exerciseInfo.weight }}kg</span></td>
-                  <td class="delete" (click)="removeExerciseInfo(exerciseInfo.id)"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
+                  <td class="workout-column"> <span>{{ strengthExercise.sets }}</span></td>
+                  <td class="workout-column"> <span>{{ strengthExercise.reps }}</span></td>
+                  <td class="workout-column"> <span>{{ strengthExercise.weight }}kg</span></td>
+                  <td class="delete" (click)="removeExerciseInfo(strengthExercise.id)"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
                 </tr>
               </ng-container>
             </table> 
@@ -52,9 +52,9 @@
 <!-- exercise presentation modal -->
 <div class="modal fade" id="exerciseVideo" tabindex="-1" aria-labelledby="exerciseVideo" aria-hidden="true">
   <div class="modal-dialog modal-xl">
-    <div class="modal-content" *ngIf="selectedExerciseInfo">
+    <div class="modal-content" *ngIf="selectedUserStrengthExercise">
       <div class="modal-header">
-        <p class="modal-title"> <span style="font-size: 25px; font-weight: 700">{{ selectedExerciseInfo.name }}</span><br></p>
+        <p class="modal-title"> <span style="font-size: 25px; font-weight: 700">{{ selectedUserStrengthExercise.name }}</span><br></p>
       </div>
 
       <div class="modal-body">

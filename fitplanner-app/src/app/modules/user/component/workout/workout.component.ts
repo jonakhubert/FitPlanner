@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { WorkoutService } from '../../services/workout/workout.service';
 import { WorkoutPlan } from '../../interface/workout-plan';
-import { ExerciseInfo } from '../../interface/exercise-info';
+import { UserStrengthExercise } from '../../interface/user-strength-exercise';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
@@ -12,7 +12,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class WorkoutComponent {
   formattedDate: string = '';
   workoutPlan: WorkoutPlan | undefined;
-  selectedExerciseInfo: ExerciseInfo | undefined;
+  selectedUserStrengthExercise: UserStrengthExercise | undefined;
 
   constructor(
     private workoutService: WorkoutService,
@@ -32,7 +32,7 @@ export class WorkoutComponent {
     const email = localStorage.getItem('userEmail');
 
     if(email) {
-      this.workoutService.removeExerciseInfo(email, this.formattedDate, id).subscribe(
+      this.workoutService.removeUserStrengthExercise(email, this.formattedDate, id).subscribe(
       {
         next: (response) => {
           this.ngOnInit();
@@ -44,19 +44,19 @@ export class WorkoutComponent {
     }
   }
 
-  openModal(exerciseInfo: ExerciseInfo): void {
-    this.selectedExerciseInfo = exerciseInfo;
+  openModal(exercise: UserStrengthExercise): void {
+    this.selectedUserStrengthExercise = exercise;
   }
 
   getSafeUrl() {
-    return this.sanitizer.bypassSecurityTrustResourceUrl(this.selectedExerciseInfo!.link);
+    return this.sanitizer.bypassSecurityTrustResourceUrl(this.selectedUserStrengthExercise!.link);
   }
 
   private fetchWorkoutPlan(): void {
     const email = localStorage.getItem("userEmail");
 
     if(email && this.formattedDate) {
-      this.workoutService.getWorkoutPlan(email, this.formattedDate).subscribe(
+      this.workoutService.getUserWorkoutPlan(email, this.formattedDate).subscribe(
       {
         next: (response) => {
           console.log(response);

@@ -1,25 +1,25 @@
 import { Component } from '@angular/core';
-import { Exercise } from '../../interface/exercise';
+import { StrengthExercise } from '../../interface/strength-exercise';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { WorkoutService } from '../../services/workout/workout.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { ExerciseInfoRequest } from '../../interface/exercise-info-request';
+import { StrengthExerciseRequest } from '../../interface/strength-exercise-request';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-exercise-search',
-  templateUrl: './exercise-search.component.html',
-  styleUrls: ['./exercise-search.component.scss']
+  selector: 'app-strength-exercise-search',
+  templateUrl: './strength-exercise-search.component.html',
+  styleUrls: ['./strength-exercise-search.component.scss']
 })
-export class ExerciseSearchComponent {
+export class StrengthExerciseSearchComponent {
 
-  exercises: Exercise[] = [];
+  strengthExercises: StrengthExercise[] = [];
   searchQuery: string = '';
   showNoResultsMessage: boolean = false;
-  selectedExercise: Exercise | null = null;
+  selectedStrengthExercise: StrengthExercise | null = null;
   date: string = '';
-  exerciseInfoForm!: FormGroup;
+  strengthExerciseForm!: FormGroup;
   submitted: boolean = false;
 
   constructor(
@@ -37,20 +37,20 @@ export class ExerciseSearchComponent {
     })
   }
 
-  searchExercises(name: string) {
-    this.workoutService.getExercises(name).subscribe(
+  searchStrengthExercises(name: string) {
+    this.workoutService.getStrengthExercises(name).subscribe(
     {
       next: (response) => {
         console.log(response);
         if (response && response.length > 0) {
-          this.exercises = response;
+          this.strengthExercises = response;
           this.showNoResultsMessage = false;
         } else {
-          this.exercises = [];
+          this.strengthExercises = [];
           this.showNoResultsMessage = true;
         }
 
-        this.selectedExercise = null;
+        this.selectedStrengthExercise = null;
       },
       error: (error) => {
         console.log(error);
@@ -58,10 +58,10 @@ export class ExerciseSearchComponent {
     })
   }
 
-  selectExercise(exercise: Exercise) {
-    this.selectedExercise = exercise;
+  selectStrengthExercise(exercise: StrengthExercise) {
+    this.selectedStrengthExercise = exercise;
 
-    this.exerciseInfoForm = this.formBuilder.group({
+    this.strengthExerciseForm = this.formBuilder.group({
       sets: [0, [Validators.required, Validators.min(1)]],
       reps: [0, [Validators.required, Validators.min(1)]],
       weight: [0, [Validators.required, Validators.min(1)]]
@@ -71,21 +71,21 @@ export class ExerciseSearchComponent {
   onSubmit() {
     this.submitted = true;
 
-    if(this.exerciseInfoForm.invalid)
+    if(this.strengthExerciseForm.invalid)
       return;
 
     const email = localStorage.getItem('userEmail');
     
-    if(email && this.selectedExercise && this.exerciseInfoForm) {
-      const request: ExerciseInfoRequest = {
-        name: this.selectedExercise.name,
-        link: this.selectedExercise.link,
-        sets: this.exerciseInfoForm.get('sets')!.value,
-        reps: this.exerciseInfoForm.get('reps')!.value,
-        weight: this.exerciseInfoForm.get('weight')!.value
+    if(email && this.selectedStrengthExercise && this.strengthExerciseForm) {
+      const request: StrengthExerciseRequest = {
+        name: this.selectedStrengthExercise.name,
+        link: this.selectedStrengthExercise.link,
+        sets: this.strengthExerciseForm.get('sets')!.value,
+        reps: this.strengthExerciseForm.get('reps')!.value,
+        weight: this.strengthExerciseForm.get('weight')!.value
       }
       
-      this.workoutService.addExerciseInfo(email, this.date, request).subscribe(
+      this.workoutService.addUserStrengthExercise(email, this.date, request).subscribe(
       {
         next: (response) => {
           this.router.navigate(['/user/workout']);
@@ -99,6 +99,6 @@ export class ExerciseSearchComponent {
   }
 
   getSafeUrl() {
-    return this.sanitizer.bypassSecurityTrustResourceUrl(this.selectedExercise!.link);
+    return this.sanitizer.bypassSecurityTrustResourceUrl(this.selectedStrengthExercise!.link);
   }
 }

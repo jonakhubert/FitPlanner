@@ -14,6 +14,6 @@ public interface UserServiceClient {
     User getUser(@PathVariable("email") String email, @RequestHeader("Authorization") String header);
 
     @PostMapping(path = "/users/{email}/details/nutrition/meal-plans")
-    void saveMealPlanList(@PathVariable("email") String email, @RequestBody List<MealPlan> mealPlanList,
+    void saveUserMealPlanList(@PathVariable("email") String email, @RequestBody List<MealPlan> mealPlanList,
         @RequestHeader("Authorization") String header);
 }

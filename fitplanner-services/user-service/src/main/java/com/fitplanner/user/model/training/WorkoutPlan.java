@@ -5,20 +5,20 @@ import java.util.List;
 public class WorkoutPlan {
 
     private String date;
-    private List<ExerciseInfo> exerciseInfoList;
+    private List<UserStrengthExercise> strengthExerciseList;
 
     public WorkoutPlan() {}
 
-    public WorkoutPlan(String date, List<ExerciseInfo> exerciseInfoList) {
+    public WorkoutPlan(String date, List<UserStrengthExercise> strengthExerciseList) {
         this.date = date;
-        this.exerciseInfoList = exerciseInfoList;
+        this.strengthExerciseList = strengthExerciseList;
     }
 
     // getters
     public String getDate() { return date; }
-    public List<ExerciseInfo> getExerciseInfoList() { return exerciseInfoList; }
+    public List<UserStrengthExercise> getStrengthExerciseList() { return strengthExerciseList; }
 
     // setters
     public void setDate(String date) { this.date = date; }
-    public void setExerciseInfoList(List<ExerciseInfo> exerciseInfoList) { this.exerciseInfoList = exerciseInfoList; }
+    public void setStrengthExerciseList(List<UserStrengthExercise> strengthExerciseList) { this.strengthExerciseList = strengthExerciseList; }
 }

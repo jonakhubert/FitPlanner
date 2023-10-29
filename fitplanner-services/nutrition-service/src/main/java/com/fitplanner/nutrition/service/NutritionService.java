@@ -63,7 +63,7 @@ public class NutritionService {
             }
         );
 
-        userServiceClient.saveMealPlanList(email, user.getMealPlanList(), header);
+        userServiceClient.saveUserMealPlanList(email, user.getMealPlanList(), header);
 
         return new ConfirmationResponse("Food item has been added.");
     }
@@ -91,7 +91,7 @@ public class NutritionService {
                 user.getMealPlanList().removeIf(plan -> plan.getDate().equals(date));
         });
 
-        userServiceClient.saveMealPlanList(email, user.getMealPlanList(), header);
+        userServiceClient.saveUserMealPlanList(email, user.getMealPlanList(), header);
 
         return new ConfirmationResponse("Food item has been removed.");
     }

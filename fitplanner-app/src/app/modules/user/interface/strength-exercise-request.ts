@@ -1,5 +1,4 @@
-export interface ExerciseInfo {
-    id: string,
+export interface StrengthExerciseRequest {
     name: string,
     link: string,
     sets: number,

@@ -1,4 +1,4 @@
-export interface Exercise {
+export interface StrengthExercise {
     id: string,
     name: string,
     link: string

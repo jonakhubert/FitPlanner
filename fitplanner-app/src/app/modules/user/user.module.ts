@@ -20,7 +20,7 @@ import { AccountDetailsComponent } from './component/account-details/account-det
 import { NgChartsModule } from 'ng2-charts';
 import { ProductSearchComponent } from './component/product-search/product-search.component';
 import { DateSelectorComponent } from './component/date-selector/date-selector.component';
-import { ExerciseSearchComponent } from './component/exercise-search/exercise-search.component';
+import { StrengthExerciseSearchComponent } from './component/strength-exercise-search/strength-exercise-search.component';
 
 
 @NgModule({
@@ -36,7 +36,7 @@ import { ExerciseSearchComponent } from './component/exercise-search/exercise-se
     AccountDetailsComponent,
     ProductSearchComponent,
     DateSelectorComponent,
-    ExerciseSearchComponent
+    StrengthExerciseSearchComponent
   ],
   imports: [
     CommonModule,
