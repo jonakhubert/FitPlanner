@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { CanActivateFn } from '@angular/router';
 
-import { searchGuard } from './search.guard';
+import { exerciseSearchGuard } from './exercise-search.guard';
 
-describe('searchGuard', () => {
+describe('exerciseSearchGuard', () => {
   const executeGuard: CanActivateFn = (...guardParameters) => 
-      TestBed.runInInjectionContext(() => searchGuard(...guardParameters));
+      TestBed.runInInjectionContext(() => exerciseSearchGuard(...guardParameters));
 
   beforeEach(() => {
     TestBed.configureTestingModule({});

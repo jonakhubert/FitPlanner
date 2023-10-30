@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 
-export const searchGuard: CanActivateFn = (route, state) => {
+export const exerciseSearchGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const dateParam = route.queryParamMap.get('date');
   const typeParam = route.queryParamMap.get('type');
@@ -13,12 +13,7 @@ export const searchGuard: CanActivateFn = (route, state) => {
   if(dateParam && isValidType && dateParam.match(dateFormatRegex))
     return true;
   else {
-    const currentUrl = state.url;
-
-    if(currentUrl.includes('/user/workout'))
-      router.navigate(['user/workout']);
-    else if(currentUrl.includes('/user/diet'))
-      router.navigate(['user/diet']);
+    router.navigate(['user/workout']);
 
     return false;
   }
