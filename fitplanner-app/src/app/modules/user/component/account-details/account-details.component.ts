@@ -54,7 +54,7 @@ export class AccountDetailsComponent {
 
     this.userService.updateUserDetails(this.accountForm.get('email')!.value, request).subscribe({
       next: (response) => {
-        this.toastr.success("User updated successfully.", "Success");
+        this.toastr.info(response.confirmation_message, "Info");
         this.ngOnInit();
       },
       error: (error) => {

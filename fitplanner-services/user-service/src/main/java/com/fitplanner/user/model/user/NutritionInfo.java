@@ -2,6 +2,7 @@ package com.fitplanner.user.model.user;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 public class NutritionInfo {
 
@@ -61,4 +62,26 @@ public class NutritionInfo {
 
     // setters
     public void setFinishDate(String finishDate) { this.finishDate = finishDate; }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == this)
+            return true;
+        if(!(o instanceof NutritionInfo other))
+            return false;
+
+        return  Objects.equals(calories, other.calories) &&
+                Objects.equals(protein, other.protein) &&
+                Objects.equals(fat, other.fat) &&
+                Objects.equals(carbs, other.carbs) &&
+                Objects.equals(weight, other.weight) &&
+                Objects.equals(height, other.height) &&
+                Objects.equals(goal, other.goal) &&
+                Objects.equals(activity_level, other.activity_level);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(calories, protein, fat, carbs, weight, height, goal, activity_level);
+    }
 }

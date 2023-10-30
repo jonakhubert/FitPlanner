@@ -56,19 +56,20 @@ public class UserService {
             .orElseThrow(() -> new UserNotFoundException("User not found."));
 
         var newDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        var newNutritionInfo = createNutritionInfo(request);
         var currentNutritionInfo = user.getNutritionInfo();
 
-        if(!newDate.equals(currentNutritionInfo.getBeginDate())) {
+        if(!currentNutritionInfo.equals(newNutritionInfo)) {
             currentNutritionInfo.setFinishDate(newDate);
             user.getHistoricalNutritionInfoList().add(currentNutritionInfo);
+            user.setNutritionInfo(newNutritionInfo);
 
-            setUserNutrients(user, request);
+            userRepository.save(user);
+
+            return new ConfirmationResponse("User updated successfully.");
         }
 
-        setUserNutrients(user, request);
-        userRepository.save(user);
-
-        return new ConfirmationResponse("User updated successfully.");
+        return new ConfirmationResponse("User data hasn't changed.");
     }
 
     public UserDTO findUserByEmail(String email) {
@@ -92,7 +93,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    private void setUserNutrients(User user, UserDetailsRequest request) {
+    private NutritionInfo createNutritionInfo(UserDetailsRequest request) {
         var baseCalories = request.activity_level() == 1 ? (int)(request.weight() * 31)
             : request.activity_level() == 2 ? (int)(request.weight() * 32)
             : (int)(request.weight() * 33);
@@ -105,9 +106,7 @@ public class UserService {
         var fat = (int) request.weight();
         var carbs = (totalCalories - (protein * 4) - (fat * 9)) / 4;
 
-        var nutritionInfo = new NutritionInfo(totalCalories, protein, fat, carbs,request.height(), request.weight(),
-            request.goal(), request.activity_level());
-
-        user.setNutritionInfo(nutritionInfo);
+        return new NutritionInfo(totalCalories, protein, fat, carbs,request.height(), request.weight(), request.goal(),
+            request.activity_level());
     }
 }
