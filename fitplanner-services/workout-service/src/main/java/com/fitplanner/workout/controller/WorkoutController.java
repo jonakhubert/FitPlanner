@@ -1,8 +1,10 @@
 package com.fitplanner.workout.controller;
 
 import com.fitplanner.workout.model.api.ConfirmationResponse;
-import com.fitplanner.workout.model.api.StrengthExerciseRequest;
+import com.fitplanner.workout.model.api.ExerciseRequest;
 import com.fitplanner.workout.model.training.*;
+import com.fitplanner.workout.model.training.exercise.Exercise;
+import com.fitplanner.workout.model.training.exercise.ExerciseType;
 import com.fitplanner.workout.service.WorkoutService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,25 +77,16 @@ public class WorkoutController {
         return ResponseEntity.ok(workoutService.getWorkoutPlan(email, date, header));
     }
 
-    @GetMapping(path = "/strength-exercises")
-    public ResponseEntity<List<StrengthExercise>> getStrengthExercises(@RequestParam("name") String name) {
-        return ResponseEntity.ok(workoutService.getStrengthExercises(name));
+    @GetMapping(path = "/exercises")
+    public ResponseEntity<List<Exercise>> getExercises(@RequestParam("name") String name,
+        @RequestParam("type") ExerciseType type
+    ) {
+        return ResponseEntity.ok(workoutService.getExercises(name, type));
     }
 
-    @PostMapping(path = "/strength-exercises")
-    public ResponseEntity<Void> addStrengthExercise(@RequestBody @Valid StrengthExerciseRequest request) {
-        workoutService.addStrengthExercise((request));
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    @GetMapping(path = "/cardio-exercises")
-    public ResponseEntity<List<CardioExercise>> getCardioExercises(@RequestParam("name") String name) {
-        return ResponseEntity.ok(workoutService.getCardioExercise(name));
-    }
-
-    @PostMapping(path = "/cardio-exercises")
-    public ResponseEntity<Void> addCardioExercise(@RequestBody String request) {
-        workoutService.addCardioExercise(request);
+    @PostMapping(path = "/exercises")
+    public ResponseEntity<Void> addExercise(@RequestBody @Valid ExerciseRequest request) {
+        workoutService.addExercise((request));
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

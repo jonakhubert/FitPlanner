@@ -2,10 +2,11 @@ package com.fitplanner.workout.service;
 
 import com.fitplanner.workout.client.UserServiceClient;
 import com.fitplanner.workout.model.api.ConfirmationResponse;
-import com.fitplanner.workout.model.api.StrengthExerciseRequest;
+import com.fitplanner.workout.model.api.ExerciseRequest;
 import com.fitplanner.workout.model.training.*;
-import com.fitplanner.workout.repository.CardioExerciseRepository;
-import com.fitplanner.workout.repository.StrengthExerciseRepository;
+import com.fitplanner.workout.model.training.exercise.Exercise;
+import com.fitplanner.workout.model.training.exercise.ExerciseType;
+import com.fitplanner.workout.repository.ExerciseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +16,12 @@ import java.util.List;
 @Service
 public class WorkoutService {
 
-    private final StrengthExerciseRepository strengthExerciseRepository;
-    private final CardioExerciseRepository cardioExerciseRepository;
+    private final ExerciseRepository exerciseRepository;
     private final UserServiceClient userServiceClient;
 
     @Autowired
-    public WorkoutService(StrengthExerciseRepository strengthExerciseRepository, CardioExerciseRepository cardioExerciseRepository,
-        UserServiceClient userServiceClient
-    ) {
-        this.strengthExerciseRepository = strengthExerciseRepository;
-        this.cardioExerciseRepository = cardioExerciseRepository;
+    public WorkoutService(ExerciseRepository exerciseRepository, UserServiceClient userServiceClient) {
+        this.exerciseRepository = exerciseRepository;
         this.userServiceClient = userServiceClient;
     }
 
@@ -127,29 +124,16 @@ public class WorkoutService {
             .orElse(new WorkoutPlan(date));
     }
 
-    public List<StrengthExercise> getStrengthExercises(String name) {
-        if(name.isEmpty())
+    public List<Exercise> getExercises(String name, ExerciseType type) {
+        if(name.isEmpty() || type == null)
             return Collections.emptyList();
 
-        return strengthExerciseRepository.findByNameIgnoreCase(name)
+        return exerciseRepository.findByNameAndExerciseTypeIgnoreCase(name, type)
             .orElse(Collections.emptyList());
     }
 
-    public void addStrengthExercise(StrengthExerciseRequest request) {
-        var exercise = new StrengthExercise(request.name(), request.link());
-        strengthExerciseRepository.save(exercise);
-    }
-
-    public List<CardioExercise> getCardioExercise(String name) {
-        if(name.isEmpty())
-            return Collections.emptyList();
-
-        return cardioExerciseRepository.findByNameIgnoreCase(name)
-            .orElse(Collections.emptyList());
-    }
-
-    public void addCardioExercise(String name) {
-        var exercise = new CardioExercise(name);
-        cardioExerciseRepository.save(exercise);
+    public void addExercise(ExerciseRequest request) {
+        var exercise = new Exercise(request.name(), request.link(), request.type());
+        exerciseRepository.save(exercise);
     }
 }

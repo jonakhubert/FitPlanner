@@ -10,10 +10,11 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./workout.component.scss']
 })
 export class WorkoutComponent {
+
   formattedDate: string = '';
   workoutPlan: WorkoutPlan | undefined;
   selectedUserStrengthExercise: UserStrengthExercise | undefined;
-
+  
   constructor(
     private workoutService: WorkoutService,
     private sanitizer: DomSanitizer

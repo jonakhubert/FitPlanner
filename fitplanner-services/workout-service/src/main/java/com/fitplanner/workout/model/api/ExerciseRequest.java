@@ -1,9 +1,11 @@
 package com.fitplanner.workout.model.api;
 
+import com.fitplanner.workout.model.training.exercise.ExerciseType;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-public record StrengthExerciseRequest(
+public record ExerciseRequest(
         @NotNull @NotEmpty String name,
-        @NotNull @NotEmpty String link
+        String link,
+        @NotNull ExerciseType type
 ) {}

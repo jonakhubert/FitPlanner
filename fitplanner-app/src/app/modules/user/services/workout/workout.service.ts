@@ -2,11 +2,12 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
 import { WorkoutPlan } from '../../interface/workout-plan';
-import { StrengthExerciseRequest } from '../../interface/strength-exercise-request';
 import { ConfirmationResponse } from 'src/app/interface/confirmation-response';
-import { StrengthExercise } from '../../interface/strength-exercise';
+import { ExerciseType } from '../../interface/exercise-type';
+import { Exercise } from '../../interface/exercise';
 import { CardioExerciseRequest } from '../../interface/cardio-exercise-request';
-import { CardioExercise } from '../../interface/cardio-exercise';
+import { StrengthExerciseRequest } from '../../interface/strength-exercise-request';
+
 
 @Injectable({
   providedIn: 'root'
@@ -62,17 +63,8 @@ export class WorkoutService {
     )
   }
 
-  public getStrengthExercises(name: string): Observable<StrengthExercise[]> {
-    return this.http.get<StrengthExercise[]>(`${this.apiUrl}/strength-exercises?name=${name}`)
-    .pipe(
-      catchError((error: HttpErrorResponse) => {
-        throw error;
-      })
-    )
-  }
-
-  public getCardioExercises(name: string): Observable<CardioExercise[]> {
-    return this.http.get<CardioExercise[]>(`${this.apiUrl}/cardio-exercises?name=${name}`)
+  public getExercises(name: string, type: string): Observable<Exercise[]> {
+    return this.http.get<Exercise[]>(`${this.apiUrl}/exercises?name=${name}&type=${type}`)
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw error;

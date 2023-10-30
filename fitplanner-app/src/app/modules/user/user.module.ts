@@ -20,8 +20,7 @@ import { AccountDetailsComponent } from './component/account-details/account-det
 import { NgChartsModule } from 'ng2-charts';
 import { ProductSearchComponent } from './component/product-search/product-search.component';
 import { DateSelectorComponent } from './component/date-selector/date-selector.component';
-import { StrengthExerciseSearchComponent } from './component/strength-exercise-search/strength-exercise-search.component';
-import { CardioExerciseSearchComponent } from './component/cardio-exercise-search/cardio-exercise-search.component';
+import { ExerciseSearchComponent } from './component/exercise-search/exercise-search.component';
 
 
 @NgModule({
@@ -37,8 +36,7 @@ import { CardioExerciseSearchComponent } from './component/cardio-exercise-searc
     AccountDetailsComponent,
     ProductSearchComponent,
     DateSelectorComponent,
-    StrengthExerciseSearchComponent,
-    CardioExerciseSearchComponent
+    ExerciseSearchComponent
   ],
   imports: [
     CommonModule,

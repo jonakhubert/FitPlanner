@@ -11,7 +11,7 @@
             <div class="table-container">
               <table>
                 <tr class="workout-parameters">
-                  <td class="add" [routerLink]="['./strength-exercise/search']" [queryParams]="{ date: formattedDate }">Add Strength Exercise</td>
+                  <td class="add" [routerLink]="['./exercise/search']" [queryParams]="{ date: formattedDate, type: 'STRENGTH' }">Add Strength Exercise</td>
                   <td class="workout-column">
                     <div class="workout-column-wrapper">Sets</div>
                   </td>
@@ -44,7 +44,7 @@
             <div class="table-container">
               <table>
                 <tr class="workout-parameters">
-                  <td class="add" [routerLink]="['./cardio-exercise/search']" [queryParams]="{ date: formattedDate }">Add Cardio Exercise</td>
+                  <td class="add" [routerLink]="['./exercise/search']" [queryParams]="{ date: formattedDate, type: 'CARDIO' }">Add Cardio Exercise</td>
                   <td class="workout-column">
                     <div class="workout-column-wrapper">Minutes</div>
                   </td>

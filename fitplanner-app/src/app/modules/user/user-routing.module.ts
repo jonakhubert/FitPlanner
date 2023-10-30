@@ -11,8 +11,7 @@ import { userGuard } from './guards/user/user.guard';
 import { AccountDetailsComponent } from './component/account-details/account-details.component';
 import { ProductSearchComponent } from './component/product-search/product-search.component';
 import { searchGuard } from './guards/search/search.guard';
-import { StrengthExerciseSearchComponent } from './component/strength-exercise-search/strength-exercise-search.component';
-import { CardioExerciseSearchComponent } from './component/cardio-exercise-search/cardio-exercise-search.component';
+import { ExerciseSearchComponent } from './component/exercise-search/exercise-search.component';
 
 const routes: Routes = [
   {
@@ -23,8 +22,7 @@ const routes: Routes = [
       { path: 'diet', component: DietComponent, canActivate: [userGuard] },
       { path: 'diet/search', component: ProductSearchComponent, canActivate: [userGuard, searchGuard] },
       { path: 'workout', component: WorkoutComponent, canActivate: [userGuard] },
-      { path: 'workout/strength-exercise/search', component: StrengthExerciseSearchComponent, canActivate: [userGuard, searchGuard] },
-      { path: 'workout/cardio-exercise/search', component: CardioExerciseSearchComponent, canActivate: [userGuard, searchGuard] },
+      { path: 'workout/exercise/search', component: ExerciseSearchComponent, canActivate: [userGuard, searchGuard] },
       { path: 'account-settings', component: AccountSettingsComponent, canActivate: [userGuard] },
       { path: 'account-settings/change-password', component: PasswordChangeComponent, canActivate: [userGuard] },
       { path: 'account-settings/delete-account', component: AccountDeleteComponent, canActivate: [userGuard] },
