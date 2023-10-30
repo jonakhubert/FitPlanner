@@ -28,11 +28,27 @@ export class WorkoutComponent {
     this.fetchWorkoutPlan();
   }
 
-  removeExerciseInfo(id: string): void {
+  removeUserStrengthExercise(id: string): void {
     const email = localStorage.getItem('userEmail');
 
     if(email) {
       this.workoutService.removeUserStrengthExercise(email, this.formattedDate, id).subscribe(
+      {
+        next: (response) => {
+          this.ngOnInit();
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      })
+    }
+  }
+
+  removeUserCardioExercise(id: string): void {
+    const email = localStorage.getItem('userEmail');
+
+    if(email) {
+      this.workoutService.removeUserCardioExercise(email, this.formattedDate, id).subscribe(
       {
         next: (response) => {
           this.ngOnInit();

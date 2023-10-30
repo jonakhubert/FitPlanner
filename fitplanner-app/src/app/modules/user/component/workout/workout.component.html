@@ -8,39 +8,60 @@
 
         <div class="workout-container">
           <ng-container *ngIf="workoutPlan">
-            <table>
-              <tr class="workout-parameters">
-                <td class="add" [routerLink]="['./strength-exercise/search']" [queryParams]="{ date: formattedDate }">Add Strength Exercise</td>
-                <td class="workout-column">
-                  <div class="workout-column-wrapper">Sets</div>
-                </td>
-                <td class="workout-column">
-                  <div class="workout-column-wrapper">Reps/Set</div>
-                </td>
-                <td class="workout-column">
-                  <div class="workout-column-wrapper">Weight/Set</div>
-                </td>
-              </tr>
-              <tr class="spacer">
-                <td>&nbsp;</td>
-              </tr>
-              
-
-              <ng-container *ngFor="let strengthExercise of workoutPlan.strengthExerciseList">
-                <tr class="exercise">
-                  <td class="exercise-name">
-                    {{ strengthExercise.name }} 
-                    <span class="exercise-video">
-                      <i class="fa-solid fa-circle-play fa-lg" (click)="openModal(strengthExercise)"data-bs-toggle="modal" data-bs-target="#exerciseVideo"></i>
-                    </span>
+            <div class="table-container">
+              <table>
+                <tr class="workout-parameters">
+                  <td class="add" [routerLink]="['./strength-exercise/search']" [queryParams]="{ date: formattedDate }">Add Strength Exercise</td>
+                  <td class="workout-column">
+                    <div class="workout-column-wrapper">Sets</div>
                   </td>
-                  <td class="workout-column"> <span>{{ strengthExercise.sets }}</span></td>
-                  <td class="workout-column"> <span>{{ strengthExercise.reps }}</span></td>
-                  <td class="workout-column"> <span>{{ strengthExercise.weight }}kg</span></td>
-                  <td class="delete" (click)="removeExerciseInfo(strengthExercise.id)"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
+                  <td class="workout-column">
+                    <div class="workout-column-wrapper">Reps/Set</div>
+                  </td>
+                  <td class="workout-column">
+                    <div class="workout-column-wrapper">Weight/Set</div>
+                  </td>
+                  <td class="delete"></td>
                 </tr>
-              </ng-container>
-            </table> 
+               
+                <ng-container *ngFor="let strengthExercise of workoutPlan.strengthExerciseList">
+                  <tr class="exercise">
+                    <td class="exercise-name">
+                      {{ strengthExercise.name }} 
+                      <span class="exercise-video">
+                        <i class="fa-solid fa-circle-play fa-lg" (click)="openModal(strengthExercise)"data-bs-toggle="modal" data-bs-target="#exerciseVideo"></i>
+                      </span>
+                    </td>
+                    <td class="workout-column"> <span>{{ strengthExercise.sets }}</span></td>
+                    <td class="workout-column"> <span>{{ strengthExercise.reps }}</span></td>
+                    <td class="workout-column"> <span>{{ strengthExercise.weight }}kg</span></td>
+                    <td class="delete" (click)="removeUserStrengthExercise(strengthExercise.id)"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
+                  </tr>
+                </ng-container>
+              </table> 
+            </div>
+            
+            <div class="table-container">
+              <table>
+                <tr class="workout-parameters">
+                  <td class="add" [routerLink]="['./cardio-exercise/search']" [queryParams]="{ date: formattedDate }">Add Cardio Exercise</td>
+                  <td class="workout-column">
+                    <div class="workout-column-wrapper">Minutes</div>
+                  </td>
+                  <td class="delete"></td>
+                </tr>
+
+                <ng-container *ngFor="let cardioExercise of workoutPlan.cardioExerciseList">
+                  <tr class="exercise">
+                    <td class="exercise-name">
+                      {{ cardioExercise.name }} 
+                    </td>
+                    <td class="workout-column"> <span>{{ cardioExercise.minutes }}</span></td>
+                    <td class="delete" (click)="removeUserCardioExercise(cardioExercise.id)"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
+                  </tr>
+                </ng-container>
+              </table>
+            </div>
           </ng-container>  
         </div>
       </div>
