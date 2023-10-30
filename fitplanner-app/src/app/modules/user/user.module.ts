@@ -21,6 +21,7 @@ import { NgChartsModule } from 'ng2-charts';
 import { ProductSearchComponent } from './component/product-search/product-search.component';
 import { DateSelectorComponent } from './component/date-selector/date-selector.component';
 import { StrengthExerciseSearchComponent } from './component/strength-exercise-search/strength-exercise-search.component';
+import { CardioExerciseSearchComponent } from './component/cardio-exercise-search/cardio-exercise-search.component';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { StrengthExerciseSearchComponent } from './component/strength-exercise-s
     AccountDetailsComponent,
     ProductSearchComponent,
     DateSelectorComponent,
-    StrengthExerciseSearchComponent
+    StrengthExerciseSearchComponent,
+    CardioExerciseSearchComponent
   ],
   imports: [
     CommonModule,
