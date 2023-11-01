@@ -79,7 +79,6 @@ export class ProductSearchComponent {
     if(email && this.selectedProduct && this.foodItemForm) {
       const quantity = this.foodItemForm.get('quantity')!.value;
       const parsedQuantity = parseFloat(quantity);
-      const formattedQuantity = parsedQuantity.toFixed(1);
 
       const request: FoodItemRequest = {
         name: this.selectedProduct.name,
