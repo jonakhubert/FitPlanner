@@ -77,14 +77,18 @@ export class ProductSearchComponent {
     const email = localStorage.getItem('userEmail');
     
     if(email && this.selectedProduct && this.foodItemForm) {
+      const quantity = this.foodItemForm.get('quantity')!.value;
+      const parsedQuantity = parseFloat(quantity);
+      const formattedQuantity = parsedQuantity.toFixed(1);
+
       const request: FoodItemRequest = {
         name: this.selectedProduct.name,
-        calories: this.calculateCalories(this.foodItemForm.get('quantity')!.value),
-        protein: this.calculateProtein(this.foodItemForm.get('quantity')!.value),
-        fat: this.calculateFat(this.foodItemForm.get('quantity')!.value),
-        carbs: this.calculateCarbs(this.foodItemForm.get('quantity')!.value),
-        quantity: this.foodItemForm.get('quantity')!.value
-      }
+        calories: this.calculateCalories(parsedQuantity),
+        protein: parseFloat(this.calculateProtein(parsedQuantity).toFixed(1)),
+        fat: parseFloat(this.calculateFat(parsedQuantity).toFixed(1)), 
+        carbs: parseFloat(this.calculateCarbs(parsedQuantity).toFixed(1)),
+        quantity: parsedQuantity,
+    };
       
       this.nutritionService.addFoodItem(email, this.date, this.foodItemForm.get('meal')!.value, request).subscribe(
       {
