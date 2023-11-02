@@ -21,7 +21,6 @@ import { NgChartsModule } from 'ng2-charts';
 import { ProductSearchComponent } from './component/product-search/product-search.component';
 import { DateSelectorComponent } from './component/date-selector/date-selector.component';
 import { ExerciseSearchComponent } from './component/exercise-search/exercise-search.component';
-import { MuscleSearchComponent } from './component/muscle-search/muscle-search.component';
 
 
 @NgModule({
@@ -37,8 +36,7 @@ import { MuscleSearchComponent } from './component/muscle-search/muscle-search.c
     AccountDetailsComponent,
     ProductSearchComponent,
     DateSelectorComponent,
-    ExerciseSearchComponent,
-    MuscleSearchComponent
+    ExerciseSearchComponent
   ],
   imports: [
     CommonModule,

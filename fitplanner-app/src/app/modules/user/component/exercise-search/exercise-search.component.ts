@@ -22,6 +22,7 @@ export class ExerciseSearchComponent {
   showNoResultsMessage: boolean = false;
   date: string = '';
   type: string = '';
+  find: string = '';
   submitted: boolean = false;
   cardioExerciseForm!: FormGroup;
   strengthExerciseForm!: FormGroup;
@@ -39,28 +40,15 @@ export class ExerciseSearchComponent {
     this.route.queryParams.subscribe(params => {
       this.date = params['date'];
       this.type = params['type'];
+      this.find = params['find'];
     })
   }
 
   searchExercises(name: string) {
-    this.workoutService.getExercisesByName(name, this.type).subscribe(
-    {
-      next: (response) => {
-        console.log(response);
-        if (response && response.length > 0) {
-          this.exercises = response;
-          this.showNoResultsMessage = false;
-        } else {
-          this.exercises = [];
-          this.showNoResultsMessage = true;
-        }
-
-        this.selectedExercise = null;
-      },
-      error: (error) => {
-        console.log(error);
-      }
-    })
+    if(this.find === 'muscle')
+      this.searchExercisesByMuscle(name);
+    else
+      this.searchExercisesByName(name);
   }
 
   selectExercise(exercise: Exercise) {
@@ -138,5 +126,47 @@ export class ExerciseSearchComponent {
 
   getSafeUrl() {
     return this.sanitizer.bypassSecurityTrustResourceUrl(this.selectedExercise!.link);
+  }
+
+  private searchExercisesByName(name: string): void {
+    this.workoutService.getExercisesByName(name, this.type).subscribe(
+    {
+      next: (response) => {
+        console.log(response);
+        if (response && response.length > 0) {
+          this.exercises = response;
+          this.showNoResultsMessage = false;
+        } else {
+          this.exercises = [];
+          this.showNoResultsMessage = true;
+        }
+
+        this.selectedExercise = null;
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    })
+  }
+
+  private searchExercisesByMuscle(muscle: string): void {
+    this.workoutService.getExercisesByMuscle(muscle).subscribe(
+    {
+      next: (response) => {
+        console.log(response);
+        if (response && response.length > 0) {
+          this.exercises = response;
+          this.showNoResultsMessage = false;
+        } else {
+          this.exercises = [];
+          this.showNoResultsMessage = true;
+        }
+
+        this.selectedExercise = null;
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    })
   }
 }

@@ -13,7 +13,7 @@
                 <tr class="workout-parameters">
                   <td class="add">
                     <span [routerLink]="['./exercise/search']" [queryParams]="{ date: formattedDate, type: 'STRENGTH' }">Add Strength Exercise | </span>
-                    <span [routerLink]="['./exercise/muscle/search']" [queryParams]="{ date: formattedDate }">Muscle Group</span>
+                    <span [routerLink]="['./exercise/search']" [queryParams]="{ date: formattedDate, type: 'STRENGTH', find: 'muscle' }">Muscle Group</span>
                   </td>
                   <td class="workout-column">
                     <div class="workout-column-wrapper">Sets</div>
