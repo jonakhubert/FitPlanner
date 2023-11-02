@@ -10,11 +10,13 @@ public class Exercise {
     private String id;
     private String name;
     private String link;
+    private String muscle;
     private ExerciseType exerciseType;
 
-    public Exercise(String name, String link, ExerciseType exerciseType) {
+    public Exercise(String name, String link, String muscle, ExerciseType exerciseType) {
         this.name = name;
         this.link = link;
+        this.muscle = muscle;
         this.exerciseType = exerciseType;
     }
 
@@ -22,5 +24,6 @@ public class Exercise {
     public String getId() { return id; }
     public String getName() { return name; }
     public String getLink() { return link; }
+    public String getMuscle() { return muscle; }
     public ExerciseType getExerciseType() { return exerciseType; }
 }

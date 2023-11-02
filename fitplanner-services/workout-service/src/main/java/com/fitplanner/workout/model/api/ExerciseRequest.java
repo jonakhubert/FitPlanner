@@ -7,5 +7,6 @@ import jakarta.validation.constraints.NotNull;
 public record ExerciseRequest(
         @NotNull @NotEmpty String name,
         String link,
+        String muscle,
         @NotNull ExerciseType type
 ) {}

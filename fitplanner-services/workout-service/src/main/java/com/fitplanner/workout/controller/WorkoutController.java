@@ -77,11 +77,16 @@ public class WorkoutController {
         return ResponseEntity.ok(workoutService.getWorkoutPlan(email, date, header));
     }
 
-    @GetMapping(path = "/exercises")
-    public ResponseEntity<List<Exercise>> getExercises(@RequestParam("name") String name,
+    @GetMapping(path = "/exercises/by-name")
+    public ResponseEntity<List<Exercise>> getExercisesByName(@RequestParam("name") String name,
         @RequestParam("type") ExerciseType type
     ) {
-        return ResponseEntity.ok(workoutService.getExercises(name, type));
+        return ResponseEntity.ok(workoutService.getExercisesByName(name, type));
+    }
+
+    @GetMapping(path = "/exercises/by-muscle")
+    public ResponseEntity<List<Exercise>> getExercisesByMuscle(@RequestParam("muscle") String muscle) {
+        return ResponseEntity.ok(workoutService.getExercisesByMuscle(muscle));
     }
 
     @PostMapping(path = "/exercises")

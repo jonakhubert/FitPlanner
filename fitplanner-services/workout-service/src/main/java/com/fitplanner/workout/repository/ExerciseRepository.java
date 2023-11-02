@@ -14,4 +14,7 @@ public interface ExerciseRepository extends MongoRepository<Exercise, String> {
 
     @Query("{'name': {$regex : ?0, $options: 'i'}, 'exerciseType': ?1}")
     Optional<List<Exercise>> findByNameAndExerciseTypeIgnoreCase(String name, ExerciseType exerciseType);
+
+    @Query("{'muscle': {$regex : ?0, $options: 'i'}}")
+    Optional<List<Exercise>> findByMuscleIgnoreCase(String muscle);
 }

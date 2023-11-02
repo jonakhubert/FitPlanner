@@ -124,7 +124,7 @@ public class WorkoutService {
             .orElse(new WorkoutPlan(date));
     }
 
-    public List<Exercise> getExercises(String name, ExerciseType type) {
+    public List<Exercise> getExercisesByName(String name, ExerciseType type) {
         if(name.isEmpty() || type == null)
             return Collections.emptyList();
 
@@ -132,8 +132,16 @@ public class WorkoutService {
             .orElse(Collections.emptyList());
     }
 
+    public List<Exercise> getExercisesByMuscle(String muscle) {
+        if(muscle.isEmpty())
+            return Collections.emptyList();
+
+        return exerciseRepository.findByMuscleIgnoreCase(muscle)
+            .orElse(Collections.emptyList());
+    }
+
     public void addExercise(ExerciseRequest request) {
-        var exercise = new Exercise(request.name(), request.link(), request.type());
+        var exercise = new Exercise(request.name(), request.link(), request.muscle(), request.type());
         exerciseRepository.save(exercise);
     }
 }
