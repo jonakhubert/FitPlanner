@@ -1,0 +1,70 @@
+<div class="container">
+  <h1 class="main-title">Find your exercise</h1>
+  <div class="search-bar">
+    <input type="text" placeholder="Search..." [(ngModel)]="searchQuery">
+    <button type="submit" (click)="searchExercises(searchQuery)">Search</button>
+  </div>
+  <div class="content">
+    <div class="left-fragment">
+      <ul class="list-group mt-3" *ngIf="exercises.length > 0; else noResultsTemplate">
+        <li *ngFor="let exercise of exercises" class="list-group-item" (click)="selectExercise(exercise)">{{ exercise.name }}</li>
+      </ul>
+      <ng-template #noResultsTemplate>
+        <p *ngIf="showNoResultsMessage">No results found.</p>
+      </ng-template>
+    </div>
+    <div class="right-fragment">
+      <ng-container *ngIf="selectedExercise">
+        <h3>{{ selectedExercise.name }}</h3>
+      
+        <form [formGroup]="exerciseForm" (ngSubmit)="onSubmit()">
+          <div class="form-group row mb-4">
+            <label class="col-sm-4 col-form-label">Number of sets:</label>
+            <div class="col-sm-3">
+              <input type="number" min="1" class="form-control" formControlName="sets" [ngClass]="{'is-invalid': submitted && exerciseForm.controls['sets'].errors}">
+            </div>
+          </div>
+        
+          <div class="form-group row mb-4">
+            <label class="col-sm-4 col-form-label">Repetitions per set:</label>
+            <div class="col-sm-3">
+              <input type="number" min="1" class="form-control" formControlName="reps" [ngClass]="{'is-invalid': submitted && exerciseForm.controls['reps'].errors}">
+            </div>
+          </div>
+        
+          <div class="form-group row mb-4">
+            <label class="col-sm-4 col-form-label">Weight per set (kg):</label>
+            <div class="col-sm-3">
+              <input type="number" min="1" class="form-control" formControlName="weight" [ngClass]="{'is-invalid': submitted && exerciseForm.controls['weight'].errors}">
+            </div>
+          </div>
+        
+          <div class="button-group">
+            <button type="submit" class="btn btn-primary">Add to workout</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exerciseVideo">Video</button>
+          </div>
+        </form>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+
+<!-- exercise video presentation -->
+<div class="modal fade" id="exerciseVideo" tabindex="-1" aria-labelledby="exerciseVideo" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content" *ngIf="selectedExercise">
+      <div class="modal-header">
+        <p class="modal-title"> <span style="font-size: 25px; font-weight: 700; margin-bottom: 10px;">{{ selectedExercise.name}}</span><br></p>
+      </div>
+
+      <div class="modal-body">
+        <iframe width="100%" height="600" [src]="getSafeUrl()" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </div>
+
+      <div class="modal-footer">
+        <button id="closeBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

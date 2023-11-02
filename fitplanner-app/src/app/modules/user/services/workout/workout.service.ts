@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
 import { WorkoutPlan } from '../../interface/workout-plan';
 import { ConfirmationResponse } from 'src/app/interface/confirmation-response';
-import { ExerciseType } from '../../interface/exercise-type';
 import { Exercise } from '../../interface/exercise';
 import { CardioExerciseRequest } from '../../interface/cardio-exercise-request';
 import { StrengthExerciseRequest } from '../../interface/strength-exercise-request';
@@ -63,8 +62,17 @@ export class WorkoutService {
     )
   }
 
-  public getExercises(name: string, type: string): Observable<Exercise[]> {
-    return this.http.get<Exercise[]>(`${this.apiUrl}/exercises?name=${name}&type=${type}`)
+  public getExercisesByName(name: string, type: string): Observable<Exercise[]> {
+    return this.http.get<Exercise[]>(`${this.apiUrl}/exercises/by-name?name=${name}&type=${type}`)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        throw error;
+      })
+    )
+  }
+
+  public getExercisesByMuscle(muscle: string): Observable<Exercise[]> {
+    return this.http.get<Exercise[]>(`${this.apiUrl}/exercises/by-muscle?muscle=${muscle}`)
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw error;

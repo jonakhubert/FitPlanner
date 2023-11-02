@@ -43,7 +43,7 @@ export class ExerciseSearchComponent {
   }
 
   searchExercises(name: string) {
-    this.workoutService.getExercises(name, this.type).subscribe(
+    this.workoutService.getExercisesByName(name, this.type).subscribe(
     {
       next: (response) => {
         console.log(response);

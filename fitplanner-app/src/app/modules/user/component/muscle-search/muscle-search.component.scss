@@ -1,0 +1,85 @@
+.container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 80vh;
+	width: 80%;
+flex-direction: column;
+}
+
+.main-title {
+	margin-bottom: 20px;
+}
+
+.search-bar {
+	display: flex;
+	margin-bottom: 20px;
+	width: 60%;
+
+	input {
+		flex: 1;
+		padding: 10px;
+		font-size: 16px;
+		border: 1px solid #ccc;
+		border-radius: 5px 0 0 5px;
+		outline: none;
+	}
+
+	button {
+		padding: 10px 20px;
+		background-color: #4059ca;
+		color: white;
+		border: 1px solid #4059ca;
+		border-radius: 0 5px 5px 0;
+		cursor: pointer;
+		transition: background-color 0.3s;
+	}
+
+	button:hover {
+    background-color: rgb(20, 71, 105);
+	}
+}
+
+.content {
+	display: flex;
+	width: 100%;
+}
+
+.left-fragment,
+.right-fragment {
+	flex: 1;
+	width: 300px;
+	height: 500px;
+	padding: 20px;
+	background-color: #3d3d3d;
+	overflow-y: auto;
+}
+
+.left-fragment {
+	margin-right: 10px;
+
+	p {
+		color: rgb(255, 255, 255);
+		font-weight: bold;
+	}
+}
+
+.list-group-item {
+	cursor: pointer;
+
+	&:hover {
+		background-color: #e0e0e0;
+	}
+}
+
+.form-group {
+	margin-bottom: 10px;
+}
+
+.btn {
+	margin-right: 10px;
+}
+
+.modal-content {
+   color: black;
+}
