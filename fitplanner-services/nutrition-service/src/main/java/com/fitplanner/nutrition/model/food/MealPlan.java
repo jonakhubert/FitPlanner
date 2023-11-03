@@ -2,6 +2,7 @@ package com.fitplanner.nutrition.model.food;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MealPlan {
 
@@ -41,5 +42,25 @@ public class MealPlan {
         mealList.add(new Meal("Lunch"));
         mealList.add(new Meal("Dinner"));
         mealList.add(new Meal("Snacks"));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == this)
+            return true;
+        if(!(o instanceof MealPlan other))
+            return false;
+
+        return  Objects.equals(date, other.date) &&
+                Objects.equals(mealList, other.mealList) &&
+                Objects.equals(dailyCalories, other.dailyCalories) &&
+                Objects.equals(dailyProtein, other.dailyProtein) &&
+                Objects.equals(dailyFat, other.dailyFat) &&
+                Objects.equals(dailyCarbs, other.dailyCarbs);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(date, mealList, dailyCalories, dailyProtein, dailyFat, dailyCarbs);
     }
 }

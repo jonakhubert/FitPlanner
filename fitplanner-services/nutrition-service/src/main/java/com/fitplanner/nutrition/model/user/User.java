@@ -11,6 +11,17 @@ public class User {
     private List<NutritionInfo> historicalNutritionInfoList;
     private List<MealPlan> mealPlanList;
 
+    public User(String email, NutritionInfo nutritionInfo, List<NutritionInfo> historicalNutritionInfoList,
+        List<MealPlan> mealPlanList
+    ) {
+        this.email = email;
+        this.nutritionInfo = nutritionInfo;
+        this.historicalNutritionInfoList = historicalNutritionInfoList;
+        this.mealPlanList = mealPlanList;
+    }
+
+    public User() {}
+
     // getters
     public String getEmail() { return email; }
     public NutritionInfo getNutritionInfo() { return nutritionInfo; }

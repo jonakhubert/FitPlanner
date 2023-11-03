@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AuthenticationController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class AuthenticationControllerTest { // TODO: WebTestClient, WireMock, mongodb exception
+public class AuthenticationControllerTest {
 
     @MockBean
     private JwtAuthenticationFilter jwtAuthenticationFilter;
