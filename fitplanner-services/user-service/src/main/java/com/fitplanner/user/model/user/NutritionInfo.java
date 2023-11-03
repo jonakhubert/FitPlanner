@@ -2,24 +2,25 @@ package com.fitplanner.user.model.user;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 public class NutritionInfo {
 
-    private Integer calories;
-    private Integer protein;
-    private Integer fat;
-    private Integer carbs;
-    private Double height;
-    private Double weight;
-    private Integer goal;
-    private Integer activity_level;
+    private int calories;
+    private int protein;
+    private int fat;
+    private int carbs;
+    private double height;
+    private double weight;
+    private int goal;
+    private int activity_level;
     private String beginDate;
     private String finishDate;
 
     public NutritionInfo() {}
 
-    public NutritionInfo(Integer calories, Integer protein, Integer fat, Integer carbs, Double height, Double weight,
-         Integer goal, Integer activity_level, String beginDate, String finishDate
+    public NutritionInfo(int calories, int protein, int fat, int carbs, double height, double weight, int goal,
+        int activity_level, String beginDate, String finishDate
     ) {
         this.calories = calories;
         this.protein = protein;
@@ -33,8 +34,8 @@ public class NutritionInfo {
         this.finishDate = finishDate;
     }
 
-    public NutritionInfo(Integer calories, Integer protein, Integer fat, Integer carbs, Double height, Double weight,
-         Integer goal, Integer activity_level
+    public NutritionInfo(int calories, int protein, int fat, int carbs, double height, double weight, int goal,
+        int activity_level
     ) {
         this.calories = calories;
         this.protein = protein;
@@ -61,4 +62,26 @@ public class NutritionInfo {
 
     // setters
     public void setFinishDate(String finishDate) { this.finishDate = finishDate; }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == this)
+            return true;
+        if(!(o instanceof NutritionInfo other))
+            return false;
+
+        return  Objects.equals(calories, other.calories) &&
+                Objects.equals(protein, other.protein) &&
+                Objects.equals(fat, other.fat) &&
+                Objects.equals(carbs, other.carbs) &&
+                Objects.equals(weight, other.weight) &&
+                Objects.equals(height, other.height) &&
+                Objects.equals(goal, other.goal) &&
+                Objects.equals(activity_level, other.activity_level);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(calories, protein, fat, carbs, weight, height, goal, activity_level);
+    }
 }

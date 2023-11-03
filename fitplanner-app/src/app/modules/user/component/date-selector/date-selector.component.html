@@ -1,0 +1,20 @@
+<span class="date">
+  <a class="prev" (click)="goToDate('previous')">
+    <i class="fa-solid fa-caret-left fa-2xl"></i>
+  </a>
+
+  <time class="fixed-size-time">{{ formattedDate }}</time>
+
+  <a class="next" (click)="goToDate('next')">
+    <i class="fa-solid fa-caret-right fa-2xl"></i>
+  </a>
+
+  <a class="calendar" (click)="picker.open()">
+    <i class="fa-solid fa-calendar-days fa-lg"></i>
+  </a>
+
+  <mat-form-field style="width:1px; visibility:hidden;">
+    <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" (dateChange)="onDateSelected($event)">
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+</span>

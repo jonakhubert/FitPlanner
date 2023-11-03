@@ -1,11 +1,8 @@
 import { Component } from '@angular/core';
 import { NutritionService } from '../../services/nutrition/nutrition.service';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import { DailyMealPlan } from '../../interface/daily-meal-plan';
-import { FoodItemCreationRequest } from '../../interface/food-item-creation-request';
+import { MealPlan } from '../../interface/meal-plan';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FoodItemRemovalRequest } from '../../interface/food-item-removal-request';
 import { ChartOptions } from 'chart.js';
 
 @Component({
@@ -14,10 +11,9 @@ import { ChartOptions } from 'chart.js';
   styleUrls: ['./diet.component.scss']
 })
 export class DietComponent {
-  selectedDate: Date = new Date();
   formattedDate: string = '';
   foodItemForm!: FormGroup;
-  dailyMealPlan: DailyMealPlan | undefined;
+  mealPlan: MealPlan | undefined;
   selectedMeal!: string | null;
   totalCalories: number = 0;
   totalProtein: number = 0;
@@ -63,66 +59,40 @@ export class DietComponent {
 
   ngOnInit(): void {
     this.submitted = false;
-    const storedDate = localStorage.getItem('selectedDate');
-    this.selectedDate = storedDate ? new Date(storedDate) : new Date();
-    this.displayDate();
-    this.fetchDailyMealPlan();
+    this.fetchMealPlan();
   }
 
-  onDateSelected(event: MatDatepickerInputEvent<Date>): void {
-    this.selectedDate = event.value ?? new Date();
-    this.saveSelectedDate();
-    this.displayDate();
-    this.fetchDailyMealPlan();
-  }
-
-  goToDate(direction: 'previous' | 'next'): void {
-    const days = direction === 'next' ? 1 : -1;
-    this.selectedDate.setDate(this.selectedDate.getDate() + days);
-    this.saveSelectedDate();
-    this.displayDate();
-    this.fetchDailyMealPlan();
+  onDateSelected(date: string): void {
+    this.formattedDate = date;
+    this.fetchMealPlan();
   }
 
   removeFoodItem(foodId: string, mealName: string): void {
     const email = localStorage.getItem("userEmail");
 
     if(email) {
-      const request: FoodItemRemovalRequest = {
-        email: email,
-        date: this.formatDate(),
-        mealName: mealName,
-        foodId: foodId
-      };
-      
-      this.nutritionService.removeFoodItem(request).subscribe(
+      this.nutritionService.removeFoodItem(email, this.formattedDate, mealName, foodId).subscribe(
       {
         next: (response) => {
           this.ngOnInit();
         },
         error: (error) => {
-          console.log(error)
+          console.log(error);
         }
       });
     }
   }
 
-  addFoodItem() { 
+  addFoodItem(): void { 
     this.submitted = true;
     
     if(this.foodItemForm.invalid)
       return;
 
     const email = localStorage.getItem('userEmail');
-    if(email && this.selectedMeal && this.dailyMealPlan) {
-      const request: FoodItemCreationRequest = {
-        email: email,
-        date: this.formatDate(),
-        mealName: this.selectedMeal,
-        foodItem: this.foodItemForm.value
-      }
-      
-      this.nutritionService.addFoodItem(request).subscribe(
+    
+    if(email && this.selectedMeal && this.mealPlan) {
+      this.nutritionService.addFoodItem(email, this.formattedDate, this.selectedMeal, this.foodItemForm.value).subscribe(
       {
         next: (response) => {
           const closeButton = document.getElementById("closeBtn");
@@ -150,21 +120,21 @@ export class DietComponent {
     })
   }
 
-  private fetchDailyMealPlan(): void {
+  private fetchMealPlan(): void {
     const email = localStorage.getItem("userEmail");
   
-    if(email) {
-      this.nutritionService.getDailyMealPlan(email, this.formatDate()).subscribe(
+    if(email && this.formattedDate) {
+      this.nutritionService.getMealPlan(email, this.formattedDate).subscribe(
       {
         next: (response) => {
           console.log(response);
-          this.dailyMealPlan = response;
+          this.mealPlan = response;
           this.calculateMealTotals();
           this.calculateTotals();
           this.calculateRemaining();
         },
         error: (error) => {
-          console.log(error)
+          console.log(error);
           if(error.status === 503)
             this.toastr.error("The Nutrition Service cannot be reached. Try again later.", "Error");
         }
@@ -172,38 +142,15 @@ export class DietComponent {
     }
   }
 
-  private displayDate(): void {
-    const options: Intl.DateTimeFormatOptions = { 
-      weekday: 'long', 
-      month: 'long', 
-      day: 'numeric', 
-      year: 'numeric' 
-    };
-
-    this.formattedDate = this.selectedDate.toLocaleDateString('en-US', options);
-  }
-
-  formatDate(): string {
-    const year = this.selectedDate.getFullYear();
-    const month = ('0' + (this.selectedDate.getMonth() + 1)).slice(-2);
-    const day = ('0' + this.selectedDate.getDate()).slice(-2);
-  
-    return `${year}-${month}-${day}`;
-  }
-
-  private saveSelectedDate(): void {
-    localStorage.setItem('selectedDate', this.selectedDate.toISOString());
-  }
-
   private calculateMealTotals(): void {
-    if(this.dailyMealPlan) {
-      this.dailyMealPlan.meals.forEach(meal => {
+    if(this.mealPlan) {
+      this.mealPlan.mealList.forEach(meal => {
         let totalCalories = 0;
         let totalProtein = 0;
         let totalFat = 0;
         let totalCarbs = 0;
 
-        meal.foodItems.forEach(foodItem => {
+        meal.foodItemList.forEach(foodItem => {
           totalCalories += foodItem.calories;
           totalProtein += foodItem.protein;
           totalFat += foodItem.fat;
@@ -231,8 +178,8 @@ export class DietComponent {
     this.totalFat = 0;
     this.totalCarbs = 0;
   
-    if(this.dailyMealPlan) {
-      this.dailyMealPlan.meals.forEach(meal => {
+    if(this.mealPlan) {
+      this.mealPlan.mealList.forEach(meal => {
         this.totalCalories += meal.mealTotals.calories;
         this.totalProtein += meal.mealTotals.protein;
         this.totalFat += meal.mealTotals.fat;
@@ -249,11 +196,11 @@ export class DietComponent {
   }
 
   private calculateRemaining(): void {
-    if(this.dailyMealPlan) {
-      this.remainingCalories = this.dailyMealPlan.dailyCalories - this.totalCalories;
-      this.remainingProtein = this.dailyMealPlan.dailyProtein - this.totalProtein;
-      this.remainingFat = this.dailyMealPlan.dailyFat - this.totalFat;
-      this.remainingCarbs = this.dailyMealPlan.dailyCarbs - this.totalCarbs;
+    if(this.mealPlan) {
+      this.remainingCalories = this.mealPlan.dailyCalories - this.totalCalories;
+      this.remainingProtein = this.mealPlan.dailyProtein - this.totalProtein;
+      this.remainingFat = this.mealPlan.dailyFat - this.totalFat;
+      this.remainingCarbs = this.mealPlan.dailyCarbs - this.totalCarbs;
     }
   }
 

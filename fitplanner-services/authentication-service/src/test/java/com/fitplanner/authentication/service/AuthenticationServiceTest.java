@@ -235,11 +235,8 @@ public class AuthenticationServiceTest {
     public void verify_ExpiredToken_TokenExpiredException() {
         // given
         var token = "token";
-        var verificationToken = new VerificationToken(
-            token,
-            LocalDateTime.now().minusMinutes(10),
-            LocalDateTime.now().minusMinutes(5)
-        );
+        var verificationToken = new VerificationToken(token, LocalDateTime.now().minusMinutes(10),
+            LocalDateTime.now().minusMinutes(5));
         var user = new User();
         user.setVerificationToken(verificationToken);
 
@@ -303,15 +300,15 @@ public class AuthenticationServiceTest {
         // given
         var email = "any@gmail.com";
         var token = "token";
-        var request = new ResetPasswordRequest(email, token, "password");
+        var request = new ResetPasswordRequest(token, "password");
         var user = new User("", "", email, "", null);
         var resetPasswordToken = new ResetPasswordToken(token, null, LocalDateTime.now().plusMinutes(5));
         user.setResetPasswordToken(resetPasswordToken);
 
-        when(userService.getUserByEmail(request.email())).thenReturn(user);
+        when(userService.getUserByEmail(email)).thenReturn(user);
 
         // when
-        var result = underTest.resetPassword(request);
+        var result = underTest.resetPassword(email, request);
 
         // then
         assertNotNull(result);
@@ -325,12 +322,12 @@ public class AuthenticationServiceTest {
         // given
         var email = "any@gmail.com";
         var token = "token";
-        var request = new ResetPasswordRequest(email, token, "password");
+        var request = new ResetPasswordRequest(token, "password");
 
-        when(userService.getUserByEmail(request.email())).thenThrow(new UserNotFoundException("User not found."));
+        when(userService.getUserByEmail(email)).thenThrow(new UserNotFoundException("User not found."));
 
         // then
-        assertThrows(UserNotFoundException.class, () -> underTest.resetPassword(request));
+        assertThrows(UserNotFoundException.class, () -> underTest.resetPassword(email, request));
         verify(userService, times(1)).getUserByEmail(eq(email));
         verify(userService, never()).resetPassword(any(User.class), eq(request.newPassword()));
     }
@@ -340,7 +337,7 @@ public class AuthenticationServiceTest {
         // given
         var email = "any@gmail.com";
         var token = "token";
-        var request = new ResetPasswordRequest(email, token, "password");
+        var request = new ResetPasswordRequest(token, "password");
         var user = new User("", "", email, "", null);
         var resetPasswordToken = new ResetPasswordToken(token, null, LocalDateTime.now().minusMinutes(5));
         user.setResetPasswordToken(resetPasswordToken);
@@ -348,7 +345,7 @@ public class AuthenticationServiceTest {
         when(userService.getUserByEmail(email)).thenReturn(user);
 
         // then
-        assertThrows(TokenExpiredException.class, () -> underTest.resetPassword(request));
+        assertThrows(TokenExpiredException.class, () -> underTest.resetPassword(email, request));
         verify(userService, times(1)).getUserByEmail(eq(email));
         verify(userService, never()).resetPassword(eq(user), eq(request.newPassword()));
     }
@@ -358,10 +355,10 @@ public class AuthenticationServiceTest {
         // given
         var email = "invalid";
         var token = "token";
-        var request = new ResetPasswordRequest(email, token, "password");
+        var request = new ResetPasswordRequest(token, "password");
 
         // then
-        assertThrows(InvalidEmailFormatException.class, () -> underTest.resetPassword(request));
+        assertThrows(InvalidEmailFormatException.class, () -> underTest.resetPassword(email, request));
         verify(userService, never()).getUserByEmail(eq(email));
         verify(userService, never()).resetPassword(any(User.class), eq(request.newPassword()));
     }

@@ -5,16 +5,16 @@ import java.util.List;
 
 public class Meal {
     private String name;
-    private List<FoodItem> foodItems;
+    private List<FoodItem> foodItemList;
 
     public Meal(String name) {
         this.name = name;
-        this.foodItems = new ArrayList<>();
+        this.foodItemList = new ArrayList<>();
     }
 
     public Meal() {}
 
     // getters
     public String getName() { return name; }
-    public List<FoodItem> getFoodItems() { return foodItems; }
+    public List<FoodItem> getFoodItemList() { return foodItemList; }
 }

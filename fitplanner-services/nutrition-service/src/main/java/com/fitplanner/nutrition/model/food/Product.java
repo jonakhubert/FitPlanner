@@ -9,12 +9,12 @@ public class Product {
     @Id
     private String id;
     private String name;
-    private Double calories;
-    private Double protein;
-    private Double fat;
-    private Double carbs;
+    private double calories;
+    private double protein;
+    private double fat;
+    private double carbs;
 
-    public Product(String name, Double calories, Double protein, Double fat, Double carbs) {
+    public Product(String name, double calories, double protein, double fat, double carbs) {
         this.name = name;
         this.calories = calories;
         this.protein = protein;
@@ -25,8 +25,8 @@ public class Product {
     // getters
     public String getId() { return id; }
     public String getName() { return name; }
-    public Double getCalories() { return calories; }
-    public Double getProtein() { return protein; }
-    public Double getFat() { return fat; }
-    public Double getCarbs() { return carbs; }
+    public double getCalories() { return calories; }
+    public double getProtein() { return protein; }
+    public double getFat() { return fat; }
+    public double getCarbs() { return carbs; }
 }

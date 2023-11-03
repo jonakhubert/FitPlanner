@@ -1,0 +1,30 @@
+.prev {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.next {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.date {
+  font-size: 28px;
+}
+
+.calendar {
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+.prev,
+.next {
+  user-select: none;
+}
+
+.fixed-size-time {
+  width: 450px;
+  height: 50px;
+  display: inline-block;
+  text-align: center;
+}

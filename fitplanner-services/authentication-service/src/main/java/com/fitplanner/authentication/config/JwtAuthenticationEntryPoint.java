@@ -15,10 +15,9 @@ import java.time.LocalDateTime;
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
+    // if auth request is invalid (/api/auth/**) custom response is returned
     @Override
-    public void commence( // if auth request is invalid (/api/auth/**) custom response is returned
-        HttpServletRequest request,
-        HttpServletResponse response,
+    public void commence(HttpServletRequest request, HttpServletResponse response,
         AuthenticationException authException
     ) throws IOException {
         var apiError = new ApiError(

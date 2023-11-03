@@ -1,8 +1,8 @@
 import { Meal } from "./meal";
 
-export interface DailyMealPlan {
+export interface MealPlan {
     date: string,
-    meals: Meal[],
+    mealList: Meal[],
     dailyCalories: number,
     dailyProtein: number,
     dailyFat: number,

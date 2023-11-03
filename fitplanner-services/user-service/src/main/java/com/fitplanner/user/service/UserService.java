@@ -1,13 +1,13 @@
 package com.fitplanner.user.service;
 
 import com.fitplanner.user.exception.model.UserNotFoundException;
-import com.fitplanner.user.model.api.ChangePasswordRequest;
 import com.fitplanner.user.model.api.ConfirmationResponse;
 import com.fitplanner.user.model.api.UserDetailsRequest;
+import com.fitplanner.user.model.food.MealPlan;
+import com.fitplanner.user.model.training.WorkoutPlan;
 import com.fitplanner.user.model.user.NutritionInfo;
 import com.fitplanner.user.model.user.User;
 import com.fitplanner.user.model.user.UserDTO;
-import com.fitplanner.user.model.user.UserNutrition;
 import com.fitplanner.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -30,11 +31,11 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ConfirmationResponse changePassword(ChangePasswordRequest request) {
-        var user = userRepository.findByEmail(request.email())
+    public ConfirmationResponse changePassword(String email, String newPassword) {
+        var user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UserNotFoundException("User not found."));
 
-        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setPassword(passwordEncoder.encode(newPassword));
         user.setAccessToken(null);
         userRepository.save(user);
 
@@ -50,24 +51,25 @@ public class UserService {
         return new ConfirmationResponse("Account has been deleted.");
     }
 
-    public ConfirmationResponse updateUserDetails(UserDetailsRequest request) {
-        var user = userRepository.findByEmail(request.email())
+    public ConfirmationResponse updateUserDetails(String email, UserDetailsRequest request) {
+        var user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UserNotFoundException("User not found."));
 
         var newDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        var newNutritionInfo = createNutritionInfo(request);
         var currentNutritionInfo = user.getNutritionInfo();
 
-        if(!newDate.equals(currentNutritionInfo.getBeginDate())) {
+        if(!currentNutritionInfo.equals(newNutritionInfo)) {
             currentNutritionInfo.setFinishDate(newDate);
-            user.getHistoricalNutritionInfos().add(currentNutritionInfo);
+            user.getHistoricalNutritionInfoList().add(currentNutritionInfo);
+            user.setNutritionInfo(newNutritionInfo);
 
-            setUserNutrients(user, request);
+            userRepository.save(user);
+
+            return new ConfirmationResponse("User updated successfully.");
         }
 
-        setUserNutrients(user, request);
-        userRepository.save(user);
-
-        return new ConfirmationResponse("User updated successfully.");
+        return new ConfirmationResponse("User data hasn't changed.");
     }
 
     public UserDTO findUserByEmail(String email) {
@@ -75,15 +77,23 @@ public class UserService {
             .orElseThrow(() -> new UserNotFoundException("User not found."));
     }
 
-    public void saveUserNutrition(UserNutrition userNutrition) {
-        var user = userRepository.findByEmail(userNutrition.email())
+    public void saveUserMealPlanList(String email, List<MealPlan> mealPlanList) {
+        var user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UserNotFoundException("User not found."));
 
-        user.setDailyMealPlans(userNutrition.dailyMealPlans());
+        user.setMealPlanList(mealPlanList);
         userRepository.save(user);
     }
 
-    private void setUserNutrients(User user, UserDetailsRequest request) {
+    public void saveUserWorkoutPlanList(String email, List<WorkoutPlan> workoutPlanList) {
+        var user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UserNotFoundException("User not found."));
+
+        user.setWorkoutPlanList(workoutPlanList);
+        userRepository.save(user);
+    }
+
+    private NutritionInfo createNutritionInfo(UserDetailsRequest request) {
         var baseCalories = request.activity_level() == 1 ? (int)(request.weight() * 31)
             : request.activity_level() == 2 ? (int)(request.weight() * 32)
             : (int)(request.weight() * 33);
@@ -92,13 +102,11 @@ public class UserService {
             : request.goal() == 3 ? baseCalories + 300
             : baseCalories;
 
-        var protein = request.weight().intValue() * 2;
-        var fat = request.weight().intValue();
+        var protein = (int) request.weight() * 2;
+        var fat = (int) request.weight();
         var carbs = (totalCalories - (protein * 4) - (fat * 9)) / 4;
 
-        var nutritionInfo = new NutritionInfo(totalCalories, protein, fat, carbs,request.height(),
-            request.weight(), request.goal(), request.activity_level());
-
-        user.setNutritionInfo(nutritionInfo);
+        return new NutritionInfo(totalCalories, protein, fat, carbs,request.height(), request.weight(), request.goal(),
+            request.activity_level());
     }
 }

@@ -24,11 +24,8 @@ public class SecurityConfig {
     private final AuthenticationEntryPoint authenticationEntryPoint;
 
     @Autowired
-    public SecurityConfig(
-        JwtAuthenticationFilter jwtAuthenticationFilter,
-        AuthenticationProvider authenticationProvider,
-        LogoutHandler logoutHandler,
-        AuthenticationEntryPoint authenticationEntryPoint
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, AuthenticationProvider authenticationProvider,
+        LogoutHandler logoutHandler, AuthenticationEntryPoint authenticationEntryPoint
     ) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.authenticationProvider = authenticationProvider;
@@ -42,7 +39,7 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorizeHttpRequests ->
                 authorizeHttpRequests
-                    .requestMatchers("/api/auth/**")
+                    .requestMatchers("/api/authentication/**")
                     .permitAll()
                     .anyRequest()
                     .authenticated()
@@ -57,7 +54,7 @@ public class SecurityConfig {
                 logout
                     .deleteCookies("remove")
                     .invalidateHttpSession(false)
-                    .logoutUrl("/api/auth/logout")
+                    .logoutUrl("/api/authentication/logout")
                     .addLogoutHandler(logoutHandler)
                     .logoutSuccessHandler((request, response, authentication) ->
                         SecurityContextHolder.clearContext()

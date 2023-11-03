@@ -20,10 +20,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public AuthenticationService(
-        UserService userService,
-        EmailService emailService,
-        JwtService jwtService,
+    public AuthenticationService(UserService userService, EmailService emailService, JwtService jwtService,
         AuthenticationManager authenticationManager
     ) {
         this.userService = userService;
@@ -42,7 +39,8 @@ public class AuthenticationService {
         var user = userService.createUser(request);
         var verificationToken = userService.createVerificationToken(user);
 
-        var link = "http://localhost:8222/api/auth/verify?verification_token=" + verificationToken.getToken();
+        var link = "http://localhost:8222/api/authentication/verification-tokens/" + verificationToken.getToken();
+
         emailService.send(user.getUsername(), "Confirm your account", EmailBuilder.buildEmailBody(link, "Confirm"));
 
         return new ConfirmationResponse("Verification email has been sent.");
@@ -56,19 +54,13 @@ public class AuthenticationService {
 
         if(!user.isEnabled()) {
             var verificationToken = userService.createVerificationToken(user);
-
-            var link = "http://localhost:8222/api/auth/verify?verification_token=" + verificationToken.getToken();
+            var link = "http://localhost:8222/api/authentication/verification-tokens/" + verificationToken.getToken();
             emailService.send(user.getUsername(), "Confirm your account", EmailBuilder.buildEmailBody(link, "Confirm"));
 
             throw new UserNotVerifiedException("User is not verified. Verification email has been resent.");
         }
 
-        authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                request.email(),
-                request.password()
-            )
-        );
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
 
         var jwt = jwtService.generateToken(user);
         var accessToken = userService.createAccessToken(user, jwt);
@@ -106,17 +98,16 @@ public class AuthenticationService {
 
         var resetPasswordToken = userService.createResetPasswordToken(user);
         var link = "http://localhost:4200/reset-password?email=" + email + "&token=" + resetPasswordToken.getToken();
-
         emailService.send(user.getUsername(), "Reset password", EmailBuilder.buildEmailBody(link, "Reset password"));
 
         return new ConfirmationResponse("Reset password has been sent.");
     }
 
-    public ConfirmationResponse resetPassword(ResetPasswordRequest request) {
-        if(!isEmailValid(request.email()))
-            throw new InvalidEmailFormatException(request.email() + " format is invalid.");
+    public ConfirmationResponse resetPassword(String email, ResetPasswordRequest request) {
+        if(!isEmailValid(email))
+            throw new InvalidEmailFormatException(email + " format is invalid.");
 
-        var user = userService.getUserByEmail(request.email());
+        var user = userService.getUserByEmail(email);
 
         if(user.getResetPasswordToken().getExpiredAt().isBefore(LocalDateTime.now()))
             throw new TokenExpiredException("Token is expired.");

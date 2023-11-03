@@ -1,7 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, tap } from 'rxjs';
-import { ChangePasswordRequest } from 'src/app/modules/user/interface/change-password-request';
 import { ConfirmationResponse } from 'src/app/interface/confirmation-response';
 import { User } from '../../interface/user';
 import { UserDetailsRequest } from '../../interface/user-details-request';
@@ -11,12 +10,12 @@ import { UserDetailsRequest } from '../../interface/user-details-request';
 })
 export class UserService {
 
-  private readonly apiUrl = 'http://localhost:8222/api/users';
+  private readonly apiUrl = 'http://localhost:8222/api/user-management';
 
   constructor(private http: HttpClient) {}
 
   public getUser(email: string): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/${email}`)
+    return this.http.get<User>(`${this.apiUrl}/users/${email}`)
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw error;
@@ -24,8 +23,8 @@ export class UserService {
     )
   }
 
-  public changePassword(request: ChangePasswordRequest): Observable<ConfirmationResponse> {
-    return this.http.post<ConfirmationResponse>(`${this.apiUrl}/change-password`, request)
+  public changePassword(email: string, request: string): Observable<ConfirmationResponse> {
+    return this.http.post<ConfirmationResponse>(`${this.apiUrl}/users/${email}/password-change`, request)
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw error;
@@ -37,7 +36,7 @@ export class UserService {
   }
 
   public deleteAccount(email: string): Observable<ConfirmationResponse> {
-    return this.http.post<ConfirmationResponse>(`${this.apiUrl}/delete-account?email=${email}`, {})
+    return this.http.post<ConfirmationResponse>(`${this.apiUrl}/users/${email}/account-deletion`, {})
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw error;
@@ -48,8 +47,8 @@ export class UserService {
     )
   }
 
-  public updateUserDetails(request: UserDetailsRequest): Observable<ConfirmationResponse> {
-    return this.http.post<ConfirmationResponse>(`${this.apiUrl}/details`, request)
+  public updateUserDetails(email: string, request: UserDetailsRequest): Observable<ConfirmationResponse> {
+    return this.http.post<ConfirmationResponse>(`${this.apiUrl}/users/${email}/details`, request)
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw error;

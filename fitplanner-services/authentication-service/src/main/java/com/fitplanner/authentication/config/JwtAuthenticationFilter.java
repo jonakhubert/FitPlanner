@@ -32,19 +32,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserService userService;
 
     @Autowired
-    public JwtAuthenticationFilter(
-        JwtService jwtService,
-        UserDetailsService userDetailsService,
-        UserService userService
-    ) {
+    public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService, UserService userService) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
         this.userService = userService;
     }
 
     @Override
-    protected void doFilterInternal(
-        @NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
         @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
         try {
@@ -86,11 +81,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    private void handleJwtException(
-        Exception ex,
-        HttpServletRequest request,
-        HttpServletResponse response
-    ) throws IOException {
+    private void handleJwtException(Exception ex, HttpServletRequest request, HttpServletResponse response) throws IOException {
         var apiError = new ApiError(
             request.getRequestURI(),
             ex.getMessage(),

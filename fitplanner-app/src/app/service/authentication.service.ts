@@ -12,12 +12,12 @@ import { ResetPasswordRequest } from '../interface/reset-password-request';
 })
 export class AuthenticationService {
 
-  private readonly apiUrl = 'http://localhost:8222/api/auth';
+  private readonly apiUrl = 'http://localhost:8222/api/authentication';
 
   constructor(private http: HttpClient) {}
 
   public register(request: RegisterRequest): Observable<ConfirmationResponse> {
-    return this.http.post<ConfirmationResponse>(`${this.apiUrl}/register`, request)
+    return this.http.post<ConfirmationResponse>(`${this.apiUrl}/registration`, request)
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw error;
@@ -51,7 +51,7 @@ export class AuthenticationService {
   }
 
   public forgotPassword(email: string): Observable<ConfirmationResponse> {
-    return this.http.post<ConfirmationResponse>(`${this.apiUrl}/forgot-password?email=${email}`, {})
+    return this.http.post<ConfirmationResponse>(`${this.apiUrl}/users/${email}/password-reminder`, {})
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw error;
@@ -59,8 +59,8 @@ export class AuthenticationService {
     );
   }
 
-  public resetPassword(request: ResetPasswordRequest): Observable<ConfirmationResponse> {
-    return this.http.post<ConfirmationResponse>(`${this.apiUrl}/reset-password`, request)
+  public resetPassword(email: string, request: ResetPasswordRequest): Observable<ConfirmationResponse> {
+    return this.http.post<ConfirmationResponse>(`${this.apiUrl}/users/${email}/password-reset`, request)
     .pipe(
       catchError((error: HttpErrorResponse) => {
         throw error;
@@ -69,7 +69,7 @@ export class AuthenticationService {
   }
 
   public validateResetPasswordToken(token: string): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/validate-reset-password-token`, {}, {
+    return this.http.post<void>(`${this.apiUrl}/reset-password-tokens`, {}, {
       headers: {
         'X-Reset-Password-Token': token,
       },
@@ -77,7 +77,7 @@ export class AuthenticationService {
   }
 
   public authorize(): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/validate-access-token`, {});
+    return this.http.post<any>(`${this.apiUrl}/access-tokens`, {});
   }
 
   public isLoggedIn() {

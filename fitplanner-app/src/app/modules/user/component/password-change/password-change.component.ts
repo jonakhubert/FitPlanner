@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../services/user/user.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { ChangePasswordRequest } from 'src/app/modules/user/interface/change-password-request';
 
 @Component({
   selector: 'app-password-change',
@@ -38,21 +37,20 @@ export class PasswordChangeComponent {
     if(this.passwordChangeForm.invalid)
       return;
 
-    const resetPasswordRequest: ChangePasswordRequest = {
-      email: localStorage.getItem("userEmail")!,
-      password: this.passwordChangeForm.controls['newPassword'].value
-    };
+    const email = localStorage.getItem('userEmail');
 
-    this.userService.changePassword(resetPasswordRequest).subscribe(
-    {
-      next: (response) => {
-        this.router.navigate(['login']);
-        this.toastr.success(response.confirmation_message, "Info");
-      }, 
-      error: () => {
-        this.toastr.error("Something went wrong. Try again later.", "Error");
-      }
-    })
+    if(email) {
+      this.userService.changePassword(email, this.passwordChangeForm.controls['newPassword'].value).subscribe(
+      {
+        next: (response) => {
+          this.router.navigate(['login']);
+          this.toastr.success(response.confirmation_message, "Info");
+        }, 
+        error: () => {
+          this.toastr.error("Something went wrong. Try again later.", "Error");
+        }
+      })
+    }
   }
 
   private confirmPasswordValidator(controlName: string, matchingControlName: string) {

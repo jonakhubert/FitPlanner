@@ -16,11 +16,8 @@ import reactor.core.publisher.Mono;
 @Component
 public class GatewayExceptionHandler extends AbstractErrorWebExceptionHandler {
 
-    public GatewayExceptionHandler(
-        ErrorAttributes errorAttributes,
-        WebProperties.Resources resources,
-        ApplicationContext applicationContext,
-        ServerCodecConfigurer configurer
+    public GatewayExceptionHandler(ErrorAttributes errorAttributes, WebProperties.Resources resources,
+                                   ApplicationContext applicationContext, ServerCodecConfigurer configurer
     ) {
         super(errorAttributes, resources, applicationContext);
         this.setMessageReaders(configurer.getReaders());

@@ -47,12 +47,11 @@ export class ResetPasswordComponent {
       return;
 
     const resetPasswordRequest: ResetPasswordRequest = {
-      email: this.email,
       resetPasswordToken: this.resetPasswordToken,
       newPassword: this.resetPasswordForm.controls['newPassword'].value
     };
 
-    this.authenticationService.resetPassword(resetPasswordRequest).subscribe(
+    this.authenticationService.resetPassword(this.email, resetPasswordRequest).subscribe(
     {
       next: (response) => {
         this.router.navigate(['login']);

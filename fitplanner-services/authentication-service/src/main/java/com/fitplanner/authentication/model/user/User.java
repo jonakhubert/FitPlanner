@@ -1,9 +1,10 @@
 package com.fitplanner.authentication.model.user;
 
-import com.fitplanner.authentication.model.food.DailyMealPlan;
+import com.fitplanner.authentication.model.food.MealPlan;
 import com.fitplanner.authentication.model.tokens.ResetPasswordToken;
 import com.fitplanner.authentication.model.tokens.VerificationToken;
 import com.fitplanner.authentication.model.tokens.accesstoken.AccessToken;
+import com.fitplanner.authentication.model.training.WorkoutPlan;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import org.springframework.data.annotation.Id;
@@ -37,8 +38,11 @@ public class User implements UserDetails {
 
     // nutrition
     private NutritionInfo nutritionInfo;
-    private List<NutritionInfo> historicalNutritionInfos;
-    private List<DailyMealPlan> dailyMealPlans;
+    private List<NutritionInfo> historicalNutritionInfoList;
+    private List<MealPlan> mealPlanList;
+
+    // workout
+    private List<WorkoutPlan> workoutPlanList;
 
     public User(String firstName, String lastName, String email, String password, Role role) {
         this.firstName = firstName;
@@ -49,8 +53,9 @@ public class User implements UserDetails {
         this.accessToken = null;
         this.verificationToken = null;
         this.resetPasswordToken = null;
-        this.historicalNutritionInfos = new ArrayList<>();
-        this.dailyMealPlans = new ArrayList<>();
+        this.historicalNutritionInfoList = new ArrayList<>();
+        this.mealPlanList = new ArrayList<>();
+        this.workoutPlanList = new ArrayList<>();
     }
 
     public User() {}
@@ -109,13 +114,14 @@ public class User implements UserDetails {
                 Objects.equals(accessToken, other.accessToken) &&
                 Objects.equals(verificationToken, other.verificationToken) &&
                 Objects.equals(resetPasswordToken, other.resetPasswordToken) &&
-                Objects.equals(historicalNutritionInfos, other.historicalNutritionInfos) &&
-                Objects.equals(dailyMealPlans, other.dailyMealPlans);
+                Objects.equals(historicalNutritionInfoList, other.historicalNutritionInfoList) &&
+                Objects.equals(mealPlanList, other.mealPlanList) &&
+                Objects.equals(workoutPlanList, other.workoutPlanList);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, firstName, lastName, email, password, role, enabled, accessToken, verificationToken,
-            resetPasswordToken, nutritionInfo, historicalNutritionInfos, dailyMealPlans);
+            resetPasswordToken, nutritionInfo, historicalNutritionInfoList, mealPlanList, workoutPlanList);
     }
 }

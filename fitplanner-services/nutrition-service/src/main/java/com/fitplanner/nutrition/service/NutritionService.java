@@ -2,10 +2,9 @@ package com.fitplanner.nutrition.service;
 
 import com.fitplanner.nutrition.client.UserServiceClient;
 import com.fitplanner.nutrition.model.api.ConfirmationResponse;
-import com.fitplanner.nutrition.model.api.FoodItemCreationRequest;
-import com.fitplanner.nutrition.model.api.FoodItemRemovalRequest;
 import com.fitplanner.nutrition.model.api.ProductRequest;
-import com.fitplanner.nutrition.model.food.DailyMealPlan;
+import com.fitplanner.nutrition.model.food.MealPlan;
+import com.fitplanner.nutrition.model.food.FoodItem;
 import com.fitplanner.nutrition.model.food.Meal;
 import com.fitplanner.nutrition.model.food.Product;
 import com.fitplanner.nutrition.repository.ProductRepository;
@@ -28,86 +27,86 @@ public class NutritionService {
         this.productRepository = productRepository;
     }
 
-    public ConfirmationResponse addFoodItem(FoodItemCreationRequest request, String header) {
-        var user = userServiceClient.getUser(request.email(), header);
+    public ConfirmationResponse addFoodItem(String email, String date, String mealName, FoodItem foodItem, String header) {
+        var user = userServiceClient.getUser(email, header);
 
-        var nutritionInfo = user.getHistoricalNutritionInfos().stream()
-            .filter(info -> info.isDateInRange(request.date()))
+        var nutritionInfo = user.getHistoricalNutritionInfoList().stream()
+            .filter(info -> info.isDateInRange(date))
             .findFirst().orElseGet(user::getNutritionInfo);
 
-        // if the daily meal plan with the specific date doesn't exist, create a new one
-        var dailyMealPlan = user.getDailyMealPlans().stream()
-            .filter(plan -> plan.getDate().equals(request.date()))
+        // if the meal plan with the specific date doesn't exist, create a new one
+        var mealPlan = user.getMealPlanList().stream()
+            .filter(plan -> plan.getDate().equals(date))
             .findFirst()
             .orElseGet(() -> {
-                var newPlan = new DailyMealPlan(
-                    request.date(), nutritionInfo.getCalories(), nutritionInfo.getProtein(), nutritionInfo.getFat(),
+                var newPlan = new MealPlan(
+                    date, nutritionInfo.getCalories(), nutritionInfo.getProtein(), nutritionInfo.getFat(),
                     nutritionInfo.getCarbs()
                 );
-                user.getDailyMealPlans().add(newPlan);
+                user.getMealPlanList().add(newPlan);
                 return newPlan;
             });
 
-        // find the meal in the dailyMealPlan with the specified name
-        var existingMeal = dailyMealPlan.getMeals().stream()
-            .filter(meal -> meal.getName().equals(request.mealName()))
+        // find the meal in the mealPlan with the specified name
+        var existingMeal = mealPlan.getMealList().stream()
+            .filter(meal -> meal.getName().equals(mealName))
             .findFirst();
 
         // if the meal already exists, add the new food item to it
         // otherwise create a new meal with the specified name and the new food item
         existingMeal.ifPresentOrElse(
-            meal -> meal.getFoodItems().add(request.foodItem()),
+            meal -> meal.getFoodItemList().add(foodItem),
             () -> {
-                var newMeal = new Meal(request.mealName());
-                newMeal.getFoodItems().add(request.foodItem());
-                dailyMealPlan.getMeals().add(newMeal);
+                var newMeal = new Meal(mealName);
+                newMeal.getFoodItemList().add(foodItem);
+                mealPlan.getMealList().add(newMeal);
             }
         );
 
-        userServiceClient.saveDailyMealPlans(user, header);
+        userServiceClient.saveUserMealPlanList(email, user.getMealPlanList(), header);
 
         return new ConfirmationResponse("Food item has been added.");
     }
 
-    public ConfirmationResponse removeFoodItem(FoodItemRemovalRequest request, String header) {
-        var user = userServiceClient.getUser(request.email(), header);
+    public ConfirmationResponse removeFoodItem(String email, String date, String mealName, String foodId, String header) {
+        var user = userServiceClient.getUser(email, header);
 
-        var userMeal = user.getDailyMealPlans().stream()
-            .filter(plan -> plan.getDate().equals(request.date()))
-            .flatMap(plan -> plan.getMeals().stream())
-            .filter(meal -> meal.getName().equals(request.mealName()))
+        var userMeal = user.getMealPlanList().stream()
+            .filter(plan -> plan.getDate().equals(date))
+            .flatMap(plan -> plan.getMealList().stream())
+            .filter(meal -> meal.getName().equals(mealName))
             .findFirst();
 
         userMeal.ifPresent(meal -> {
-            meal.getFoodItems().removeIf(foodItem -> foodItem.getId().equals(request.foodId()));
+            meal.getFoodItemList().removeIf(foodItem -> foodItem.getId().equals(foodId));
 
             // check if any other meals contain food items
-            boolean hasFoodItems = user.getDailyMealPlans().stream()
-                .filter(plan -> plan.getDate().equals(request.date()))
-                .flatMap(plan -> plan.getMeals().stream())
-                .anyMatch(otherMeal -> !otherMeal.getFoodItems().isEmpty());
+            var hasFoodItems = user.getMealPlanList().stream()
+                .filter(plan -> plan.getDate().equals(date))
+                .flatMap(plan -> plan.getMealList().stream())
+                .anyMatch(otherMeal -> !otherMeal.getFoodItemList().isEmpty());
 
             // if no other meals contain food items, remove the whole daily meal plan
             if(!hasFoodItems)
-                user.getDailyMealPlans().removeIf(plan -> plan.getDate().equals(request.date()));
+                user.getMealPlanList().removeIf(plan -> plan.getDate().equals(date));
         });
 
-        userServiceClient.saveDailyMealPlans(user, header);
+        userServiceClient.saveUserMealPlanList(email, user.getMealPlanList(), header);
 
         return new ConfirmationResponse("Food item has been removed.");
     }
 
-    public DailyMealPlan getDailyMealPlan(String email, String date, String header) {
+    public MealPlan getMealPlan(String email, String date, String header) {
         var user = userServiceClient.getUser(email, header);
 
-        var nutritionInfo = user.getHistoricalNutritionInfos().stream()
+        var nutritionInfo = user.getHistoricalNutritionInfoList().stream()
             .filter(info -> info.isDateInRange(date))
             .findFirst().orElseGet(user::getNutritionInfo);
 
-        return user.getDailyMealPlans().stream()
+        return user.getMealPlanList().stream()
             .filter(plan -> plan.getDate().equals(date))
             .findFirst()
-            .orElse(new DailyMealPlan(
+            .orElse(new MealPlan(
                 date, new ArrayList<>(), nutritionInfo.getCalories(), nutritionInfo.getProtein(),
                 nutritionInfo.getFat(), nutritionInfo.getCarbs())
             );
@@ -118,7 +117,7 @@ public class NutritionService {
             return Collections.emptyList();
 
         return productRepository.findByNameIgnoreCase(name)
-            .orElseThrow(() -> new RuntimeException("products not found"));
+            .orElse(Collections.emptyList());
     }
 
     public void addProduct(ProductRequest request) {

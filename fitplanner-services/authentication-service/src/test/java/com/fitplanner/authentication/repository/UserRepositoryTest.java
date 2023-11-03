@@ -27,12 +27,8 @@ public class UserRepositoryTest {
     public void findByEmail_ExistingEmail_User() {
         // given
         var email = "johnsmith@gmail.com";
-        var user = new User(
-            "John", "Smith",
-            email,
-            "1234",
-            Role.USER
-        );
+        var user = new User("John", "Smith", email, "1234", Role.USER);
+
         underTest.save(user);
 
         // when
@@ -58,12 +54,8 @@ public class UserRepositoryTest {
     public void findByAccessToken_ExistingToken_User() {
         // given
         var token = new AccessToken("access-token");
-        var user = new User(
-            "John", "Smith",
-            "johnsmith@gmail.com",
-            "1234",
-            Role.USER
-        );
+        var user = new User("John", "Smith", "johnsmith@gmail.com", "1234", Role.USER);
+
         user.setAccessToken(token);
         underTest.save(user);
 
@@ -78,12 +70,8 @@ public class UserRepositoryTest {
     public void findByAccessToken_NonExistingToken_Null() {
         // given
         var token = "non-existing-access-token";
-        var user = new User(
-            "John", "Smith",
-            "johnsmith@gmail.com",
-            "1234",
-            Role.USER
-        );
+        var user = new User("John", "Smith", "johnsmith@gmail.com", "1234", Role.USER);
+
         underTest.save(user);
 
         // when
@@ -97,12 +85,8 @@ public class UserRepositoryTest {
     public void findByVerificationToken_ExistingToken_User() {
         // given
         var token = new VerificationToken("verification-token", null, null);
-        var user = new User(
-            "John", "Smith",
-            "johnsmith@gmail.com",
-            "1234",
-            Role.USER
-        );
+        var user = new User("John", "Smith", "johnsmith@gmail.com", "1234", Role.USER);
+
         user.setVerificationToken(token);
         underTest.save(user);
 
@@ -117,12 +101,8 @@ public class UserRepositoryTest {
     public void findByVerificationToken_NonExistingToken_Null() {
         // given
         var token = new VerificationToken("non-existing-verification-token", null, null);
-        var user = new User(
-            "John", "Smith",
-            "johnsmith@gmail.com",
-            "1234",
-             Role.USER
-        );
+        var user = new User("John", "Smith", "johnsmith@gmail.com", "1234", Role.USER);
+
         underTest.save(user);
 
         // when
@@ -136,12 +116,8 @@ public class UserRepositoryTest {
     public void findByResetPasswordToken_ExistingToken_User() {
         // given
         var token = new ResetPasswordToken("reset-password-token", null, null);
-        var user = new User(
-            "John", "Smith",
-            "johnsmith@gmail.com",
-            "1234",
-            Role.USER
-        );
+        var user = new User("John", "Smith", "johnsmith@gmail.com", "1234", Role.USER);
+
         user.setResetPasswordToken(token);
         underTest.save(user);
 
@@ -156,12 +132,8 @@ public class UserRepositoryTest {
     public void findByResetPasswordToken_NonExistingToken_Null() {
         // given
         var token = new ResetPasswordToken("non-existing-reset-password-token", null, null);
-        var user = new User(
-            "John", "Smith",
-            "johnsmith@gmail.com",
-            "1234",
-            Role.USER
-        );
+        var user = new User("John", "Smith", "johnsmith@gmail.com", "1234", Role.USER);
+
         underTest.save(user);
 
         // when

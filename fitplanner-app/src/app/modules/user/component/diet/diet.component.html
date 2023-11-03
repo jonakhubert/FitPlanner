@@ -3,54 +3,49 @@
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="diary">
         <h2>Your food diary for:</h2>
-        <span class="date">
-          <a class="prev" (click)="goToDate('previous')">
-            <i class="fa-solid fa-caret-left fa-2xl"></i>
-          </a>
-
-          <time class="fixed-size-time">{{ formattedDate }}</time>
-
-          <a class="next" (click)="goToDate('next')">
-            <i class="fa-solid fa-caret-right fa-2xl"></i>
-          </a>
-
-          <a class="calendar" (click)="picker.open()">
-            <i class="fa-solid fa-calendar-days fa-lg"></i>
-          </a>
-
-          <mat-form-field style="width:1px; visibility:hidden;">
-            <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" (dateChange)="onDateSelected($event)">
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-        </span>
+        
+        <app-date-selector (dateOutput)="onDateSelected($event)"></app-date-selector>
 
         <div class="food-container">
-          <table>
-            <ng-container *ngIf="dailyMealPlan">
+          <ng-container *ngIf="mealPlan">
+            <table>
               <!-- Display nutrients header -->
               <tr class="nutrients">
                 <td></td>
-                <td class="nutrient-column">Calories <div class="subtitle">kcal</div></td>
-                <td class="nutrient-column">Protein <div class="subtitle">g</div></td>
-                <td class="nutrient-column">Fat <div class="subtitle">g</div></td>
-                <td class="nutrient-column">Carbs <div class="subtitle">g</div></td>
-              </tr>
-              <tr class="spacer">
-                <td>&nbsp;</td>
+                <td class="nutrient-column">
+                  <div class="nutrient-column-wrapper">
+                    Calories <div class="subtitle">kcal</div>
+                  </div>
+                </td>
+                <td class="nutrient-column">
+                  <div class="nutrient-column-wrapper">
+                    Protein <div class="subtitle">g</div>
+                  </div>
+                </td>
+                <td class="nutrient-column">
+                  <div class="nutrient-column-wrapper">
+                    Fat <div class="subtitle">g</div>
+                  </div>
+                </td>
+                <td class="nutrient-column">
+                  <div class="nutrient-column-wrapper">
+                    Carbs <div class="subtitle">g</div>
+                  </div>
+                </td>
               </tr>
 
-              <ng-container *ngFor="let meal of dailyMealPlan.meals">
+              <ng-container *ngFor="let meal of mealPlan.mealList">
                 <!-- Display header row for the meal -->
                 <tr class="meal-header">
                   <td class="meal-name">
                     {{ meal.name }}
                     <i class="fa-solid fa-square-plus fa-xl add" (click)="openModal(meal.name)" data-bs-toggle="modal" data-bs-target="#addFoodItem"></i>
-                    <i class="fa-solid fa-magnifying-glass fa-lg search" [routerLink]="['./search']" [queryParams]="{ date: formatDate(), meal: meal.name }"></i>
+                    <i class="fa-solid fa-magnifying-glass fa-lg search" [routerLink]="['product/search']" [queryParams]="{ date: formattedDate, meal: meal.name }"></i>
                   </td>
                 </tr>
           
                 <!-- Loop through food items of the meal -->
-                <ng-container *ngFor="let foodItem of meal.foodItems">
+                <ng-container *ngFor="let foodItem of meal.foodItemList">
                   <tr class="food">
                     <!-- Display food item details -->
                     <td class="food-name">{{ foodItem.name }}, {{ foodItem.quantity }}g</td>
@@ -87,10 +82,10 @@
 
               <tr class="day-summary">
                 <td class="first">Daily Goal</td>
-                <td class="macro"><span class="macro-value">{{ dailyMealPlan.dailyCalories }}</span></td>
-                <td class="macro"><span class="macro-value">{{ dailyMealPlan.dailyProtein }}</span></td>
-                <td class="macro"><span class="macro-value">{{ dailyMealPlan.dailyFat }}</span></td>
-                <td class="macro"><span class="macro-value">{{ dailyMealPlan.dailyCarbs }}</span></td>
+                <td class="macro"><span class="macro-value">{{ mealPlan.dailyCalories }}</span></td>
+                <td class="macro"><span class="macro-value">{{ mealPlan.dailyProtein }}</span></td>
+                <td class="macro"><span class="macro-value">{{ mealPlan.dailyFat }}</span></td>
+                <td class="macro"><span class="macro-value">{{ mealPlan.dailyCarbs }}</span></td>
               </tr>
 
               <tr class="day-summary">
@@ -102,13 +97,29 @@
               </tr>
               <tr class="nutrients">
                 <td></td>
-                <td class="nutrient-column">Calories <div class="subtitle">kcal</div></td>
-                <td class="nutrient-column">Protein <div class="subtitle">g</div></td>
-                <td class="nutrient-column">Fat <div class="subtitle">g</div></td>
-                <td class="nutrient-column">Carbs <div class="subtitle">g</div></td>
+                <td class="nutrient-column">
+                  <div class="nutrient-column-wrapper">
+                    Calories <div class="subtitle">kcal</div>
+                  </div>
+                </td>
+                <td class="nutrient-column">
+                  <div class="nutrient-column-wrapper">
+                    Protein <div class="subtitle">g</div>
+                  </div>
+                </td>
+                <td class="nutrient-column">
+                  <div class="nutrient-column-wrapper">
+                    Fat <div class="subtitle">g</div>
+                  </div>
+                </td>
+                <td class="nutrient-column">
+                  <div class="nutrient-column-wrapper">
+                    Carbs <div class="subtitle">g</div>
+                  </div>
+                </td>
               </tr>
-            </ng-container>
-          </table>
+            </table>
+          </ng-container>
 
           <div *ngIf="totalProtein !== 0 || totalFat !== 0 || totalCarbs !== 0" class="pie-chart">
             <canvas baseChart

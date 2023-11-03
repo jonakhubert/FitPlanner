@@ -3,8 +3,7 @@ import { NutritionService } from '../../services/nutrition/nutrition.service';
 import { Product } from '../../interface/product';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FoodItemCreationRequest } from '../../interface/food-item-creation-request';
-import { FoodItem } from '../../interface/food-item';
+import { FoodItemRequest } from '../../interface/food-item-request';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -78,24 +77,22 @@ export class ProductSearchComponent {
     const email = localStorage.getItem('userEmail');
     
     if(email && this.selectedProduct && this.foodItemForm) {
-      const request: FoodItemCreationRequest = {
-        email: email,
-        date: this.date,
-        mealName: this.foodItemForm.get('meal')?.value,
-        foodItem: {
-          name: this.selectedProduct.name,
-          calories: this.calculateCalories(this.foodItemForm.get('quantity')?.value),
-          protein: this.calculateProtein(this.foodItemForm.get('quantity')?.value),
-          fat: this.calculateFat(this.foodItemForm.get('quantity')?.value),
-          carbs: this.calculateCarbs(this.foodItemForm.get('quantity')?.value),
-          quantity: this.foodItemForm.get('quantity')?.value
-        }
-      }
+      const quantity = this.foodItemForm.get('quantity')!.value;
+      const parsedQuantity = parseFloat(quantity);
+
+      const request: FoodItemRequest = {
+        name: this.selectedProduct.name,
+        calories: this.calculateCalories(parsedQuantity),
+        protein: parseFloat(this.calculateProtein(parsedQuantity).toFixed(1)),
+        fat: parseFloat(this.calculateFat(parsedQuantity).toFixed(1)), 
+        carbs: parseFloat(this.calculateCarbs(parsedQuantity).toFixed(1)),
+        quantity: parsedQuantity,
+    };
       
-      this.nutritionService.addFoodItem(request).subscribe(
+      this.nutritionService.addFoodItem(email, this.date, this.foodItemForm.get('meal')!.value, request).subscribe(
       {
         next: (response) => {
-          this.router.navigate(['/user/diet'])
+          this.router.navigate(['/user/diet']);
           this.toastr.success(response.confirmation_message, "Success");
         },
         error: (error) => {
