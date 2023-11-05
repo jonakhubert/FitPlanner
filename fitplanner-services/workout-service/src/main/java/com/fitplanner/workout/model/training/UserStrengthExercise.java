@@ -16,6 +16,15 @@ public class UserStrengthExercise {
         this.id = UUID.randomUUID().toString();
     }
 
+    public UserStrengthExercise(String name, String link, int sets, int reps, double weight) {
+        this.id = UUID.randomUUID().toString();
+        this.name = name;
+        this.link = link;
+        this.sets = sets;
+        this.reps = reps;
+        this.weight = weight;
+    }
+
     // getters
     public String getId() { return id; }
     public String getName() { return name; }

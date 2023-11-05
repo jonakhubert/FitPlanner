@@ -1,0 +1,8 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:${mongodb.container.port}/test
+  cloud:
+    config:
+      import-check:
+        enabled: false

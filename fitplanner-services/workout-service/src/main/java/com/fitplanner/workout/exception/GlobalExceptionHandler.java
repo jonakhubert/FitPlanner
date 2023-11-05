@@ -112,3 +112,4 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(apiError, HttpStatus.SERVICE_UNAVAILABLE);
     }
+}

@@ -6,7 +6,6 @@ import com.fitplanner.user.model.api.UserDetailsRequest;
 import com.fitplanner.user.model.food.MealPlan;
 import com.fitplanner.user.model.training.WorkoutPlan;
 import com.fitplanner.user.model.user.NutritionInfo;
-import com.fitplanner.user.model.user.User;
 import com.fitplanner.user.model.user.UserDTO;
 import com.fitplanner.user.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -22,7 +21,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
