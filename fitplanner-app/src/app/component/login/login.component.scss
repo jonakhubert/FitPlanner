@@ -1,0 +1,28 @@
+.card {
+    margin-top: 200px;
+}
+
+input[type='text'] {
+    border: none;
+    outline: none;
+    box-shadow: none;
+    width: 100%
+}
+
+.input-field {
+    border-radius: 5px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    color: #4343ff
+}
+
+.forgot { 
+    cursor: pointer;
+}
+
+.modal-content {
+    color: black;
+}

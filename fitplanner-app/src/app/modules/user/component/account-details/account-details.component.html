@@ -1,0 +1,75 @@
+<div class="wrapper">
+  <div class="row">
+    <div class="col-md-5 border-right">
+      <div class="p-3 py-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h1 class="text-right">Profile Settings</h1>
+        </div>
+  
+        <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+          <div class="row mt-2">
+            <div class="col-md-6">
+              <label class="labels">First Name</label>
+              <input type="text" class="form-control" formControlName="firstName" [ngClass]="{'is-invalid': submitted && accountForm.controls['firstName'].errors}">
+            </div>
+            <div class="col-md-6">
+              <label class="labels">Last Name</label>
+              <input type="text" class="form-control" formControlName="lastName" [ngClass]="{'is-invalid': submitted && accountForm.controls['lastName'].errors}">
+            </div>
+          </div>
+    
+          <div class="row mt-3">
+            <div class="col-md-12">
+              <label class="labels">Email Address</label>
+              <input type="text" class="form-control" formControlName="email" [ngClass]="{'is-invalid': submitted && accountForm.controls['email'].errors}">
+            </div>
+          </div>
+    
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <label class="labels">Height</label>
+              <input type="number" min="0" class="form-control" formControlName="height" [ngClass]="{'is-invalid': submitted && accountForm.controls['height'].errors}">
+            </div>
+            <div class="col-md-6">
+              <label class="labels">Weight</label>
+              <input type="number" min="0" class="form-control" formControlName="weight" [ngClass]="{'is-invalid': submitted && accountForm.controls['weight'].errors}">
+            </div>
+          </div>
+          <div *ngIf="accountForm.hasError('invalidBMI')" class="text-danger">
+            Invalid BMI. Please enter valid weight and height values.
+          </div>
+    
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <label class="labels">Your goal</label>
+              <div class="form-outline mb-4">
+                <select class="form-select mb-3" aria-label="Default select example" formControlName="goal" formControlName="goal" [ngClass]="{'is-invalid': submitted && accountForm.controls['goal'].errors}">
+                  <option [ngValue]=1>Lose weight</option>
+                  <option [ngValue]=2>Maintain weight</option>
+                  <option [ngValue]=3>Gain weight</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="labels">Activity level</label>
+              <div class="form-outline mb-4">
+                <select class="form-select mb-3" aria-label="Default select example" formControlName="activity_level" formControlName="activity_level" [ngClass]="{'is-invalid': submitted && accountForm.controls['activity_level'].errors}">
+                  <option [ngValue]=1>Low</option>
+                  <option [ngValue]=2>Active</option>
+                  <option [ngValue]=3>Very active</option>
+                </select>
+              </div>
+            </div>
+          </div>
+  
+          <div class="mt-4 text-center">
+            <button class="btn btn-primary profile-button" type="sumbit">
+              Save Profile
+            </button>
+          </div>
+        </form>
+  
+      </div>
+    </div>
+  </div>  
+</div>

@@ -1,0 +1,91 @@
+<div class="mask d-flex align-items-center h-100">
+  <div class="container h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+        <div class="card" style="border-radius: 15px;">
+          <div class="card-body p-5">
+            <h2 class="text-uppercase text-center mb-5">Create an account</h2>
+            
+            <div *ngIf="alertMessage">
+              <div class="alert alert-danger" role="alert">
+                {{ alertMessage }}
+              </div>
+            </div>
+
+            <div *ngIf="verificationMessage">
+              <div class="alert alert-primary" role="alert">
+                {{ verificationMessage }}
+              </div>
+            </div>
+            
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+              
+              <div class="form-outline mb-4">
+                <input type="text" placeholder="First Name" class="form-control form-control-lg" formControlName="firstName" [ngClass]="{'is-invalid': submitted && registerForm.controls['firstName'].errors}"/>
+              </div>
+              
+              <div class="form-outline mb-4">
+                <input type="text" placeholder="Last Name" class="form-control form-control-lg" formControlName="lastName" [ngClass]="{'is-invalid': submitted && registerForm.controls['lastName'].errors}"/>
+              </div>
+
+              <div class="form-outline mb-4">
+                <input type="number" min="0" placeholder="Height in cm" class="form-control form-control-lg" formControlName="height" [ngClass]="{'is-invalid': submitted && registerForm.controls['height'].errors}"/>
+                <div *ngIf="registerForm.hasError('invalidBMI')" class="text-danger">
+                  Invalid BMI. Please enter valid weight and height values.
+                </div>
+              </div>
+
+              <div class="form-outline mb-4">
+                <input type="number" min="0" placeholder="Weight in kg" class="form-control form-control-lg" formControlName="weight" [ngClass]="{'is-invalid': submitted && registerForm.controls['weight'].errors}"/>
+              </div>
+
+              <div class="form-outline mb-4">
+                <select class="form-select form-select-lg mb-3" aria-label="Default select example" formControlName="goal" [ngClass]="{'is-invalid': submitted && registerForm.controls['goal'].errors}">
+                  <option [ngValue]="null" disabled selected>Select your goal</option>
+                  <option [ngValue]=1>Lose weight</option>
+                  <option [ngValue]=2>Maintain weight</option>
+                  <option [ngValue]=3>Gain weight</option>
+                </select>
+              </div>
+
+              <div class="form-outline mb-4">
+                <select class="form-select form-select-lg mb-3" aria-label="Default select example" formControlName="activity_level" [ngClass]="{'is-invalid': submitted && registerForm.controls['activity_level'].errors}">
+                  <option [ngValue]="null" disabled selected>Select your activity level</option>
+                  <option [ngValue]=1>Low</option>
+                  <option [ngValue]=2>Active</option>
+                  <option [ngValue]=3>Very active</option>
+                </select>
+              </div>
+
+              <div class="form-outline mb-4">
+                <input type="email" placeholder="Email Address" class="form-control form-control-lg" formControlName="email" [ngClass]="{'is-invalid': submitted && registerForm.controls['email'].errors}"/>
+                <div *ngIf="submitted && registerForm.controls['email'].errors" class="text-danger">
+                  <div *ngIf="registerForm.controls['email'].errors['pattern']">Email is not valid</div>
+                </div>
+              </div>
+
+              <div class="form-outline mb-4">
+                <input type="password" placeholder="Password" class="form-control form-control-lg" formControlName="password" [ngClass]="{'is-invalid': submitted && registerForm.controls['password'].errors}"/>
+                <div *ngIf="submitted && registerForm.controls['password'].errors" class="text-danger">
+                  <div *ngIf="registerForm.controls['password'].errors['minlength']">Password should be at least 6 characters</div>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-center">
+                <button type="sumbit" class="btn btn-primary btn-lg">
+                  Register
+                </button>
+              </div>
+
+              <p class="text-center text-muted mt-4 mb-0">
+                Already a member?
+                <a class="fw-bold text-body" routerLink="/login">Login here</a>
+              </p>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

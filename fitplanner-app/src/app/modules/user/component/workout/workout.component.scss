@@ -1,0 +1,77 @@
+.mask {
+  margin-top: 40px;
+  position: relative;
+}
+
+.diary {
+  text-align: left;
+}
+
+.container {
+  max-width: 70vw;  
+}
+
+.workout-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.table-container {
+  display: block;
+  width: 100%;
+  margin-bottom: 80px;
+}
+
+.workout-parameters {
+  text-align: center;
+
+  .add {
+    text-align: left;
+    width: 50%;
+    font-weight: bold;
+    cursor: pointer;
+    color: rgb(108, 165, 202);
+  }
+}
+
+.workout-column-wrapper {
+  background-color: rgb(40, 118, 170);
+}
+
+.workout-column {
+  padding: 0 2px;
+  text-align: center;
+  width: 300px;
+}
+
+.exercise-name {
+  font-size: 20px;
+  width: 50%;
+}
+
+.exercise-video {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.delete {
+  text-align: center;
+  width: 5%;
+  cursor: pointer;
+}
+
+.modal-content {
+  color: black;
+}
+
+h2 {
+  display: inline;
+  margin-right: 20px;
+}
+
+table {
+  width: 100%;
+  font-size: 20px;
+}

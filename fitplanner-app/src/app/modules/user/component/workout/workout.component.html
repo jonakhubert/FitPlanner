@@ -1,0 +1,93 @@
+<div class="mask d-flex align-items-center">
+  <div class="container">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="diary">
+        <h2>Your workout plan for:</h2>
+        
+        <app-date-selector (dateOutput)="onDateSelected($event)"></app-date-selector>
+
+        <div class="workout-container">
+          <ng-container *ngIf="workoutPlan">
+            <div class="table-container">
+              <table>
+                <tr class="workout-parameters">
+                  <td class="add">
+                    <span [routerLink]="['./exercise/search']" [queryParams]="{ date: formattedDate, type: 'STRENGTH' }">Add Strength Exercise | </span>
+                    <span [routerLink]="['./exercise/search']" [queryParams]="{ date: formattedDate, type: 'STRENGTH', find: 'muscle' }">Muscle Group</span>
+                  </td>
+                  <td class="workout-column">
+                    <div class="workout-column-wrapper">Sets</div>
+                  </td>
+                  <td class="workout-column">
+                    <div class="workout-column-wrapper">Reps/Set</div>
+                  </td>
+                  <td class="workout-column">
+                    <div class="workout-column-wrapper">Weight/Set</div>
+                  </td>
+                  <td class="delete"></td>
+                </tr>
+               
+                <ng-container *ngFor="let strengthExercise of workoutPlan.strengthExerciseList">
+                  <tr class="exercise">
+                    <td class="exercise-name">
+                      {{ strengthExercise.name }} 
+                      <span class="exercise-video">
+                        <i class="fa-solid fa-circle-play fa-lg" (click)="openModal(strengthExercise)"data-bs-toggle="modal" data-bs-target="#exerciseVideo"></i>
+                      </span>
+                    </td>
+                    <td class="workout-column"> <span>{{ strengthExercise.sets }}</span></td>
+                    <td class="workout-column"> <span>{{ strengthExercise.reps }}</span></td>
+                    <td class="workout-column"> <span>{{ strengthExercise.weight }}kg</span></td>
+                    <td class="delete" (click)="removeUserStrengthExercise(strengthExercise.id)"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
+                  </tr>
+                </ng-container>
+              </table> 
+            </div>
+            
+            <div class="table-container">
+              <table>
+                <tr class="workout-parameters">
+                  <td class="add" [routerLink]="['./exercise/search']" [queryParams]="{ date: formattedDate, type: 'CARDIO' }">Add Cardio Exercise</td>
+                  <td class="workout-column">
+                    <div class="workout-column-wrapper">Minutes</div>
+                  </td>
+                  <td class="delete"></td>
+                </tr>
+
+                <ng-container *ngFor="let cardioExercise of workoutPlan.cardioExerciseList">
+                  <tr class="exercise">
+                    <td class="exercise-name">
+                      {{ cardioExercise.name }} 
+                    </td>
+                    <td class="workout-column"> <span>{{ cardioExercise.minutes }}</span></td>
+                    <td class="delete" (click)="removeUserCardioExercise(cardioExercise.id)"> <span><i class="fa-solid fa-square-minus fa-xl"></i></span> </td>
+                  </tr>
+                </ng-container>
+              </table>
+            </div>
+          </ng-container>  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- exercise presentation modal -->
+<div class="modal fade" id="exerciseVideo" tabindex="-1" aria-labelledby="exerciseVideo" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content" *ngIf="selectedUserStrengthExercise">
+      <div class="modal-header">
+        <p class="modal-title"> <span style="font-size: 25px; font-weight: 700">{{ selectedUserStrengthExercise.name }}</span><br></p>
+      </div>
+
+      <div class="modal-body">
+        <iframe width="100%" height="600" [src]="getSafeUrl()" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </div>
+
+      <div class="modal-footer">
+        <button id="closeBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
