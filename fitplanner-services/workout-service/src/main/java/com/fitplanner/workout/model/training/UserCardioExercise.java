@@ -13,6 +13,12 @@ public class UserCardioExercise {
         this.id = UUID.randomUUID().toString();
     }
 
+    public UserCardioExercise(String name, double minutes) {
+        this.id = UUID.randomUUID().toString();
+        this.name = name;
+        this.minutes = minutes;
+    }
+
     // getters
     public String getId() { return id; }
     public String getName() { return name; }

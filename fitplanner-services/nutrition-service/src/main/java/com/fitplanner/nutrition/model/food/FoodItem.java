@@ -13,6 +13,16 @@ public class FoodItem {
     private double carbs;
     private double quantity;
 
+    public FoodItem(String name, double calories, double protein, double fat, double carbs, double quantity) {
+        this.id = UUID.randomUUID().toString();
+        this.name = name;
+        this.calories = calories;
+        this.protein = protein;
+        this.fat = fat;
+        this.carbs = carbs;
+        this.quantity = quantity;
+    }
+
     public FoodItem() {
         this.id = UUID.randomUUID().toString();
     }

@@ -9,6 +9,13 @@ public class User {
     private String email;
     private List<WorkoutPlan> workoutPlanList;
 
+    public User() {}
+
+    public User(String email, List<WorkoutPlan> workoutPlanList) {
+        this.email = email;
+        this.workoutPlanList = workoutPlanList;
+    }
+
     // getters
     public String getEmail() { return email; }
     public List<WorkoutPlan> getWorkoutPlanList() { return workoutPlanList; }

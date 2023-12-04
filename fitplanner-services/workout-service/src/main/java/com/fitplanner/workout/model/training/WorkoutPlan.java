@@ -2,6 +2,7 @@ package com.fitplanner.workout.model.training;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class WorkoutPlan {
 
@@ -34,4 +35,21 @@ public class WorkoutPlan {
     public void setDate(String date) { this.date = date; }
     public void setStrengthExerciseList(List<UserStrengthExercise> strengthExerciseList) { this.strengthExerciseList = strengthExerciseList; }
     public void setCardioExerciseList(List<UserCardioExercise> cardioExerciseList) { this.cardioExerciseList = cardioExerciseList; }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == this)
+            return true;
+        if(!(o instanceof WorkoutPlan other))
+            return false;
+
+        return  Objects.equals(date, other.date) &&
+                Objects.equals(strengthExerciseList, other.strengthExerciseList) &&
+                Objects.equals(cardioExerciseList, other.cardioExerciseList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(date, strengthExerciseList, cardioExerciseList);
+    }
 }
